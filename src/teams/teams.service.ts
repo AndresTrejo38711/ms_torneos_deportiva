@@ -77,10 +77,27 @@ export class TeamsService {
     return toTeamResponse(team);
   }
 
-  // Antes de eliminar se valida si el equipo tiene información asociada. Hoy todavía no puede
-  // tenerla: sus deportes (HU-GD-03) y sus jugadores (HU-GD-05) se revisarán aquí cuando existan.
+  // Antes de eliminar se valida si el equipo tiene información asociada: hoy, sus deportes
+  // (HU-GD-03). Sus jugadores (HU-GD-05) se revisarán aquí cuando existan.
   async remove(id: number): Promise<void> {
-    await this.findTeam(id);
+    // teamSports: { sport: true } carga las filas de team_sports y, de cada una, su deporte.
+    const team = await this.teamRepository.findOne({
+      where: { id },
+      relations: { teamSports: { sport: true } },
+      order: { teamSports: { sport: { name: 'ASC' } } },
+    });
+    if (!team) {
+      throw notFound(id);
+    }
+
+    if (team.teamSports.length > 0) {
+      const names = team.teamSports.map((row) => row.sport.name).join(', ');
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${team.name}" porque está asociado a deportes (${names}). Retira esas asociaciones primero o desactiva el equipo`,
+      );
+    }
+
     await this.teamRepository.delete(id);
   }
 
@@ -89,10 +106,7 @@ export class TeamsService {
   private async findTeam(id: number): Promise<Team> {
     const team = await this.teamRepository.findOneBy({ id });
     if (!team) {
-      throw new ApplicationException(
-        ErrorCase.NOT_FOUND,
-        `No existe el equipo con id ${id}`,
-      );
+      throw notFound(id);
     }
     return team;
   }
@@ -110,4 +124,11 @@ export class TeamsService {
       );
     }
   }
+}
+
+function notFound(id: number): ApplicationException {
+  return new ApplicationException(
+    ErrorCase.NOT_FOUND,
+    `No existe el equipo con id ${id}`,
+  );
 }

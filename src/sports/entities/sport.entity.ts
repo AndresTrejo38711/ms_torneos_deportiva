@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { TeamSport } from '../../team-sports/entities/team-sport.entity';
 
 // HU-GD-01. Un deporte puede tener subdeportes, que también son deportes:
 // Fútbol → Fútbol de salón, Fútbol callejero. Es una relación 1:N de la tabla consigo misma.
@@ -43,4 +44,9 @@ export class Sport {
   // El otro lado de la misma relación: no crea columnas, se arma con parent_id.
   @OneToMany(() => Sport, (sport) => sport.parent)
   subSports: Sport[];
+
+  // HU-GD-03. Equipos que participan en este deporte, a través de la tabla intermedia.
+  // Tampoco crea columnas: la llave foránea sport_id está en team_sports.
+  @OneToMany(() => TeamSport, (teamSport) => teamSport.sport)
+  teamSports: TeamSport[];
 }

@@ -1,7 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
+import { TeamSport } from '../../team-sports/entities/team-sport.entity';
 
 // HU-GD-02. Organización que puede participar en las competencias. Sus deportes (HU-GD-03) y
-// sus jugadores (HU-GD-05) se relacionan con tablas intermedias que se agregan en esas HU.
+// sus jugadores (HU-GD-05) se relacionan con tablas intermedias.
 @Entity({ name: 'teams' })
 // Igual que en los deportes, la base no distingue mayúsculas ni tildes:
 // "Atlético Nacional" y "ATLETICO NACIONAL" cuentan como el mismo nombre.
@@ -23,4 +30,9 @@ export class Team {
   // Desactivar es la alternativa a eliminar cuando el equipo ya tiene información asociada.
   @Column({ default: true })
   active: boolean;
+
+  // HU-GD-03. Deportes en los que participa, a través de la tabla intermedia team_sports.
+  // No crea columnas aquí: la llave foránea team_id está en team_sports.
+  @OneToMany(() => TeamSport, (teamSport) => teamSport.team)
+  teamSports: TeamSport[];
 }

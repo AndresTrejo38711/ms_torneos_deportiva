@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SecurityModule } from './security/security.module';
 import { SportsModule } from './sports/sports.module';
+import { TeamSportsModule } from './team-sports/team-sports.module';
 import { TeamsModule } from './teams/teams.module';
 
 @Module({
@@ -36,6 +37,7 @@ import { TeamsModule } from './teams/teams.module';
     // Un módulo por recurso del Anexo 2.
     SportsModule, // HU-GD-01
     TeamsModule, // HU-GD-02
+    TeamSportsModule, // HU-GD-03
   ],
 })
 export class AppModule {}

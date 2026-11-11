@@ -104,12 +104,17 @@ export class SportsService {
     return this.findOne(id);
   }
 
-  // Solo se elimina si no tiene información asociada; si la tiene, se informa qué es y se sugiere
-  // desactivarlo. (Cuando existan los equipos, HU-GD-03, también se revisarán aquí.)
+  // Solo se elimina si no tiene información asociada (subdeportes o equipos); si la tiene, se
+  // informa qué es y se sugiere desactivarlo.
   async remove(id: number): Promise<void> {
+    // teamSports: { team: true } carga las filas de team_sports y, de cada una, su equipo.
     const sport = await this.sportRepository.findOne({
       where: { id },
-      relations: { subSports: true },
+      relations: { subSports: true, teamSports: { team: true } },
+      order: {
+        subSports: { name: 'ASC' },
+        teamSports: { team: { name: 'ASC' } },
+      },
     });
     if (!sport) {
       throw notFound(id);
@@ -120,6 +125,14 @@ export class SportsService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `No se puede eliminar "${sport.name}" porque tiene subdeportes (${names}). Elimínalos primero o desactiva el deporte`,
+      );
+    }
+
+    if (sport.teamSports.length > 0) {
+      const names = sport.teamSports.map((row) => row.team.name).join(', ');
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${sport.name}" porque está asociado a equipos (${names}). Retira esas asociaciones primero o desactiva el deporte`,
       );
     }
 

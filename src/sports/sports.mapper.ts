@@ -13,6 +13,7 @@ export function toSportResponse(sport: Sport): SportResponseDto {
   };
 }
 
-function toSportSummary(sport: Sport): SportSummaryDto {
+// También lo usan las asociaciones con equipos (HU-GD-03).
+export function toSportSummary(sport: Sport): SportSummaryDto {
   return { id: sport.id, name: sport.name, active: sport.active };
 }

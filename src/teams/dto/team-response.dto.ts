@@ -6,3 +6,10 @@ export class TeamResponseDto {
   foundationDate: string | null;
   active: boolean;
 }
+
+// Lo mínimo para mostrar un equipo relacionado (por ejemplo, los equipos de un deporte).
+export class TeamSummaryDto {
+  id: number;
+  name: string;
+  active: boolean;
+}
