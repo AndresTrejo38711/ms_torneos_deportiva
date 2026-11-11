@@ -106,6 +106,11 @@
       "type": "string"
     },
     {
+      "key": "bigPhoto",
+      "value": "",
+      "type": "string"
+    },
+    {
       "key": "teamJuniorId",
       "value": "",
       "type": "string"
@@ -266,7 +271,7 @@
     },
     {
       "name": "HU-GD-01 · Deportes",
-      "description": "CRUD de deportes con subdeportes: `/api/deportiva/sports`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un nuevo deporte con su información requerida. → peticiones 01, 06\n2. El sistema debe validar los campos obligatorios antes de realizar el registro. → peticiones 03, 04\n3. No se deben permitir deportes duplicados. → peticiones 02, 14\n4. El sistema debe permitir consultar el listado de deportes registrados. → peticiones 08\n5. Se debe poder consultar el detalle de un deporte. → peticiones 09, 10\n6. Se debe permitir actualizar la información de un deporte existente. → peticiones 12\n7. Se debe permitir eliminar o desactivar un deporte. → peticiones 18, 23, 24, 25; carpeta HU-GD-03: 27\n8. Si el deporte tiene información asociada que impida su eliminación, el sistema debe informar al usuario. → peticiones 17; carpeta HU-GD-03: 16\n9. Los cambios realizados deben quedar almacenados correctamente. → peticiones 09, 13, 19, 26",
+      "description": "CRUD de deportes con subdeportes: `/api/deportiva/sports`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un nuevo deporte con su información requerida. → peticiones 01, 06\n2. El sistema debe validar los campos obligatorios antes de realizar el registro. → peticiones 03, 04\n3. No se deben permitir deportes duplicados. → peticiones 02, 14\n4. El sistema debe permitir consultar el listado de deportes registrados. → peticiones 08\n5. Se debe poder consultar el detalle de un deporte. → peticiones 09, 10\n6. Se debe permitir actualizar la información de un deporte existente. → peticiones 12\n7. Se debe permitir eliminar o desactivar un deporte. → peticiones 18, 23, 24, 25; carpeta HU-GD-03: 28\n8. Si el deporte tiene información asociada que impida su eliminación, el sistema debe informar al usuario. → peticiones 17; carpeta HU-GD-03: 17\n9. Los cambios realizados deben quedar almacenados correctamente. → peticiones 09, 13, 19, 26",
       "item": [
         {
           "name": "01 Crear Fútbol (201)",
@@ -1106,7 +1111,7 @@
     },
     {
       "name": "HU-GD-02 · Equipos",
-      "description": "CRUD de equipos: `/api/deportiva/teams`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un equipo con su información básica. → peticiones 01, 07\n2. Los campos obligatorios deben ser validados. → peticiones 03, 04, 05, 06\n3. El sistema debe permitir consultar los equipos registrados. → peticiones 08\n4. Se debe poder consultar la información detallada de un equipo. → peticiones 09, 10\n5. Se debe permitir actualizar la información del equipo. → peticiones 11\n6. Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan. → peticiones 14, 18, 19; carpeta HU-GD-03: 26\n7. Antes de eliminar un equipo, el sistema debe validar si posee información asociada. → carpeta HU-GD-03: 17; carpeta HU-GD-05: 20\n8. Los cambios realizados deben quedar almacenados correctamente. → peticiones 12, 15, 20",
+      "description": "CRUD de equipos: `/api/deportiva/teams`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un equipo con su información básica. → peticiones 01, 09\n2. Los campos obligatorios deben ser validados. → peticiones 03, 04, 05, 06, 07, 08\n3. El sistema debe permitir consultar los equipos registrados. → peticiones 10\n4. Se debe poder consultar la información detallada de un equipo. → peticiones 11, 12\n5. Se debe permitir actualizar la información del equipo. → peticiones 13\n6. Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan. → peticiones 16, 20, 21; carpeta HU-GD-03: 27\n7. Antes de eliminar un equipo, el sistema debe validar si posee información asociada. → carpeta HU-GD-03: 18; carpeta HU-GD-05: 22\n8. Los cambios realizados deben quedar almacenados correctamente. → peticiones 14, 17, 22",
       "item": [
         {
           "name": "01 Crear Atlético Nacional (201)",
@@ -1121,7 +1126,7 @@
             "url": "{{baseUrl}}/teams",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"  Atlético Nacional {{suffix}} \",\n  \"city\": \"Medellín\",\n  \"foundationDate\": \"1947-03-07\"\n}",
+              "raw": "{\n  \"name\": \"  Atlético Nacional {{suffix}} \",\n  \"shortName\": \"  Nacional \",\n  \"city\": \"Medellín\",\n  \"foundationDate\": \"1947-03-07\",\n  \"description\": \"  El equipo verdolaga.  \"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1150,11 +1155,18 @@
                   "    pm.response.to.have.status(201);",
                   "});",
                   "pm.collectionVariables.set(\"teamNacionalId\", pm.response.json().id);",
-                  "pm.test(\"Nombre sin espacios sobrantes, fecha AAAA-MM-DD y activo\", function () {",
+                  "pm.test(\"Nombre y descripción sin espacios sobrantes, fecha AAAA-MM-DD y activo\", function () {",
                   "    const team = pm.response.json();",
                   "    pm.expect(team.name).to.eql(\"Atlético Nacional \" + pm.collectionVariables.get(\"suffix\"));",
+                  "    pm.expect(team.shortName).to.eql(\"Nacional\");",
+                  "    pm.expect(team.description).to.eql(\"El equipo verdolaga.\");",
                   "    pm.expect(team.foundationDate).to.eql(\"1947-03-07\");",
                   "    pm.expect(team.active).to.eql(true);",
+                  "});",
+                  "pm.test(\"Resumen de un equipo nuevo: sin deportes ni jugadores\", function () {",
+                  "    const team = pm.response.json();",
+                  "    pm.expect(team.sports).to.eql([]);",
+                  "    pm.expect(team.playersCount).to.eql(0);",
                   "});"
                 ]
               }
@@ -1361,7 +1373,87 @@
           ]
         },
         {
-          "name": "07 Crear Once Caldas sin fecha de fundación (201)",
+          "name": "07 Descripción de más de 255 caracteres (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Millonarios {{suffix}}\",\n  \"city\": \"Bogotá\",\n  \"description\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-02 #2: Los campos obligatorios deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.description).to.eql(\"La descripción debe tener máximo 255 caracteres\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Nombre corto de más de 30 caracteres (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Millonarios {{suffix}}\",\n  \"city\": \"Bogotá\",\n  \"shortName\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-02 #2: Los campos obligatorios deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.shortName).to.eql(\"El nombre corto debe tener máximo 30 caracteres\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Crear Once Caldas solo con lo obligatorio (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -1392,9 +1484,11 @@
                   "    pm.response.to.have.status(201);",
                   "});",
                   "pm.collectionVariables.set(\"teamOnceId\", pm.response.json().id);",
-                  "pm.test(\"La fecha queda vacía\", function () {",
+                  "pm.test(\"Lo opcional queda vacío\", function () {",
                   "    const body = pm.response.json();",
+                  "    pm.expect(body.shortName).to.eql(null);",
                   "    pm.expect(body.foundationDate).to.eql(null);",
+                  "    pm.expect(body.description).to.eql(null);",
                   "});"
                 ]
               }
@@ -1402,7 +1496,7 @@
           ]
         },
         {
-          "name": "08 Listar equipos (200)",
+          "name": "10 Listar equipos (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1429,7 +1523,7 @@
           ]
         },
         {
-          "name": "09 Detalle de Atlético Nacional (200)",
+          "name": "11 Detalle de Atlético Nacional (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1456,7 +1550,7 @@
           ]
         },
         {
-          "name": "10 Detalle de un id que no existe (404)",
+          "name": "12 Detalle de un id que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1481,7 +1575,7 @@
           ]
         },
         {
-          "name": "11 Actualizar Once Caldas (200)",
+          "name": "13 Actualizar Once Caldas (200)",
           "request": {
             "method": "PUT",
             "header": [
@@ -1493,7 +1587,7 @@
             "url": "{{baseUrl}}/teams/{{teamOnceId}}",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Once Caldas {{suffix}}\",\n  \"city\": \"Manizales, Caldas\",\n  \"foundationDate\": \"1961-01-15\"\n}",
+              "raw": "{\n  \"name\": \"Once Caldas {{suffix}}\",\n  \"shortName\": \"Once\",\n  \"city\": \"Manizales, Caldas\",\n  \"foundationDate\": \"1961-01-15\",\n  \"description\": \"El blanco de Manizales.\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1513,8 +1607,10 @@
                   "});",
                   "pm.test(\"Datos nuevos\", function () {",
                   "    const body = pm.response.json();",
+                  "    pm.expect(body.shortName).to.eql(\"Once\");",
                   "    pm.expect(body.city).to.eql(\"Manizales, Caldas\");",
                   "    pm.expect(body.foundationDate).to.eql(\"1961-01-15\");",
+                  "    pm.expect(body.description).to.eql(\"El blanco de Manizales.\");",
                   "});"
                 ]
               }
@@ -1522,7 +1618,7 @@
           ]
         },
         {
-          "name": "12 Detalle de Once Caldas: los cambios quedaron guardados (200)",
+          "name": "14 Detalle de Once Caldas: los cambios quedaron guardados (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1540,8 +1636,10 @@
                   "});",
                   "pm.test(\"Datos guardados\", function () {",
                   "    const body = pm.response.json();",
+                  "    pm.expect(body.shortName).to.eql(\"Once\");",
                   "    pm.expect(body.city).to.eql(\"Manizales, Caldas\");",
                   "    pm.expect(body.foundationDate).to.eql(\"1961-01-15\");",
+                  "    pm.expect(body.description).to.eql(\"El blanco de Manizales.\");",
                   "});"
                 ]
               }
@@ -1549,7 +1647,7 @@
           ]
         },
         {
-          "name": "13 Renombrar Once Caldas como Atlético Nacional (409)",
+          "name": "15 Renombrar Once Caldas como Atlético Nacional (409)",
           "request": {
             "method": "PUT",
             "header": [
@@ -1587,7 +1685,7 @@
           ]
         },
         {
-          "name": "14 Desactivar Once Caldas (200)",
+          "name": "16 Desactivar Once Caldas (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1613,7 +1711,7 @@
           ]
         },
         {
-          "name": "15 Detalle: Once Caldas quedó desactivado (200)",
+          "name": "17 Detalle: Once Caldas quedó desactivado (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1639,7 +1737,7 @@
           ]
         },
         {
-          "name": "16 Desactivarlo otra vez (400)",
+          "name": "18 Desactivarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1663,7 +1761,7 @@
           ]
         },
         {
-          "name": "17 Activar Once Caldas (200)",
+          "name": "19 Activar Once Caldas (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1688,7 +1786,7 @@
           ]
         },
         {
-          "name": "18 Eliminar Once Caldas (204)",
+          "name": "20 Eliminar Once Caldas (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -1710,7 +1808,7 @@
           ]
         },
         {
-          "name": "19 Eliminar Atlético Nacional (204)",
+          "name": "21 Eliminar Atlético Nacional (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -1732,7 +1830,7 @@
           ]
         },
         {
-          "name": "20 Once Caldas ya no existe (404)",
+          "name": "22 Once Caldas ya no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1760,7 +1858,7 @@
     },
     {
       "name": "HU-GD-03 · Equipos y deportes",
-      "description": "Asociaciones entre equipos y deportes: `/api/deportiva/team-sports`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las primeras peticiones crean un equipo y dos deportes de prueba, y las últimas los borran.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el equipo como el deporte deben existir previamente. → peticiones 04, 07, 08\n2. No se debe permitir registrar dos veces la misma asociación entre un equipo y un deporte. → peticiones 06\n3. El sistema debe permitir consultar los deportes asociados a un equipo. → peticiones 11, 14\n4. El sistema debe permitir consultar los equipos asociados a un deporte. → peticiones 12, 15\n5. Se debe poder retirar una asociación sin eliminar el equipo ni el deporte del sistema. → peticiones 18, 20, 21, 22",
+      "description": "Asociaciones entre equipos y deportes: `/api/deportiva/team-sports`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las primeras peticiones crean un equipo y dos deportes de prueba, y las últimas los borran.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el equipo como el deporte deben existir previamente. → peticiones 04, 07, 08\n2. No se debe permitir registrar dos veces la misma asociación entre un equipo y un deporte. → peticiones 06\n3. El sistema debe permitir consultar los deportes asociados a un equipo. → peticiones 11, 15\n4. El sistema debe permitir consultar los equipos asociados a un deporte. → peticiones 12, 16\n5. Se debe poder retirar una asociación sin eliminar el equipo ni el deporte del sistema. → peticiones 19, 21, 22, 23",
       "item": [
         {
           "name": "01 Preparar: crear el equipo Deportivo Cali (201)",
@@ -2213,7 +2311,33 @@
           ]
         },
         {
-          "name": "13 Detalle de Baloncesto: cuenta 1 equipo (200)",
+          "name": "13 Detalle de Deportivo Cali: trae sus deportes (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamCaliId}}",
+            "description": "sports es un resumen para el front: los deportes del equipo, sin otra petición."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"sports = Baloncesto y Voleibol, por nombre\", function () {",
+                  "    const ids = pm.response.json().sports.map((sport) => sport.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"sportBaloncestoId\")), Number(pm.collectionVariables.get(\"sportVoleibolId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Detalle de Baloncesto: cuenta 1 equipo (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2239,7 +2363,7 @@
           ]
         },
         {
-          "name": "14 Deportes de un equipo que no existe (404)",
+          "name": "15 Deportes de un equipo que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2264,7 +2388,7 @@
           ]
         },
         {
-          "name": "15 Equipos de un deporte que no existe (404)",
+          "name": "16 Equipos de un deporte que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2289,7 +2413,7 @@
           ]
         },
         {
-          "name": "16 Eliminar Baloncesto, que tiene equipos (400)",
+          "name": "17 Eliminar Baloncesto, que tiene equipos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2319,7 +2443,7 @@
           ]
         },
         {
-          "name": "17 Eliminar Deportivo Cali, que tiene deportes (400)",
+          "name": "18 Eliminar Deportivo Cali, que tiene deportes (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2350,7 +2474,7 @@
           ]
         },
         {
-          "name": "18 Retirar la asociación con Voleibol (204)",
+          "name": "19 Retirar la asociación con Voleibol (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2372,7 +2496,7 @@
           ]
         },
         {
-          "name": "19 Retirarla otra vez (404)",
+          "name": "20 Retirarla otra vez (404)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2396,7 +2520,7 @@
           ]
         },
         {
-          "name": "20 Deportes de Deportivo Cali, ya sin Voleibol (200)",
+          "name": "21 Deportes de Deportivo Cali, ya sin Voleibol (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2422,7 +2546,7 @@
           ]
         },
         {
-          "name": "21 Voleibol sigue existiendo (200)",
+          "name": "22 Voleibol sigue existiendo (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2444,7 +2568,7 @@
           ]
         },
         {
-          "name": "22 Deportivo Cali sigue existiendo (200)",
+          "name": "23 Deportivo Cali sigue existiendo (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2466,7 +2590,7 @@
           ]
         },
         {
-          "name": "23 Desactivar Voleibol (200)",
+          "name": "24 Desactivar Voleibol (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -2487,7 +2611,7 @@
           ]
         },
         {
-          "name": "24 Asociar con un deporte desactivado (400)",
+          "name": "25 Asociar con un deporte desactivado (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -2525,7 +2649,7 @@
           ]
         },
         {
-          "name": "25 Retirar la asociación con Baloncesto (204)",
+          "name": "26 Retirar la asociación con Baloncesto (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2546,7 +2670,7 @@
           ]
         },
         {
-          "name": "26 Eliminar Deportivo Cali, ya sin deportes (204)",
+          "name": "27 Eliminar Deportivo Cali, ya sin deportes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2568,7 +2692,7 @@
           ]
         },
         {
-          "name": "27 Eliminar Baloncesto, ya sin equipos (204)",
+          "name": "28 Eliminar Baloncesto, ya sin equipos (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2590,7 +2714,7 @@
           ]
         },
         {
-          "name": "28 Limpieza: eliminar Voleibol (204)",
+          "name": "29 Limpieza: eliminar Voleibol (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2614,7 +2738,7 @@
     },
     {
       "name": "HU-GD-04 · Jugadores",
-      "description": "CRUD de jugadores: `/api/deportiva/players`. El identificador único es el documento (tipo + número). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un jugador con su información requerida. → peticiones 01\n2. Los campos obligatorios deben ser validados. → peticiones 04, 05, 06, 07\n3. No se deben permitir jugadores duplicados cuando exista un identificador único. → peticiones 02, 03, 13\n4. El sistema debe permitir consultar los jugadores registrados. → peticiones 08\n5. Se debe poder consultar el detalle de un jugador. → peticiones 09, 10\n6. Se debe permitir actualizar la información de un jugador. → peticiones 11\n7. Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan. → peticiones 14, 18, 19; carpeta HU-GD-07: 31\n8. La eliminación de un jugador debe validar previamente si tiene información asociada. → carpeta HU-GD-05: 19; carpeta HU-GD-07: 18\n9. Los cambios deben quedar almacenados correctamente. → peticiones 12, 15, 20",
+      "description": "CRUD de jugadores: `/api/deportiva/players`. El identificador único es el documento (tipo + número). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un jugador con su información requerida. → peticiones 01\n2. Los campos obligatorios deben ser validados. → peticiones 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14\n3. No se deben permitir jugadores duplicados cuando exista un identificador único. → peticiones 02, 03, 20\n4. El sistema debe permitir consultar los jugadores registrados. → peticiones 15\n5. Se debe poder consultar el detalle de un jugador. → peticiones 16, 17\n6. Se debe permitir actualizar la información de un jugador. → peticiones 18\n7. Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan. → peticiones 21, 25, 26; carpeta HU-GD-07: 31\n8. La eliminación de un jugador debe validar previamente si tiene información asociada. → carpeta HU-GD-05: 21; carpeta HU-GD-07: 18\n9. Los cambios deben quedar almacenados correctamente. → peticiones 19, 22, 27",
       "item": [
         {
           "name": "01 Crear a Juan Pérez (201)",
@@ -2629,7 +2753,7 @@
             "url": "{{baseUrl}}/players",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"documentType\": \" cc \",\n  \"documentNumber\": \" 10{{suffix}} \",\n  \"firstName\": \" Juan \",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\"\n}",
+              "raw": "{\n  \"documentType\": \" cc \",\n  \"documentNumber\": \" 10{{suffix}} \",\n  \"firstName\": \" Juan \",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\",\n  \"position\": \" Delantero \",\n  \"nationality\": \" Colombia \",\n  \"heightCm\": 180,\n  \"dominantFoot\": \" derecho \",\n  \"photo\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2664,7 +2788,18 @@
                   "    pm.expect(player.documentNumber).to.eql(\"10\" + pm.collectionVariables.get(\"suffix\"));",
                   "    pm.expect(player.firstName).to.eql(\"Juan\");",
                   "    pm.expect(player.birthDate).to.eql(\"2001-04-23\");",
+                  "    pm.expect(player.position).to.eql(\"Delantero\");",
                   "    pm.expect(player.active).to.eql(true);",
+                  "});",
+                  "pm.test(\"Datos opcionales: nacionalidad, estatura en cm, pie en mayúsculas y foto\", function () {",
+                  "    const player = pm.response.json();",
+                  "    pm.expect(player.nationality).to.eql(\"Colombia\");",
+                  "    pm.expect(player.heightCm).to.eql(180);",
+                  "    pm.expect(player.dominantFoot).to.eql(\"DERECHO\");",
+                  "    pm.expect(player.photo).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
+                  "});",
+                  "pm.test(\"Un jugador nuevo no tiene equipo actual\", function () {",
+                  "    pm.expect(pm.response.json().currentTeams).to.eql([]);",
                   "});"
                 ]
               }
@@ -2741,7 +2876,15 @@
                   "pm.test(\"Status 201\", function () {",
                   "    pm.response.to.have.status(201);",
                   "});",
-                  "pm.collectionVariables.set(\"playerAnaId\", pm.response.json().id);"
+                  "pm.collectionVariables.set(\"playerAnaId\", pm.response.json().id);",
+                  "pm.test(\"Lo opcional queda vacío\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.position).to.eql(null);",
+                  "    pm.expect(body.nationality).to.eql(null);",
+                  "    pm.expect(body.heightCm).to.eql(null);",
+                  "    pm.expect(body.dominantFoot).to.eql(null);",
+                  "    pm.expect(body.photo).to.eql(null);",
+                  "});"
                 ]
               }
             }
@@ -2912,7 +3055,296 @@
           ]
         },
         {
-          "name": "08 Listar jugadores (200)",
+          "name": "08 Posición de más de 30 caracteres (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"11{{suffix}}\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\",\n  \"position\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.position).to.eql(\"La posición debe tener máximo 30 caracteres\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Nacionalidad de más de 60 caracteres (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"11{{suffix}}\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\",\n  \"nationality\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.nationality).to.eql(\"La nacionalidad debe tener máximo 60 caracteres\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Estatura fuera de rango (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"11{{suffix}}\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\",\n  \"heightCm\": 99\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.heightCm).to.eql(\"La estatura debe estar entre 100 y 250 centímetros\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Estatura en metros con decimales (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"11{{suffix}}\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\",\n  \"heightCm\": 1.8\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados.\n\nLa estatura va en centímetros: 180, no 1.80."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.heightCm).to.eql(\"La estatura debe ser un número entero de centímetros\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Pie dominante que no existe (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"11{{suffix}}\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\",\n  \"dominantFoot\": \"ZURDO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.dominantFoot).to.eql(\"El pie dominante debe ser DERECHO, IZQUIERDO o AMBIDIESTRO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Foto que no es una imagen (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"11{{suffix}}\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\",\n  \"photo\": \"https://ejemplo.com/foto.jpg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados.\n\nLa foto se envía como texto data:image/...;base64, ya reducida. No se aceptan enlaces ni SVG."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.photo).to.eql(\"La foto debe ser una imagen JPG, PNG o WEBP\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Foto demasiado grande (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"11{{suffix}}\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"birthDate\": \"2001-04-23\",\n  \"photo\": \"{{bigPhoto}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.variables.set(\"bigPhoto\", \"data:image/png;base64,\" + \"A\".repeat(90000));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.photo).to.eql(\"La foto es demasiado grande: debe llegar reducida\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Listar jugadores (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2932,6 +3364,11 @@
                   "    const ids = pm.response.json().map((item) => item.id);",
                   "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"playerJuanId\")));",
                   "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"playerAnaId\")));",
+                  "});",
+                  "pm.test(\"La lista trae la foto de cada jugador (o null)\", function () {",
+                  "    const byId = new Map(pm.response.json().map((player) => [player.id, player]));",
+                  "    pm.expect(byId.get(Number(pm.collectionVariables.get(\"playerJuanId\"))).photo).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
+                  "    pm.expect(byId.get(Number(pm.collectionVariables.get(\"playerAnaId\"))).photo).to.eql(null);",
                   "});"
                 ]
               }
@@ -2939,7 +3376,7 @@
           ]
         },
         {
-          "name": "09 Detalle de Juan Pérez (200)",
+          "name": "16 Detalle de Juan Pérez (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2959,6 +3396,10 @@
                   "    const body = pm.response.json();",
                   "    pm.expect(body.lastName).to.eql(\"Pérez\");",
                   "    pm.expect(body.birthDate).to.eql(\"2001-04-23\");",
+                  "    pm.expect(body.nationality).to.eql(\"Colombia\");",
+                  "    pm.expect(body.heightCm).to.eql(180);",
+                  "    pm.expect(body.dominantFoot).to.eql(\"DERECHO\");",
+                  "    pm.expect(body.photo).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -2966,7 +3407,7 @@
           ]
         },
         {
-          "name": "10 Detalle de un id que no existe (404)",
+          "name": "17 Detalle de un id que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -2991,7 +3432,7 @@
           ]
         },
         {
-          "name": "11 Actualizar a Juan Pérez (200)",
+          "name": "18 Actualizar a Juan Pérez (200)",
           "request": {
             "method": "PUT",
             "header": [
@@ -3003,14 +3444,14 @@
             "url": "{{baseUrl}}/players/{{playerJuanId}}",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"10{{suffix}}\",\n  \"firstName\": \"Juan Carlos\",\n  \"lastName\": \"Pérez Gómez\",\n  \"birthDate\": \"2001-04-24\"\n}",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"10{{suffix}}\",\n  \"firstName\": \"Juan Carlos\",\n  \"lastName\": \"Pérez Gómez\",\n  \"birthDate\": \"2001-04-24\",\n  \"position\": \"Volante\",\n  \"heightCm\": 182,\n  \"dominantFoot\": \"AMBIDIESTRO\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Criterio HU-GD-04 #6: Se debe permitir actualizar la información de un jugador."
+            "description": "Criterio HU-GD-04 #6: Se debe permitir actualizar la información de un jugador.\n\nPUT reemplaza todo: la nacionalidad y la foto no se enviaron, así que se borran."
           },
           "event": [
             {
@@ -3025,6 +3466,14 @@
                   "    const body = pm.response.json();",
                   "    pm.expect(body.firstName).to.eql(\"Juan Carlos\");",
                   "    pm.expect(body.birthDate).to.eql(\"2001-04-24\");",
+                  "    pm.expect(body.position).to.eql(\"Volante\");",
+                  "    pm.expect(body.heightCm).to.eql(182);",
+                  "    pm.expect(body.dominantFoot).to.eql(\"AMBIDIESTRO\");",
+                  "});",
+                  "pm.test(\"Lo que no se envió se borra\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.nationality).to.eql(null);",
+                  "    pm.expect(body.photo).to.eql(null);",
                   "});"
                 ]
               }
@@ -3032,7 +3481,7 @@
           ]
         },
         {
-          "name": "12 Detalle de Juan: los cambios quedaron guardados (200)",
+          "name": "19 Detalle de Juan: los cambios quedaron guardados (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -3053,6 +3502,11 @@
                   "    pm.expect(body.firstName).to.eql(\"Juan Carlos\");",
                   "    pm.expect(body.lastName).to.eql(\"Pérez Gómez\");",
                   "    pm.expect(body.birthDate).to.eql(\"2001-04-24\");",
+                  "    pm.expect(body.position).to.eql(\"Volante\");",
+                  "    pm.expect(body.heightCm).to.eql(182);",
+                  "    pm.expect(body.dominantFoot).to.eql(\"AMBIDIESTRO\");",
+                  "    pm.expect(body.nationality).to.eql(null);",
+                  "    pm.expect(body.photo).to.eql(null);",
                   "});"
                 ]
               }
@@ -3060,7 +3514,7 @@
           ]
         },
         {
-          "name": "13 Cambiar el documento de Ana por el de Juan (409)",
+          "name": "20 Cambiar el documento de Ana por el de Juan (409)",
           "request": {
             "method": "PUT",
             "header": [
@@ -3099,7 +3553,7 @@
           ]
         },
         {
-          "name": "14 Desactivar a Ana (200)",
+          "name": "21 Desactivar a Ana (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -3125,7 +3579,7 @@
           ]
         },
         {
-          "name": "15 Detalle: Ana quedó desactivada (200)",
+          "name": "22 Detalle: Ana quedó desactivada (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -3151,7 +3605,7 @@
           ]
         },
         {
-          "name": "16 Desactivarla otra vez (400)",
+          "name": "23 Desactivarla otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -3175,7 +3629,7 @@
           ]
         },
         {
-          "name": "17 Activar a Ana (200)",
+          "name": "24 Activar a Ana (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -3200,7 +3654,7 @@
           ]
         },
         {
-          "name": "18 Eliminar a Ana (204)",
+          "name": "25 Eliminar a Ana (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -3222,7 +3676,7 @@
           ]
         },
         {
-          "name": "19 Eliminar a Juan (204)",
+          "name": "26 Eliminar a Juan (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -3244,7 +3698,7 @@
           ]
         },
         {
-          "name": "20 Juan ya no existe (404)",
+          "name": "27 Juan ya no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -3272,7 +3726,7 @@
     },
     {
       "name": "HU-GD-05 · Contratos de jugadores",
-      "description": "Contratos entre jugadores y equipos: `/api/deportiva/team-players`.\n\nRetirar a un jugador **cierra** el contrato (llena `retiredAt` con la fecha de hoy) y la fila queda como historial de traspasos. El estado (`VIGENTE`, `FUTURO`, `FINALIZADO`, `RETIRADO`) se calcula con las fechas en cada consulta.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Como los contratos no se borran, los equipos y jugadores de prueba no se pueden eliminar: las últimas peticiones los dejan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el jugador como el equipo deben existir previamente. → peticiones 13, 14\n2. Se debe permitir asociar un jugador con un equipo definiendo la fecha de inicio y fin del contrato. → peticiones 05, 06, 10, 11, 12\n3. Un equipo puede estar conformado por varios jugadores. → peticiones 07, 15\n4. El sistema debe evitar registrar dos veces la misma asociación. → peticiones 08, 09\n5. Se deben poder consultar los jugadores pertenecientes a un equipo. → peticiones 15, 17, 27\n6. Se deben poder consultar los equipos asociados a un jugador. → peticiones 16, 18, 26\n7. Se debe permitir retirar un jugador de un equipo sin eliminar su información del sistema. → peticiones 21, 22\n8. Al retirar la asociación, el jugador debe continuar disponible para ser asignado a otros equipos para que sirva como historial de traspasos. → peticiones 25, 26, 27",
+      "description": "Contratos entre jugadores y equipos: `/api/deportiva/team-players`.\n\nRetirar a un jugador **cierra** el contrato (llena `retiredAt` con la fecha de hoy) y la fila queda como historial de traspasos. El estado (`VIGENTE`, `FUTURO`, `FINALIZADO`, `RETIRADO`) se calcula con las fechas en cada consulta.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Como los contratos no se borran, los equipos y jugadores de prueba no se pueden eliminar: las últimas peticiones los dejan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el jugador como el equipo deben existir previamente. → peticiones 15, 16\n2. Se debe permitir asociar un jugador con un equipo definiendo la fecha de inicio y fin del contrato. → peticiones 05, 06, 12, 13, 14\n3. Un equipo puede estar conformado por varios jugadores. → peticiones 07, 17\n4. El sistema debe evitar registrar dos veces la misma asociación. → peticiones 10, 11\n5. Se deben poder consultar los jugadores pertenecientes a un equipo. → peticiones 17, 19, 30\n6. Se deben poder consultar los equipos asociados a un jugador. → peticiones 18, 20, 29\n7. Se debe permitir retirar un jugador de un equipo sin eliminar su información del sistema. → peticiones 23, 24\n8. Al retirar la asociación, el jugador debe continuar disponible para ser asignado a otros equipos para que sirva como historial de traspasos. → peticiones 28, 29, 30",
       "item": [
         {
           "name": "01 Preparar: crear el equipo Junior (201)",
@@ -3561,7 +4015,59 @@
           ]
         },
         {
-          "name": "08 La misma asociación otra vez (409)",
+          "name": "08 Detalle de Junior: cuenta sus 2 jugadores actuales (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamJuniorId}}",
+            "description": "playersCount es un resumen para el front: jugadores con contrato vigente hoy. Carlos tiene dos contratos con Junior (uno ya terminó) y cuenta una sola vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"playersCount = 2\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.playersCount).to.eql(2);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Detalle de Carlos: su equipo actual es Junior (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerCarlosId}}",
+            "description": "currentTeams es un resumen para el front: equipos con los que tiene contrato vigente hoy."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"currentTeams = Junior\", function () {",
+                  "    const ids = pm.response.json().currentTeams.map((team) => team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamJuniorId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 La misma asociación otra vez (409)",
           "request": {
             "method": "POST",
             "header": [
@@ -3600,7 +4106,7 @@
           ]
         },
         {
-          "name": "09 Contrato con Junior que se cruza con el antiguo (409)",
+          "name": "11 Contrato con Junior que se cruza con el antiguo (409)",
           "request": {
             "method": "POST",
             "header": [
@@ -3644,7 +4150,7 @@
           ]
         },
         {
-          "name": "10 Fecha de fin antes de la de inicio (400)",
+          "name": "12 Fecha de fin antes de la de inicio (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -3684,7 +4190,7 @@
           ]
         },
         {
-          "name": "11 Fecha con otro formato (400)",
+          "name": "13 Fecha con otro formato (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -3724,7 +4230,7 @@
           ]
         },
         {
-          "name": "12 Sin datos (400)",
+          "name": "14 Sin datos (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -3767,7 +4273,7 @@
           ]
         },
         {
-          "name": "13 Jugador que no existe (404)",
+          "name": "15 Jugador que no existe (404)",
           "request": {
             "method": "POST",
             "header": [
@@ -3810,7 +4316,7 @@
           ]
         },
         {
-          "name": "14 Equipo que no existe (404)",
+          "name": "16 Equipo que no existe (404)",
           "request": {
             "method": "POST",
             "header": [
@@ -3853,7 +4359,7 @@
           ]
         },
         {
-          "name": "15 Jugadores de Junior (200)",
+          "name": "17 Jugadores de Junior (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -3883,7 +4389,7 @@
           ]
         },
         {
-          "name": "16 Equipos de Carlos (200)",
+          "name": "18 Equipos de Carlos (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -3909,7 +4415,7 @@
           ]
         },
         {
-          "name": "17 Jugadores de un equipo que no existe (404)",
+          "name": "19 Jugadores de un equipo que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -3934,7 +4440,7 @@
           ]
         },
         {
-          "name": "18 Equipos de un jugador que no existe (404)",
+          "name": "20 Equipos de un jugador que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -3959,7 +4465,7 @@
           ]
         },
         {
-          "name": "19 Eliminar a Carlos, que tiene contratos (400)",
+          "name": "21 Eliminar a Carlos, que tiene contratos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -3989,7 +4495,7 @@
           ]
         },
         {
-          "name": "20 Eliminar Junior, que tiene contratos (400)",
+          "name": "22 Eliminar Junior, que tiene contratos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -4018,7 +4524,7 @@
           ]
         },
         {
-          "name": "21 Retirar a Carlos de Junior (200)",
+          "name": "23 Retirar a Carlos de Junior (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -4045,7 +4551,7 @@
           ]
         },
         {
-          "name": "22 Carlos sigue registrado (200)",
+          "name": "24 Carlos sigue registrado, ya sin equipo actual (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -4065,6 +4571,7 @@
                   "    const body = pm.response.json();",
                   "    pm.expect(body.firstName).to.eql(\"Carlos\");",
                   "    pm.expect(body.lastName).to.eql(\"Ruiz\");",
+                  "    pm.expect(body.currentTeams).to.eql([]);",
                   "});"
                 ]
               }
@@ -4072,7 +4579,32 @@
           ]
         },
         {
-          "name": "23 Retirarlo otra vez (400)",
+          "name": "25 Junior queda con 1 jugador actual (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamJuniorId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"playersCount = 1\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.playersCount).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Retirarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -4096,7 +4628,7 @@
           ]
         },
         {
-          "name": "24 Retirar el contrato antiguo, que ya terminó (400)",
+          "name": "27 Retirar el contrato antiguo, que ya terminó (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -4120,7 +4652,7 @@
           ]
         },
         {
-          "name": "25 Traspaso: Carlos firma con Millonarios desde hoy (201)",
+          "name": "28 Traspaso: Carlos firma con Millonarios desde hoy (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -4160,7 +4692,7 @@
           ]
         },
         {
-          "name": "26 Historial de traspasos de Carlos (200)",
+          "name": "29 Historial de traspasos de Carlos (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -4191,7 +4723,7 @@
           ]
         },
         {
-          "name": "27 Jugadores de Junior después del traspaso (200)",
+          "name": "30 Jugadores de Junior después del traspaso (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -4219,7 +4751,7 @@
           ]
         },
         {
-          "name": "28 Contrato futuro de Mateo con Millonarios (201)",
+          "name": "31 Contrato futuro de Mateo con Millonarios (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -4258,7 +4790,7 @@
           ]
         },
         {
-          "name": "29 Cancelar el contrato futuro (200)",
+          "name": "32 Cancelar el contrato futuro (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -4283,7 +4815,7 @@
           ]
         },
         {
-          "name": "30 Retirar un contrato que no existe (404)",
+          "name": "33 Retirar un contrato que no existe (404)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -4307,7 +4839,7 @@
           ]
         },
         {
-          "name": "31 Desactivar a Mateo (200)",
+          "name": "34 Desactivar a Mateo (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -4328,7 +4860,7 @@
           ]
         },
         {
-          "name": "32 Contrato con un jugador desactivado (400)",
+          "name": "35 Contrato con un jugador desactivado (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -4366,7 +4898,7 @@
           ]
         },
         {
-          "name": "33 Desactivar Junior (200)",
+          "name": "36 Desactivar Junior (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -4387,7 +4919,7 @@
           ]
         },
         {
-          "name": "34 Contrato con un equipo desactivado (400)",
+          "name": "37 Contrato con un equipo desactivado (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -4425,7 +4957,7 @@
           ]
         },
         {
-          "name": "35 Limpieza: desactivar a Carlos (200)",
+          "name": "38 Limpieza: desactivar a Carlos (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -4446,7 +4978,7 @@
           ]
         },
         {
-          "name": "36 Limpieza: desactivar Millonarios (200)",
+          "name": "39 Limpieza: desactivar Millonarios (200)",
           "request": {
             "method": "PATCH",
             "header": [],

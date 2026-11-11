@@ -8,6 +8,7 @@ import {
 import { PlayerSkill } from '../../player-skills/entities/player-skill.entity';
 import { TeamPlayer } from '../../team-players/entities/team-player.entity';
 import { DocumentType } from './document-type.enum';
+import { DominantFoot } from './dominant-foot.enum';
 
 // HU-GD-04. Persona que puede integrar los equipos.
 @Entity({ name: 'players' })
@@ -34,6 +35,39 @@ export class Player {
   // Columna DATE: TypeORM la entrega como texto "AAAA-MM-DD".
   @Column({ name: 'birth_date', type: 'date' })
   birthDate: string;
+
+  // Opcional: posición en la que juega, como texto corto ("Delantero", "DEL", "Base"...).
+  // Es texto libre porque las posiciones cambian de un deporte a otro.
+  @Column({ type: 'varchar', length: 30, nullable: true })
+  position: string | null;
+
+  // Opcional: país de origen, como texto ("Colombia").
+  @Column({ type: 'varchar', length: 60, nullable: true })
+  nationality: string | null;
+
+  // Opcional: estatura en centímetros (180 es 1,80 m). Un entero evita los decimales.
+  @Column({
+    name: 'height_cm',
+    type: 'smallint',
+    unsigned: true,
+    nullable: true,
+  })
+  heightCm: number | null;
+
+  // Opcional. En MySQL queda como ENUM('DERECHO','IZQUIERDO','AMBIDIESTRO').
+  @Column({
+    name: 'dominant_foot',
+    type: 'enum',
+    enum: DominantFoot,
+    nullable: true,
+  })
+  dominantFoot: DominantFoot | null;
+
+  // Opcional: la foto, ya reducida por el front, guardada como texto "data:image/jpeg;base64,...".
+  // select: false → no viene en las consultas salvo que se pida con addSelect. Así, las que traen
+  // jugadores relacionados (plantillas, conteos de un equipo) no cargan todas las fotos.
+  @Column({ type: 'mediumtext', nullable: true, select: false })
+  photo: string | null;
 
   // Desactivar es la alternativa a eliminar cuando el jugador ya tiene información asociada.
   @Column({ default: true })

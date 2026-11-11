@@ -21,8 +21,16 @@ export class Team {
   @Column({ length: 60 })
   name: string;
 
+  // Opcional: cómo se le dice al equipo en corto ("AT. Manizales"), para las tablas.
+  @Column({ name: 'short_name', type: 'varchar', length: 30, nullable: true })
+  shortName: string | null;
+
   @Column({ length: 60 })
   city: string;
+
+  // Opcional: a qué se dedica el equipo, para mostrarlo en su detalle.
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  description: string | null;
 
   // Columna DATE: TypeORM la entrega como texto "AAAA-MM-DD", sin hora ni zona horaria.
   @Column({ name: 'foundation_date', type: 'date', nullable: true })

@@ -22,7 +22,9 @@ export class TeamsService {
 
     const team = this.teamRepository.create({
       name: dto.name,
+      shortName: dto.shortName || null, // "" también cuenta como sin nombre corto
       city: dto.city,
+      description: dto.description || null,
       foundationDate: dto.foundationDate ?? null,
     });
     const saved = await this.teamRepository.save(team);
@@ -31,7 +33,10 @@ export class TeamsService {
   }
 
   async findAll(): Promise<TeamResponseDto[]> {
-    const teams = await this.teamRepository.find({ order: { name: 'ASC' } });
+    const teams = await this.teamRepository.find({
+      relations: SUMMARY_RELATIONS,
+      order: { name: 'ASC' },
+    });
     return teams.map(toTeamResponse);
   }
 
@@ -44,7 +49,9 @@ export class TeamsService {
     await this.ensureNameAvailable(dto.name, id);
 
     team.name = dto.name;
+    team.shortName = dto.shortName || null;
     team.city = dto.city;
+    team.description = dto.description || null;
     team.foundationDate = dto.foundationDate ?? null;
     await this.teamRepository.save(team);
 
@@ -61,7 +68,7 @@ export class TeamsService {
     }
     team.active = false;
     await this.teamRepository.save(team);
-    return toTeamResponse(team);
+    return this.findOne(id);
   }
 
   async enable(id: number): Promise<TeamResponseDto> {
@@ -74,7 +81,7 @@ export class TeamsService {
     }
     team.active = true;
     await this.teamRepository.save(team);
-    return toTeamResponse(team);
+    return this.findOne(id);
   }
 
   // Antes de eliminar se valida si el equipo tiene información asociada: sus contratos con
@@ -114,7 +121,10 @@ export class TeamsService {
   // ---------------------------------------------------------------------------------------------
 
   private async findTeam(id: number): Promise<Team> {
-    const team = await this.teamRepository.findOneBy({ id });
+    const team = await this.teamRepository.findOne({
+      where: { id },
+      relations: SUMMARY_RELATIONS,
+    });
     if (!team) {
       throw notFound(id);
     }
@@ -135,6 +145,13 @@ export class TeamsService {
     }
   }
 }
+
+// Lo que necesita el resumen de la respuesta: los deportes del equipo y sus contratos con el
+// jugador de cada uno (para contar los jugadores actuales).
+const SUMMARY_RELATIONS = {
+  teamSports: { sport: true },
+  teamPlayers: { player: true },
+} as const;
 
 function notFound(id: number): ApplicationException {
   return new ApplicationException(

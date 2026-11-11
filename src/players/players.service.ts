@@ -26,6 +26,11 @@ export class PlayersService {
       firstName: dto.firstName,
       lastName: dto.lastName,
       birthDate: dto.birthDate,
+      position: dto.position || null, // "" también cuenta como sin posición
+      nationality: dto.nationality || null,
+      heightCm: dto.heightCm ?? null,
+      dominantFoot: dto.dominantFoot ?? null,
+      photo: dto.photo ?? null,
     });
     const saved = await this.playerRepository.save(player);
 
@@ -36,17 +41,22 @@ export class PlayersService {
   // devuelve los que tengan ese texto en su nombre completo ("juan perez" o "perez juan") o en su
   // número de documento. Como la base no distingue tildes ni mayúsculas, "perez" encuentra "Pérez".
   async findAll(search?: string): Promise<PlayerResponseDto[]> {
+    // Los contratos y su equipo se traen para armar currentTeams (el equipo actual de cada uno).
+    // La foto se pide aparte porque no viene por defecto (select: false en la entidad).
     const query = this.playerRepository
       .createQueryBuilder('player')
+      .addSelect('player.photo')
+      .leftJoinAndSelect('player.teamPlayers', 'contract')
+      .leftJoinAndSelect('contract.team', 'team')
       .orderBy('player.lastName', 'ASC')
       .addOrderBy('player.firstName', 'ASC');
 
     const text = search?.trim();
     if (text) {
       query.where(
-        "CONCAT(player.firstName, ' ', player.lastName) LIKE :pattern" +
+        "(CONCAT(player.firstName, ' ', player.lastName) LIKE :pattern" +
           " OR CONCAT(player.lastName, ' ', player.firstName) LIKE :pattern" +
-          ' OR player.documentNumber LIKE :pattern',
+          ' OR player.documentNumber LIKE :pattern)',
         { pattern: `%${escapeLike(text)}%` },
       );
     }
@@ -68,6 +78,11 @@ export class PlayersService {
     player.firstName = dto.firstName;
     player.lastName = dto.lastName;
     player.birthDate = dto.birthDate;
+    player.position = dto.position || null;
+    player.nationality = dto.nationality || null;
+    player.heightCm = dto.heightCm ?? null;
+    player.dominantFoot = dto.dominantFoot ?? null;
+    player.photo = dto.photo ?? null;
     await this.playerRepository.save(player);
 
     return this.findOne(id);
@@ -81,9 +96,9 @@ export class PlayersService {
         `El jugador ${fullName(player)} ya está desactivado`,
       );
     }
-    player.active = false;
-    await this.playerRepository.save(player);
-    return toPlayerResponse(player);
+    // update() cambia solo esa columna: no vuelve a escribir los demás datos (ni la foto).
+    await this.playerRepository.update(id, { active: false });
+    return this.findOne(id);
   }
 
   async enable(id: number): Promise<PlayerResponseDto> {
@@ -94,9 +109,8 @@ export class PlayersService {
         `El jugador ${fullName(player)} ya está activo`,
       );
     }
-    player.active = true;
-    await this.playerRepository.save(player);
-    return toPlayerResponse(player);
+    await this.playerRepository.update(id, { active: true });
+    return this.findOne(id);
   }
 
   // Antes de eliminar se valida si tiene información asociada: sus contratos con equipos
@@ -140,8 +154,15 @@ export class PlayersService {
 
   // ---------------------------------------------------------------------------------------------
 
+  // Con sus contratos (y el equipo de cada uno) y con la foto, que no viene por defecto.
   private async findPlayer(id: number): Promise<Player> {
-    const player = await this.playerRepository.findOneBy({ id });
+    const player = await this.playerRepository
+      .createQueryBuilder('player')
+      .addSelect('player.photo')
+      .leftJoinAndSelect('player.teamPlayers', 'contract')
+      .leftJoinAndSelect('contract.team', 'team')
+      .where('player.id = :id', { id })
+      .getOne();
     if (!player) {
       throw notFound(id);
     }
