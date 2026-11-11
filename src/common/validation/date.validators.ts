@@ -62,3 +62,27 @@ export function IsNotFutureDate(
     options,
   );
 }
+
+// Decorador para los DTO: la fecha no puede ser anterior a la de otro campo del mismo DTO
+// (por ejemplo, el fin de un contrato frente a su inicio). Si alguna de las dos no es una fecha
+// válida no repite el error: de eso se encarga IsDateOnly.
+export function IsNotBeforeDate(
+  property: string,
+  options?: ValidationOptions,
+): PropertyDecorator {
+  return ValidateBy(
+    {
+      name: 'isNotBeforeDate',
+      constraints: [property],
+      validator: {
+        validate: (value, args) => {
+          const dto = args?.object as Record<string, unknown> | undefined;
+          const other = dto?.[property];
+          return !isDateOnly(value) || !isDateOnly(other) || value >= other;
+        },
+        defaultMessage: () => `La fecha no puede ser anterior a ${property}`,
+      },
+    },
+    options,
+  );
+}

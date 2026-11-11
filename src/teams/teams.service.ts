@@ -77,17 +77,27 @@ export class TeamsService {
     return toTeamResponse(team);
   }
 
-  // Antes de eliminar se valida si el equipo tiene información asociada: hoy, sus deportes
-  // (HU-GD-03). Sus jugadores (HU-GD-05) se revisarán aquí cuando existan.
+  // Antes de eliminar se valida si el equipo tiene información asociada: sus contratos con
+  // jugadores (HU-GD-05) y sus deportes (HU-GD-03).
   async remove(id: number): Promise<void> {
     // teamSports: { sport: true } carga las filas de team_sports y, de cada una, su deporte.
     const team = await this.teamRepository.findOne({
       where: { id },
-      relations: { teamSports: { sport: true } },
+      relations: { teamSports: { sport: true }, teamPlayers: true },
       order: { teamSports: { sport: { name: 'ASC' } } },
     });
     if (!team) {
       throw notFound(id);
+    }
+
+    // Los contratos se revisan primero: son historial y no se borran, así que con ellos la única
+    // salida es desactivar el equipo. Se dice cuántos hay, porque una plantilla puede ser larga.
+    const contracts = team.teamPlayers.length;
+    if (contracts > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${team.name}" porque tiene historial de contratos con jugadores (${contracts} ${contracts === 1 ? 'contrato' : 'contratos'}). Desactívalo en su lugar`,
+      );
     }
 
     if (team.teamSports.length > 0) {

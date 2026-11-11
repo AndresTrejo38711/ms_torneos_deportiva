@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { TeamPlayer } from '../../team-players/entities/team-player.entity';
 import { TeamSport } from '../../team-sports/entities/team-sport.entity';
 
 // HU-GD-02. Organización que puede participar en las competencias. Sus deportes (HU-GD-03) y
@@ -35,4 +36,9 @@ export class Team {
   // No crea columnas aquí: la llave foránea team_id está en team_sports.
   @OneToMany(() => TeamSport, (teamSport) => teamSport.team)
   teamSports: TeamSport[];
+
+  // HU-GD-05. Contratos de sus jugadores (vigentes e historial). La llave foránea team_id
+  // está en team_players.
+  @OneToMany(() => TeamPlayer, (teamPlayer) => teamPlayer.team)
+  teamPlayers: TeamPlayer[];
 }
