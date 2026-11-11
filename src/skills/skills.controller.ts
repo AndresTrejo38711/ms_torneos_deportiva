@@ -15,7 +15,7 @@ import { SkillResponseDto } from './dto/skill-response.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
 import { SkillsService } from './skills.service';
 
-// HU-GD-06 · /api/deportiva/skills (sin pantalla propia: solo API).
+// HU-GD-06 · /api/deportiva/skills
 @Controller('skills')
 export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
