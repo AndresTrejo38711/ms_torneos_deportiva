@@ -32,11 +32,26 @@ export class PlayersService {
     return this.findOne(saved.id);
   }
 
-  // Ordenados por apellidos y luego por nombres.
-  async findAll(): Promise<PlayerResponseDto[]> {
-    const players = await this.playerRepository.find({
-      order: { lastName: 'ASC', firstName: 'ASC' },
-    });
+  // Ordenados por apellidos y luego por nombres. Con `search` (HU-GD-08, buscar un jugador) solo
+  // devuelve los que tengan ese texto en su nombre completo ("juan perez" o "perez juan") o en su
+  // número de documento. Como la base no distingue tildes ni mayúsculas, "perez" encuentra "Pérez".
+  async findAll(search?: string): Promise<PlayerResponseDto[]> {
+    const query = this.playerRepository
+      .createQueryBuilder('player')
+      .orderBy('player.lastName', 'ASC')
+      .addOrderBy('player.firstName', 'ASC');
+
+    const text = search?.trim();
+    if (text) {
+      query.where(
+        "CONCAT(player.firstName, ' ', player.lastName) LIKE :pattern" +
+          " OR CONCAT(player.lastName, ' ', player.firstName) LIKE :pattern" +
+          ' OR player.documentNumber LIKE :pattern',
+        { pattern: `%${escapeLike(text)}%` },
+      );
+    }
+
+    const players = await query.getMany();
     return players.map(toPlayerResponse);
   }
 
@@ -85,18 +100,22 @@ export class PlayersService {
   }
 
   // Antes de eliminar se valida si tiene información asociada: sus contratos con equipos
-  // (HU-GD-05). Los contratos son historial y no se borran, así que la salida es desactivarlo.
-  // (Sus habilidades, HU-GD-07, se revisarán aquí cuando existan.)
+  // (HU-GD-05) y sus habilidades (HU-GD-07).
   async remove(id: number): Promise<void> {
     const player = await this.playerRepository.findOne({
       where: { id },
-      relations: { teamPlayers: { team: true } },
-      order: { teamPlayers: { team: { name: 'ASC' } } },
+      relations: { teamPlayers: { team: true }, playerSkills: { skill: true } },
+      order: {
+        teamPlayers: { team: { name: 'ASC' } },
+        playerSkills: { skill: { name: 'ASC' } },
+      },
     });
     if (!player) {
       throw notFound(id);
     }
 
+    // Los contratos van primero: son historial y no se borran, así que con ellos la única salida
+    // es desactivar al jugador.
     if (player.teamPlayers.length > 0) {
       // Un jugador puede tener varios contratos con el mismo equipo: cada nombre va una vez.
       const names = [
@@ -105,6 +124,14 @@ export class PlayersService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `No se puede eliminar al jugador ${fullName(player)} porque tiene historial de contratos con equipos (${names}). Desactívalo en su lugar`,
+      );
+    }
+
+    if (player.playerSkills.length > 0) {
+      const names = player.playerSkills.map((row) => row.skill.name).join(', ');
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar al jugador ${fullName(player)} porque tiene habilidades asignadas (${names}). Retíraselas primero o desactívalo`,
       );
     }
 
@@ -149,4 +176,9 @@ function notFound(id: number): ApplicationException {
     ErrorCase.NOT_FOUND,
     `No existe el jugador con id ${id}`,
   );
+}
+
+// En un LIKE, % y _ son comodines: se escapan para que "10_5" busque ese texto tal cual.
+function escapeLike(text: string): string {
+  return text.replace(/[\\%_]/g, (char) => '\\' + char);
 }

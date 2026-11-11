@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ParseIdPipe } from '../common/validation/parse-id.pipe';
 import { CreatePlayerDto } from './dto/create-player.dto';
@@ -26,9 +27,13 @@ export class PlayersController {
     return this.playersService.create(dto);
   }
 
+  // GET /players lista todos; GET /players?search=perez busca por nombre o documento (HU-GD-08).
   @Get()
-  findAll(): Promise<PlayerResponseDto[]> {
-    return this.playersService.findAll();
+  findAll(@Query('search') search?: unknown): Promise<PlayerResponseDto[]> {
+    // ?search=a&search=b llega como lista: en ese caso se ignora.
+    return this.playersService.findAll(
+      typeof search === 'string' ? search : undefined,
+    );
   }
 
   @Get(':id')

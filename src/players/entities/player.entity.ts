@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { PlayerSkill } from '../../player-skills/entities/player-skill.entity';
 import { TeamPlayer } from '../../team-players/entities/team-player.entity';
 import { DocumentType } from './document-type.enum';
 
@@ -42,4 +43,8 @@ export class Player {
   // está en team_players.
   @OneToMany(() => TeamPlayer, (teamPlayer) => teamPlayer.player)
   teamPlayers: TeamPlayer[];
+
+  // HU-GD-07. Sus habilidades. La llave foránea player_id está en player_skills.
+  @OneToMany(() => PlayerSkill, (playerSkill) => playerSkill.player)
+  playerSkills: PlayerSkill[];
 }

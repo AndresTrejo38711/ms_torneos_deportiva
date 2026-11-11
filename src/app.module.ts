@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { PlayerProfilesModule } from './player-profiles/player-profiles.module';
+import { PlayerSkillsModule } from './player-skills/player-skills.module';
 import { PlayersModule } from './players/players.module';
 import { SecurityModule } from './security/security.module';
+import { SkillsModule } from './skills/skills.module';
 import { SportsModule } from './sports/sports.module';
 import { TeamPlayersModule } from './team-players/team-players.module';
 import { TeamSportsModule } from './team-sports/team-sports.module';
@@ -42,6 +45,9 @@ import { TeamsModule } from './teams/teams.module';
     TeamSportsModule, // HU-GD-03
     PlayersModule, // HU-GD-04
     TeamPlayersModule, // HU-GD-05
+    SkillsModule, // HU-GD-06
+    PlayerSkillsModule, // HU-GD-07
+    PlayerProfilesModule, // HU-GD-08
   ],
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "ms_torneos_deportiva · Anexo 2 (Gestión Deportiva)",
-    "description": "Pruebas del módulo de gestión deportiva.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security.",
+    "description": "Pruebas del módulo de gestión deportiva, una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -47,6 +47,11 @@
     },
     {
       "key": "suffix",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "today",
       "value": "",
       "type": "string"
     },
@@ -116,6 +121,11 @@
       "type": "string"
     },
     {
+      "key": "playerMateoId",
+      "value": "",
+      "type": "string"
+    },
+    {
       "key": "contractOldId",
       "value": "",
       "type": "string"
@@ -126,12 +136,82 @@
       "type": "string"
     },
     {
+      "key": "contractMateoId",
+      "value": "",
+      "type": "string"
+    },
+    {
       "key": "contractMillosId",
       "value": "",
       "type": "string"
     },
     {
-      "key": "contractReturnId",
+      "key": "contractFutureId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "skillVisionId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "skillRegateId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "skillRemateId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "skillCabeceoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerLuisId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerSaraId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamSantaFeId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamAmericaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "skillLiderazgoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerTomasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerDiegoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "contractAmericaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "contractSantaFeId",
       "value": "",
       "type": "string"
     }
@@ -186,7 +266,7 @@
     },
     {
       "name": "HU-GD-01 · Deportes",
-      "description": "CRUD de deportes con subdeportes: `/api/deportiva/sports`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores, y las últimas borran lo creado. Los nombres llevan un sufijo nuevo en cada corrida para no chocar con datos de corridas anteriores.",
+      "description": "CRUD de deportes con subdeportes: `/api/deportiva/sports`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un nuevo deporte con su información requerida. → peticiones 01, 06\n2. El sistema debe validar los campos obligatorios antes de realizar el registro. → peticiones 03, 04\n3. No se deben permitir deportes duplicados. → peticiones 02, 14\n4. El sistema debe permitir consultar el listado de deportes registrados. → peticiones 08\n5. Se debe poder consultar el detalle de un deporte. → peticiones 09, 10\n6. Se debe permitir actualizar la información de un deporte existente. → peticiones 12\n7. Se debe permitir eliminar o desactivar un deporte. → peticiones 18, 23, 24, 25; carpeta HU-GD-03: 26\n8. Si el deporte tiene información asociada que impida su eliminación, el sistema debe informar al usuario. → peticiones 17; carpeta HU-GD-03: 15\n9. Los cambios realizados deben quedar almacenados correctamente. → peticiones 09, 13, 19, 26",
       "item": [
         {
           "name": "01 Crear Fútbol (201)",
@@ -207,7 +287,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-01 #1: El sistema debe permitir registrar un nuevo deporte con su información requerida."
           },
           "event": [
             {
@@ -215,7 +296,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// Sufijo nuevo en cada corrida para que los nombres no choquen.",
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
                   "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
                 ]
               }
@@ -228,9 +309,9 @@
                   "pm.test(\"Status 201\", function () {",
                   "    pm.response.to.have.status(201);",
                   "});",
-                  "const sport = pm.response.json();",
-                  "pm.collectionVariables.set(\"sportFutbolId\", sport.id);",
+                  "pm.collectionVariables.set(\"sportFutbolId\", pm.response.json().id);",
                   "pm.test(\"Nombre sin espacios sobrantes, activo y sin padre\", function () {",
+                  "    const sport = pm.response.json();",
                   "    pm.expect(sport.name).to.eql(\"Fútbol \" + pm.collectionVariables.get(\"suffix\"));",
                   "    pm.expect(sport.active).to.eql(true);",
                   "    pm.expect(sport.parent).to.eql(null);",
@@ -261,7 +342,7 @@
                 }
               }
             },
-            "description": "La base no distingue mayúsculas ni tildes: FUTBOL y Fútbol son el mismo nombre."
+            "description": "Criterio HU-GD-01 #3: No se deben permitir deportes duplicados.\n\nLa base no distingue mayúsculas ni tildes: FUTBOL y Fútbol son el mismo nombre."
           },
           "event": [
             {
@@ -299,7 +380,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-01 #2: El sistema debe validar los campos obligatorios antes de realizar el registro."
           },
           "event": [
             {
@@ -310,8 +392,9 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje del campo name\", function () {",
-                  "    pm.expect(pm.response.json().name).to.eql(\"El nombre es obligatorio\");",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.name).to.eql(\"El nombre es obligatorio\");",
                   "});"
                 ]
               }
@@ -319,7 +402,47 @@
           ]
         },
         {
-          "name": "04 Padre que no existe (404)",
+          "name": "04 Nombre de más de 60 caracteres (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-01 #2: El sistema debe validar los campos obligatorios antes de realizar el registro."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.name).to.eql(\"El nombre debe tener máximo 60 caracteres\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Padre que no existe (404)",
           "request": {
             "method": "POST",
             "header": [
@@ -357,7 +480,7 @@
           ]
         },
         {
-          "name": "05 Crear subdeporte Fútbol de salón (201)",
+          "name": "06 Crear subdeporte Fútbol de salón (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -375,7 +498,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-01 #1: El sistema debe permitir registrar un nuevo deporte con su información requerida."
           },
           "event": [
             {
@@ -386,10 +510,9 @@
                   "pm.test(\"Status 201\", function () {",
                   "    pm.response.to.have.status(201);",
                   "});",
-                  "const sport = pm.response.json();",
-                  "pm.collectionVariables.set(\"sportSalonId\", sport.id);",
+                  "pm.collectionVariables.set(\"sportSalonId\", pm.response.json().id);",
                   "pm.test(\"Su padre es Fútbol\", function () {",
-                  "    pm.expect(sport.parent.id).to.eql(Number(pm.collectionVariables.get(\"sportFutbolId\")));",
+                  "    pm.expect(pm.response.json().parent.id).to.eql(Number(pm.collectionVariables.get(\"sportFutbolId\")));",
                   "});"
                 ]
               }
@@ -397,7 +520,7 @@
           ]
         },
         {
-          "name": "06 Crear sub-subdeporte Futsal femenino (201)",
+          "name": "07 Crear sub-subdeporte Futsal femenino (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -433,11 +556,12 @@
           ]
         },
         {
-          "name": "07 Listar deportes (200)",
+          "name": "08 Listar deportes (200)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/sports"
+            "url": "{{baseUrl}}/sports",
+            "description": "Criterio HU-GD-01 #4: El sistema debe permitir consultar el listado de deportes registrados."
           },
           "event": [
             {
@@ -449,10 +573,10 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Aparecen los tres deportes creados\", function () {",
-                  "    const ids = pm.response.json().map((sport) => sport.id);",
-                  "    [\"sportFutbolId\", \"sportSalonId\", \"sportFemeninoId\"].forEach((key) => {",
-                  "        pm.expect(ids).to.include(Number(pm.collectionVariables.get(key)));",
-                  "    });",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"sportFutbolId\")));",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"sportSalonId\")));",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"sportFemeninoId\")));",
                   "});"
                 ]
               }
@@ -460,11 +584,12 @@
           ]
         },
         {
-          "name": "08 Detalle de Fútbol con sus subdeportes (200)",
+          "name": "09 Detalle de Fútbol con sus subdeportes (200)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{sportFutbolId}}"
+            "url": "{{baseUrl}}/sports/{{sportFutbolId}}",
+            "description": "Criterio HU-GD-01 #5: Se debe poder consultar el detalle de un deporte.\n\nCriterio HU-GD-01 #9: Los cambios realizados deben quedar almacenados correctamente."
           },
           "event": [
             {
@@ -475,9 +600,10 @@
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.test(\"Fútbol de salón aparece como subdeporte\", function () {",
-                  "    const ids = pm.response.json().subSports.map((sub) => sub.id);",
-                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"sportSalonId\")));",
+                  "pm.test(\"Datos guardados y Fútbol de salón como subdeporte\", function () {",
+                  "    const sport = pm.response.json();",
+                  "    pm.expect(sport.description).to.eql(\"Once contra once\");",
+                  "    pm.expect(sport.subSports.map((sub) => sub.id)).to.eql([Number(pm.collectionVariables.get(\"sportSalonId\"))]);",
                   "});"
                 ]
               }
@@ -485,11 +611,12 @@
           ]
         },
         {
-          "name": "09 Detalle de un id que no existe (404)",
+          "name": "10 Detalle de un id que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{noExiste}}"
+            "url": "{{baseUrl}}/sports/{{noExiste}}",
+            "description": "Criterio HU-GD-01 #5: Se debe poder consultar el detalle de un deporte."
           },
           "event": [
             {
@@ -509,7 +636,7 @@
           ]
         },
         {
-          "name": "10 Id no numérico en la URL (400)",
+          "name": "11 Id no numérico en la URL (400)",
           "request": {
             "method": "GET",
             "header": [],
@@ -533,7 +660,7 @@
           ]
         },
         {
-          "name": "11 Actualizar la descripción de Fútbol (200)",
+          "name": "12 Actualizar la descripción de Fútbol (200)",
           "request": {
             "method": "PUT",
             "header": [
@@ -551,7 +678,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-01 #6: Se debe permitir actualizar la información de un deporte existente."
           },
           "event": [
             {
@@ -563,7 +691,8 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Descripción nueva\", function () {",
-                  "    pm.expect(pm.response.json().description).to.eql(\"Deporte de once contra once\");",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.description).to.eql(\"Deporte de once contra once\");",
                   "});"
                 ]
               }
@@ -571,7 +700,72 @@
           ]
         },
         {
-          "name": "12 Ciclo: Fútbol dentro de su propio sub-subdeporte (400)",
+          "name": "13 Detalle de Fútbol: la descripción nueva quedó guardada (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportFutbolId}}",
+            "description": "Criterio HU-GD-01 #9: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Descripción guardada\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.description).to.eql(\"Deporte de once contra once\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Renombrar Fútbol de salón con el nombre de Fútbol (409)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports/{{sportSalonId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"FÚTBOL {{suffix}}\",\n  \"parentId\": {{sportFutbolId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-01 #3: No se deben permitir deportes duplicados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Ciclo: Fútbol dentro de su propio sub-subdeporte (400)",
           "request": {
             "method": "PUT",
             "header": [
@@ -610,7 +804,7 @@
           ]
         },
         {
-          "name": "13 Ciclo: Fútbol como su propio padre (400)",
+          "name": "16 Ciclo: Fútbol como su propio padre (400)",
           "request": {
             "method": "PUT",
             "header": [
@@ -648,11 +842,12 @@
           ]
         },
         {
-          "name": "14 Eliminar Fútbol que tiene subdeportes (400)",
+          "name": "17 Eliminar Fútbol, que tiene subdeportes (400)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{sportFutbolId}}"
+            "url": "{{baseUrl}}/sports/{{sportFutbolId}}",
+            "description": "Criterio HU-GD-01 #8: Si el deporte tiene información asociada que impida su eliminación, el sistema debe informar al usuario."
           },
           "event": [
             {
@@ -665,6 +860,11 @@
                   "});",
                   "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
                   "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"subdeportes\");",
+                  "    pm.expect(message).to.include(\"Fútbol de salón\");",
                   "});"
                 ]
               }
@@ -672,11 +872,12 @@
           ]
         },
         {
-          "name": "15 Desactivar Fútbol de salón (200)",
+          "name": "18 Desactivar Fútbol de salón (200)",
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{sportSalonId}}/disable"
+            "url": "{{baseUrl}}/sports/{{sportSalonId}}/disable",
+            "description": "Criterio HU-GD-01 #7: Se debe permitir eliminar o desactivar un deporte."
           },
           "event": [
             {
@@ -688,7 +889,8 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Queda inactivo\", function () {",
-                  "    pm.expect(pm.response.json().active).to.eql(false);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
                   "});"
                 ]
               }
@@ -696,7 +898,33 @@
           ]
         },
         {
-          "name": "16 Desactivarlo otra vez (400)",
+          "name": "19 Detalle: Fútbol de salón quedó desactivado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportSalonId}}",
+            "description": "Criterio HU-GD-01 #9: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Inactivo en la base\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Desactivarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -720,7 +948,7 @@
           ]
         },
         {
-          "name": "17 Subdeporte de un deporte desactivado (400)",
+          "name": "21 Subdeporte de un deporte desactivado (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -758,7 +986,7 @@
           ]
         },
         {
-          "name": "18 Activar Fútbol de salón (200)",
+          "name": "22 Activar Fútbol de salón (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -774,7 +1002,8 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Queda activo\", function () {",
-                  "    pm.expect(pm.response.json().active).to.eql(true);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(true);",
                   "});"
                 ]
               }
@@ -782,11 +1011,12 @@
           ]
         },
         {
-          "name": "19 Eliminar Futsal femenino (204)",
+          "name": "23 Eliminar Futsal femenino (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{sportFemeninoId}}"
+            "url": "{{baseUrl}}/sports/{{sportFemeninoId}}",
+            "description": "Criterio HU-GD-01 #7: Se debe permitir eliminar o desactivar un deporte."
           },
           "event": [
             {
@@ -803,11 +1033,12 @@
           ]
         },
         {
-          "name": "20 Eliminar Fútbol de salón (204)",
+          "name": "24 Eliminar Fútbol de salón (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{sportSalonId}}"
+            "url": "{{baseUrl}}/sports/{{sportSalonId}}",
+            "description": "Criterio HU-GD-01 #7: Se debe permitir eliminar o desactivar un deporte."
           },
           "event": [
             {
@@ -824,11 +1055,12 @@
           ]
         },
         {
-          "name": "21 Eliminar Fútbol, ya sin subdeportes (204)",
+          "name": "25 Eliminar Fútbol, ya sin subdeportes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{sportFutbolId}}"
+            "url": "{{baseUrl}}/sports/{{sportFutbolId}}",
+            "description": "Criterio HU-GD-01 #7: Se debe permitir eliminar o desactivar un deporte."
           },
           "event": [
             {
@@ -845,11 +1077,12 @@
           ]
         },
         {
-          "name": "22 Fútbol ya no existe (404)",
+          "name": "26 Fútbol ya no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{sportFutbolId}}"
+            "url": "{{baseUrl}}/sports/{{sportFutbolId}}",
+            "description": "Criterio HU-GD-01 #9: Los cambios realizados deben quedar almacenados correctamente."
           },
           "event": [
             {
@@ -872,7 +1105,7 @@
     },
     {
       "name": "HU-GD-02 · Equipos",
-      "description": "CRUD de equipos: `/api/deportiva/teams`.\n\nEjecuta la carpeta completa en orden (Run folder). Los nombres llevan un sufijo nuevo en cada corrida y las últimas peticiones borran lo creado.",
+      "description": "CRUD de equipos: `/api/deportiva/teams`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un equipo con su información básica. → peticiones 01, 07\n2. Los campos obligatorios deben ser validados. → peticiones 03, 04, 05, 06\n3. El sistema debe permitir consultar los equipos registrados. → peticiones 08\n4. Se debe poder consultar la información detallada de un equipo. → peticiones 09, 10\n5. Se debe permitir actualizar la información del equipo. → peticiones 11\n6. Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan. → peticiones 14, 18, 19; carpeta HU-GD-03: 25\n7. Antes de eliminar un equipo, el sistema debe validar si posee información asociada. → carpeta HU-GD-03: 16; carpeta HU-GD-05: 20\n8. Los cambios realizados deben quedar almacenados correctamente. → peticiones 12, 15, 20",
       "item": [
         {
           "name": "01 Crear Atlético Nacional (201)",
@@ -893,7 +1126,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-02 #1: El sistema debe permitir registrar un equipo con su información básica."
           },
           "event": [
             {
@@ -901,7 +1135,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// Sufijo nuevo en cada corrida para que los nombres no choquen.",
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
                   "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
                 ]
               }
@@ -914,9 +1148,9 @@
                   "pm.test(\"Status 201\", function () {",
                   "    pm.response.to.have.status(201);",
                   "});",
-                  "const team = pm.response.json();",
-                  "pm.collectionVariables.set(\"teamNacionalId\", team.id);",
+                  "pm.collectionVariables.set(\"teamNacionalId\", pm.response.json().id);",
                   "pm.test(\"Nombre sin espacios sobrantes, fecha AAAA-MM-DD y activo\", function () {",
+                  "    const team = pm.response.json();",
                   "    pm.expect(team.name).to.eql(\"Atlético Nacional \" + pm.collectionVariables.get(\"suffix\"));",
                   "    pm.expect(team.foundationDate).to.eql(\"1947-03-07\");",
                   "    pm.expect(team.active).to.eql(true);",
@@ -983,7 +1217,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-02 #2: Los campos obligatorios deben ser validados."
           },
           "event": [
             {
@@ -994,7 +1229,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Un mensaje por cada campo obligatorio\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.name).to.eql(\"El nombre es obligatorio\");",
                   "    pm.expect(body.city).to.eql(\"La ciudad es obligatoria\");",
@@ -1023,7 +1258,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-02 #2: Los campos obligatorios deben ser validados."
           },
           "event": [
             {
@@ -1034,8 +1270,9 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje del campo foundationDate\", function () {",
-                  "    pm.expect(pm.response.json()).to.have.property(\"foundationDate\");",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.foundationDate).to.eql(\"La fecha de fundación debe ser una fecha real con el formato AAAA-MM-DD\");",
                   "});"
                 ]
               }
@@ -1061,7 +1298,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-02 #2: Los campos obligatorios deben ser validados."
           },
           "event": [
             {
@@ -1071,6 +1309,10 @@
                 "exec": [
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.foundationDate).to.eql(\"La fecha de fundación debe ser una fecha real con el formato AAAA-MM-DD\");",
                   "});"
                 ]
               }
@@ -1096,7 +1338,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-02 #2: Los campos obligatorios deben ser validados."
           },
           "event": [
             {
@@ -1107,8 +1350,9 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje de fecha futura\", function () {",
-                  "    pm.expect(pm.response.json().foundationDate).to.eql(\"La fecha de fundación no puede ser posterior a hoy\");",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.foundationDate).to.eql(\"La fecha de fundación no puede ser posterior a hoy\");",
                   "});"
                 ]
               }
@@ -1134,7 +1378,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-02 #1: El sistema debe permitir registrar un equipo con su información básica."
           },
           "event": [
             {
@@ -1145,10 +1390,10 @@
                   "pm.test(\"Status 201\", function () {",
                   "    pm.response.to.have.status(201);",
                   "});",
-                  "const team = pm.response.json();",
-                  "pm.collectionVariables.set(\"teamOnceId\", team.id);",
+                  "pm.collectionVariables.set(\"teamOnceId\", pm.response.json().id);",
                   "pm.test(\"La fecha queda vacía\", function () {",
-                  "    pm.expect(team.foundationDate).to.eql(null);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.foundationDate).to.eql(null);",
                   "});"
                 ]
               }
@@ -1160,7 +1405,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/teams"
+            "url": "{{baseUrl}}/teams",
+            "description": "Criterio HU-GD-02 #3: El sistema debe permitir consultar los equipos registrados."
           },
           "event": [
             {
@@ -1172,10 +1418,9 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Aparecen los dos equipos creados\", function () {",
-                  "    const ids = pm.response.json().map((team) => team.id);",
-                  "    [\"teamNacionalId\", \"teamOnceId\"].forEach((key) => {",
-                  "        pm.expect(ids).to.include(Number(pm.collectionVariables.get(key)));",
-                  "    });",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"teamNacionalId\")));",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"teamOnceId\")));",
                   "});"
                 ]
               }
@@ -1187,7 +1432,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/teams/{{teamNacionalId}}"
+            "url": "{{baseUrl}}/teams/{{teamNacionalId}}",
+            "description": "Criterio HU-GD-02 #4: Se debe poder consultar la información detallada de un equipo."
           },
           "event": [
             {
@@ -1199,9 +1445,9 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Datos del equipo\", function () {",
-                  "    const team = pm.response.json();",
-                  "    pm.expect(team.city).to.eql(\"Medellín\");",
-                  "    pm.expect(team.foundationDate).to.eql(\"1947-03-07\");",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.city).to.eql(\"Medellín\");",
+                  "    pm.expect(body.foundationDate).to.eql(\"1947-03-07\");",
                   "});"
                 ]
               }
@@ -1213,7 +1459,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/teams/{{noExiste}}"
+            "url": "{{baseUrl}}/teams/{{noExiste}}",
+            "description": "Criterio HU-GD-02 #4: Se debe poder consultar la información detallada de un equipo."
           },
           "event": [
             {
@@ -1251,7 +1498,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-02 #5: Se debe permitir actualizar la información del equipo."
           },
           "event": [
             {
@@ -1263,9 +1511,9 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Datos nuevos\", function () {",
-                  "    const team = pm.response.json();",
-                  "    pm.expect(team.city).to.eql(\"Manizales, Caldas\");",
-                  "    pm.expect(team.foundationDate).to.eql(\"1961-01-15\");",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.city).to.eql(\"Manizales, Caldas\");",
+                  "    pm.expect(body.foundationDate).to.eql(\"1961-01-15\");",
                   "});"
                 ]
               }
@@ -1273,7 +1521,34 @@
           ]
         },
         {
-          "name": "12 Renombrar Once Caldas como Atlético Nacional (409)",
+          "name": "12 Detalle de Once Caldas: los cambios quedaron guardados (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamOnceId}}",
+            "description": "Criterio HU-GD-02 #8: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Datos guardados\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.city).to.eql(\"Manizales, Caldas\");",
+                  "    pm.expect(body.foundationDate).to.eql(\"1961-01-15\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Renombrar Once Caldas como Atlético Nacional (409)",
           "request": {
             "method": "PUT",
             "header": [
@@ -1311,11 +1586,12 @@
           ]
         },
         {
-          "name": "13 Desactivar Once Caldas (200)",
+          "name": "14 Desactivar Once Caldas (200)",
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": "{{baseUrl}}/teams/{{teamOnceId}}/disable"
+            "url": "{{baseUrl}}/teams/{{teamOnceId}}/disable",
+            "description": "Criterio HU-GD-02 #6: Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan."
           },
           "event": [
             {
@@ -1327,7 +1603,8 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Queda inactivo\", function () {",
-                  "    pm.expect(pm.response.json().active).to.eql(false);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
                   "});"
                 ]
               }
@@ -1335,7 +1612,33 @@
           ]
         },
         {
-          "name": "14 Desactivarlo otra vez (400)",
+          "name": "15 Detalle: Once Caldas quedó desactivado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamOnceId}}",
+            "description": "Criterio HU-GD-02 #8: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Inactivo en la base\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Desactivarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1359,7 +1662,7 @@
           ]
         },
         {
-          "name": "15 Activar Once Caldas (200)",
+          "name": "17 Activar Once Caldas (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1375,7 +1678,8 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Queda activo\", function () {",
-                  "    pm.expect(pm.response.json().active).to.eql(true);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(true);",
                   "});"
                 ]
               }
@@ -1383,11 +1687,12 @@
           ]
         },
         {
-          "name": "16 Eliminar Once Caldas (204)",
+          "name": "18 Eliminar Once Caldas (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/teams/{{teamOnceId}}"
+            "url": "{{baseUrl}}/teams/{{teamOnceId}}",
+            "description": "Criterio HU-GD-02 #6: Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan."
           },
           "event": [
             {
@@ -1404,11 +1709,12 @@
           ]
         },
         {
-          "name": "17 Eliminar Atlético Nacional (204)",
+          "name": "19 Eliminar Atlético Nacional (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/teams/{{teamNacionalId}}"
+            "url": "{{baseUrl}}/teams/{{teamNacionalId}}",
+            "description": "Criterio HU-GD-02 #6: Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan."
           },
           "event": [
             {
@@ -1425,11 +1731,12 @@
           ]
         },
         {
-          "name": "18 Once Caldas ya no existe (404)",
+          "name": "20 Once Caldas ya no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/teams/{{teamOnceId}}"
+            "url": "{{baseUrl}}/teams/{{teamOnceId}}",
+            "description": "Criterio HU-GD-02 #8: Los cambios realizados deben quedar almacenados correctamente."
           },
           "event": [
             {
@@ -1452,7 +1759,7 @@
     },
     {
       "name": "HU-GD-03 · Equipos y deportes",
-      "description": "Asociaciones entre equipos y deportes: `/api/deportiva/team-sports`.\n\nEjecuta la carpeta completa en orden (Run folder). Las primeras peticiones crean un equipo y dos deportes de prueba, y las últimas los borran. No depende de las carpetas HU-GD-01 ni HU-GD-02.",
+      "description": "Asociaciones entre equipos y deportes: `/api/deportiva/team-sports`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las primeras peticiones crean un equipo y dos deportes de prueba, y las últimas los borran.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el equipo como el deporte deben existir previamente. → peticiones 04, 07, 08\n2. No se debe permitir registrar dos veces la misma asociación entre un equipo y un deporte. → peticiones 06\n3. El sistema debe permitir consultar los deportes asociados a un equipo. → peticiones 11, 13\n4. El sistema debe permitir consultar los equipos asociados a un deporte. → peticiones 12, 14\n5. Se debe poder retirar una asociación sin eliminar el equipo ni el deporte del sistema. → peticiones 17, 19, 20, 21",
       "item": [
         {
           "name": "01 Preparar: crear el equipo Deportivo Cali (201)",
@@ -1481,7 +1788,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// Sufijo nuevo en cada corrida para que los nombres no choquen.",
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
                   "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
                 ]
               }
@@ -1591,7 +1898,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-03 #1: Tanto el equipo como el deporte deben existir previamente."
           },
           "event": [
             {
@@ -1666,7 +1974,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-03 #2: No se debe permitir registrar dos veces la misma asociación entre un equipo y un deporte."
           },
           "event": [
             {
@@ -1704,7 +2013,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-03 #1: Tanto el equipo como el deporte deben existir previamente."
           },
           "event": [
             {
@@ -1717,6 +2027,10 @@
                   "});",
                   "pm.test(\"errorCase = NOT_FOUND\", function () {",
                   "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"equipo\");",
                   "});"
                 ]
               }
@@ -1742,7 +2056,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-03 #1: Tanto el equipo como el deporte deben existir previamente."
           },
           "event": [
             {
@@ -1755,6 +2070,10 @@
                   "});",
                   "pm.test(\"errorCase = NOT_FOUND\", function () {",
                   "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"deporte\");",
                   "});"
                 ]
               }
@@ -1791,7 +2110,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Un mensaje por cada campo obligatorio\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.teamId).to.eql(\"El id del equipo es obligatorio\");",
                   "    pm.expect(body.sportId).to.eql(\"El id del deporte es obligatorio\");",
@@ -1831,8 +2150,9 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje del campo teamId\", function () {",
-                  "    pm.expect(pm.response.json().teamId).to.eql(\"El id del equipo debe ser un número entero\");",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.teamId).to.eql(\"El id del equipo debe ser un número entero\");",
                   "});"
                 ]
               }
@@ -1844,7 +2164,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/team-sports/teams/{{teamCaliId}}"
+            "url": "{{baseUrl}}/team-sports/teams/{{teamCaliId}}",
+            "description": "Criterio HU-GD-03 #3: El sistema debe permitir consultar los deportes asociados a un equipo."
           },
           "event": [
             {
@@ -1857,8 +2178,7 @@
                   "});",
                   "pm.test(\"Baloncesto y Voleibol, por nombre\", function () {",
                   "    const ids = pm.response.json().map((item) => item.id);",
-                  "    const expected = [\"sportBaloncestoId\", \"sportVoleibolId\"].map((key) => Number(pm.collectionVariables.get(key)));",
-                  "    pm.expect(ids).to.eql(expected);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"sportBaloncestoId\")), Number(pm.collectionVariables.get(\"sportVoleibolId\"))]);",
                   "});"
                 ]
               }
@@ -1870,7 +2190,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/team-sports/sports/{{sportBaloncestoId}}"
+            "url": "{{baseUrl}}/team-sports/sports/{{sportBaloncestoId}}",
+            "description": "Criterio HU-GD-03 #4: El sistema debe permitir consultar los equipos asociados a un deporte."
           },
           "event": [
             {
@@ -1883,8 +2204,7 @@
                   "});",
                   "pm.test(\"Solo Deportivo Cali\", function () {",
                   "    const ids = pm.response.json().map((item) => item.id);",
-                  "    const expected = [\"teamCaliId\"].map((key) => Number(pm.collectionVariables.get(key)));",
-                  "    pm.expect(ids).to.eql(expected);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamCaliId\"))]);",
                   "});"
                 ]
               }
@@ -1896,7 +2216,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/team-sports/teams/{{noExiste}}"
+            "url": "{{baseUrl}}/team-sports/teams/{{noExiste}}",
+            "description": "Criterio HU-GD-03 #3: El sistema debe permitir consultar los deportes asociados a un equipo."
           },
           "event": [
             {
@@ -1916,12 +2237,37 @@
           ]
         },
         {
-          "name": "14 Eliminar Baloncesto, que tiene equipos (400)",
+          "name": "14 Equipos de un deporte que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/sports/{{noExiste}}",
+            "description": "Criterio HU-GD-03 #4: El sistema debe permitir consultar los equipos asociados a un deporte."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Eliminar Baloncesto, que tiene equipos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/sports/{{sportBaloncestoId}}",
-            "description": "HU-GD-01: si el deporte tiene información asociada, el sistema informa por qué no se puede eliminar."
+            "description": "Criterio HU-GD-01 #8: Si el deporte tiene información asociada que impida su eliminación, el sistema debe informar al usuario."
           },
           "event": [
             {
@@ -1934,6 +2280,11 @@
                   "});",
                   "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
                   "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"equipos\");",
+                  "    pm.expect(message).to.include(\"Deportivo Cali\");",
                   "});"
                 ]
               }
@@ -1941,12 +2292,12 @@
           ]
         },
         {
-          "name": "15 Eliminar Deportivo Cali, que tiene deportes (400)",
+          "name": "16 Eliminar Deportivo Cali, que tiene deportes (400)",
           "request": {
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/teams/{{teamCaliId}}",
-            "description": "HU-GD-02: antes de eliminar un equipo se valida si posee información asociada."
+            "description": "Criterio HU-GD-02 #7: Antes de eliminar un equipo, el sistema debe validar si posee información asociada."
           },
           "event": [
             {
@@ -1959,6 +2310,12 @@
                   "});",
                   "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
                   "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"deportes\");",
+                  "    pm.expect(message).to.include(\"Baloncesto\");",
+                  "    pm.expect(message).to.include(\"Voleibol\");",
                   "});"
                 ]
               }
@@ -1966,11 +2323,12 @@
           ]
         },
         {
-          "name": "16 Retirar la asociación con Voleibol (204)",
+          "name": "17 Retirar la asociación con Voleibol (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/team-sports/{{teamCaliId}}/{{sportVoleibolId}}"
+            "url": "{{baseUrl}}/team-sports/{{teamCaliId}}/{{sportVoleibolId}}",
+            "description": "Criterio HU-GD-03 #5: Se debe poder retirar una asociación sin eliminar el equipo ni el deporte del sistema."
           },
           "event": [
             {
@@ -1987,7 +2345,7 @@
           ]
         },
         {
-          "name": "17 Retirarla otra vez (404)",
+          "name": "18 Retirarla otra vez (404)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2011,11 +2369,12 @@
           ]
         },
         {
-          "name": "18 Deportes de Deportivo Cali, ya sin Voleibol (200)",
+          "name": "19 Deportes de Deportivo Cali, ya sin Voleibol (200)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/team-sports/teams/{{teamCaliId}}"
+            "url": "{{baseUrl}}/team-sports/teams/{{teamCaliId}}",
+            "description": "Criterio HU-GD-03 #5: Se debe poder retirar una asociación sin eliminar el equipo ni el deporte del sistema."
           },
           "event": [
             {
@@ -2028,8 +2387,7 @@
                   "});",
                   "pm.test(\"Solo Baloncesto\", function () {",
                   "    const ids = pm.response.json().map((item) => item.id);",
-                  "    const expected = [\"sportBaloncestoId\"].map((key) => Number(pm.collectionVariables.get(key)));",
-                  "    pm.expect(ids).to.eql(expected);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"sportBaloncestoId\"))]);",
                   "});"
                 ]
               }
@@ -2037,12 +2395,12 @@
           ]
         },
         {
-          "name": "19 Voleibol sigue existiendo (200)",
+          "name": "20 Voleibol sigue existiendo (200)",
           "request": {
             "method": "GET",
             "header": [],
             "url": "{{baseUrl}}/sports/{{sportVoleibolId}}",
-            "description": "Retirar una asociación no elimina el equipo ni el deporte."
+            "description": "Criterio HU-GD-03 #5: Se debe poder retirar una asociación sin eliminar el equipo ni el deporte del sistema."
           },
           "event": [
             {
@@ -2059,7 +2417,29 @@
           ]
         },
         {
-          "name": "20 Desactivar Voleibol (200)",
+          "name": "21 Deportivo Cali sigue existiendo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamCaliId}}",
+            "description": "Criterio HU-GD-03 #5: Se debe poder retirar una asociación sin eliminar el equipo ni el deporte del sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Desactivar Voleibol (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -2080,7 +2460,7 @@
           ]
         },
         {
-          "name": "21 Asociar con un deporte desactivado (400)",
+          "name": "23 Asociar con un deporte desactivado (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -2118,7 +2498,7 @@
           ]
         },
         {
-          "name": "22 Retirar la asociación con Baloncesto (204)",
+          "name": "24 Retirar la asociación con Baloncesto (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2139,11 +2519,12 @@
           ]
         },
         {
-          "name": "23 Limpieza: eliminar Deportivo Cali, ya sin deportes (204)",
+          "name": "25 Eliminar Deportivo Cali, ya sin deportes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/teams/{{teamCaliId}}"
+            "url": "{{baseUrl}}/teams/{{teamCaliId}}",
+            "description": "Criterio HU-GD-02 #6: Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan."
           },
           "event": [
             {
@@ -2160,11 +2541,12 @@
           ]
         },
         {
-          "name": "24 Limpieza: eliminar Baloncesto (204)",
+          "name": "26 Eliminar Baloncesto, ya sin equipos (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/sports/{{sportBaloncestoId}}"
+            "url": "{{baseUrl}}/sports/{{sportBaloncestoId}}",
+            "description": "Criterio HU-GD-01 #7: Se debe permitir eliminar o desactivar un deporte."
           },
           "event": [
             {
@@ -2181,7 +2563,7 @@
           ]
         },
         {
-          "name": "25 Limpieza: eliminar Voleibol (204)",
+          "name": "27 Limpieza: eliminar Voleibol (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2205,7 +2587,7 @@
     },
     {
       "name": "HU-GD-04 · Jugadores",
-      "description": "CRUD de jugadores: `/api/deportiva/players`. El identificador único es el documento (tipo + número).\n\nEjecuta la carpeta completa en orden (Run folder). Los documentos llevan un sufijo nuevo en cada corrida y las últimas peticiones borran lo creado.",
+      "description": "CRUD de jugadores: `/api/deportiva/players`. El identificador único es el documento (tipo + número). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un jugador con su información requerida. → peticiones 01\n2. Los campos obligatorios deben ser validados. → peticiones 04, 05, 06, 07\n3. No se deben permitir jugadores duplicados cuando exista un identificador único. → peticiones 02, 03, 13\n4. El sistema debe permitir consultar los jugadores registrados. → peticiones 08\n5. Se debe poder consultar el detalle de un jugador. → peticiones 09, 10\n6. Se debe permitir actualizar la información de un jugador. → peticiones 11\n7. Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan. → peticiones 14, 18, 19; carpeta HU-GD-07: 27\n8. La eliminación de un jugador debe validar previamente si tiene información asociada. → carpeta HU-GD-05: 19; carpeta HU-GD-07: 17\n9. Los cambios deben quedar almacenados correctamente. → peticiones 12, 15, 20",
       "item": [
         {
           "name": "01 Crear a Juan Pérez (201)",
@@ -2226,7 +2608,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-04 #1: El sistema debe permitir registrar un jugador con su información requerida."
           },
           "event": [
             {
@@ -2234,7 +2617,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// Sufijo nuevo en cada corrida para que los nombres y documentos no choquen.",
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
                   "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
                 ]
               }
@@ -2248,8 +2631,8 @@
                   "    pm.response.to.have.status(201);",
                   "});",
                   "pm.collectionVariables.set(\"playerJuanId\", pm.response.json().id);",
-                  "const player = pm.response.json();",
                   "pm.test(\"Tipo en mayúsculas, sin espacios sobrantes y activo\", function () {",
+                  "    const player = pm.response.json();",
                   "    pm.expect(player.documentType).to.eql(\"CC\");",
                   "    pm.expect(player.documentNumber).to.eql(\"10\" + pm.collectionVariables.get(\"suffix\"));",
                   "    pm.expect(player.firstName).to.eql(\"Juan\");",
@@ -2280,7 +2663,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-04 #3: No se deben permitir jugadores duplicados cuando exista un identificador único."
           },
           "event": [
             {
@@ -2319,7 +2703,7 @@
                 }
               }
             },
-            "description": "El documento único es tipo + número: una TI con el mismo número que una CC es otro documento."
+            "description": "Criterio HU-GD-04 #3: No se deben permitir jugadores duplicados cuando exista un identificador único.\n\nEl documento único es tipo + número: una TI con el mismo número que una CC es otro documento."
           },
           "event": [
             {
@@ -2355,7 +2739,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
           },
           "event": [
             {
@@ -2366,7 +2751,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Un mensaje por cada campo obligatorio\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.documentType).to.eql(\"El tipo de documento es obligatorio\");",
                   "    pm.expect(body.documentNumber).to.eql(\"El número de documento es obligatorio\");",
@@ -2398,7 +2783,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
           },
           "event": [
             {
@@ -2409,7 +2795,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje del campo documentType\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.documentType).to.eql(\"El tipo de documento debe ser CC, TI, CE o PA\");",
                   "});"
@@ -2437,7 +2823,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
           },
           "event": [
             {
@@ -2448,7 +2835,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje del campo documentNumber\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.documentNumber).to.eql(\"El número de documento solo puede tener letras y números, sin puntos ni espacios\");",
                   "});"
@@ -2476,7 +2863,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-04 #2: Los campos obligatorios deben ser validados."
           },
           "event": [
             {
@@ -2487,7 +2875,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje del campo birthDate\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.birthDate).to.eql(\"La fecha de nacimiento no puede ser posterior a hoy\");",
                   "});"
@@ -2501,7 +2889,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/players"
+            "url": "{{baseUrl}}/players",
+            "description": "Criterio HU-GD-04 #4: El sistema debe permitir consultar los jugadores registrados."
           },
           "event": [
             {
@@ -2513,10 +2902,9 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Aparecen los dos jugadores creados\", function () {",
-                  "    const ids = pm.response.json().map((player) => player.id);",
-                  "    [\"playerJuanId\", \"playerAnaId\"].forEach((key) => {",
-                  "        pm.expect(ids).to.include(Number(pm.collectionVariables.get(key)));",
-                  "    });",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"playerJuanId\")));",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"playerAnaId\")));",
                   "});"
                 ]
               }
@@ -2528,7 +2916,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/players/{{playerJuanId}}"
+            "url": "{{baseUrl}}/players/{{playerJuanId}}",
+            "description": "Criterio HU-GD-04 #5: Se debe poder consultar el detalle de un jugador."
           },
           "event": [
             {
@@ -2540,7 +2929,9 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Datos del jugador\", function () {",
-                  "    pm.expect(pm.response.json().lastName).to.eql(\"Pérez\");",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.lastName).to.eql(\"Pérez\");",
+                  "    pm.expect(body.birthDate).to.eql(\"2001-04-23\");",
                   "});"
                 ]
               }
@@ -2552,7 +2943,8 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/players/{{noExiste}}"
+            "url": "{{baseUrl}}/players/{{noExiste}}",
+            "description": "Criterio HU-GD-04 #5: Se debe poder consultar el detalle de un jugador."
           },
           "event": [
             {
@@ -2590,7 +2982,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-04 #6: Se debe permitir actualizar la información de un jugador."
           },
           "event": [
             {
@@ -2602,9 +2995,9 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Datos nuevos\", function () {",
-                  "    const player = pm.response.json();",
-                  "    pm.expect(player.firstName).to.eql(\"Juan Carlos\");",
-                  "    pm.expect(player.birthDate).to.eql(\"2001-04-24\");",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.firstName).to.eql(\"Juan Carlos\");",
+                  "    pm.expect(body.birthDate).to.eql(\"2001-04-24\");",
                   "});"
                 ]
               }
@@ -2612,7 +3005,35 @@
           ]
         },
         {
-          "name": "12 Cambiar el documento de Ana por el de Juan (409)",
+          "name": "12 Detalle de Juan: los cambios quedaron guardados (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerJuanId}}",
+            "description": "Criterio HU-GD-04 #9: Los cambios deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Datos guardados\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.firstName).to.eql(\"Juan Carlos\");",
+                  "    pm.expect(body.lastName).to.eql(\"Pérez Gómez\");",
+                  "    pm.expect(body.birthDate).to.eql(\"2001-04-24\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Cambiar el documento de Ana por el de Juan (409)",
           "request": {
             "method": "PUT",
             "header": [
@@ -2630,7 +3051,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-04 #3: No se deben permitir jugadores duplicados cuando exista un identificador único."
           },
           "event": [
             {
@@ -2650,11 +3072,12 @@
           ]
         },
         {
-          "name": "13 Desactivar a Ana (200)",
+          "name": "14 Desactivar a Ana (200)",
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": "{{baseUrl}}/players/{{playerAnaId}}/disable"
+            "url": "{{baseUrl}}/players/{{playerAnaId}}/disable",
+            "description": "Criterio HU-GD-04 #7: Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan."
           },
           "event": [
             {
@@ -2666,7 +3089,8 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Queda inactiva\", function () {",
-                  "    pm.expect(pm.response.json().active).to.eql(false);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
                   "});"
                 ]
               }
@@ -2674,7 +3098,33 @@
           ]
         },
         {
-          "name": "14 Desactivarla otra vez (400)",
+          "name": "15 Detalle: Ana quedó desactivada (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerAnaId}}",
+            "description": "Criterio HU-GD-04 #9: Los cambios deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Inactiva en la base\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Desactivarla otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -2698,7 +3148,7 @@
           ]
         },
         {
-          "name": "15 Activar a Ana (200)",
+          "name": "17 Activar a Ana (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -2714,7 +3164,8 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"Queda activa\", function () {",
-                  "    pm.expect(pm.response.json().active).to.eql(true);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(true);",
                   "});"
                 ]
               }
@@ -2722,11 +3173,12 @@
           ]
         },
         {
-          "name": "16 Eliminar a Ana (204)",
+          "name": "18 Eliminar a Ana (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/players/{{playerAnaId}}"
+            "url": "{{baseUrl}}/players/{{playerAnaId}}",
+            "description": "Criterio HU-GD-04 #7: Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan."
           },
           "event": [
             {
@@ -2743,11 +3195,12 @@
           ]
         },
         {
-          "name": "17 Eliminar a Juan (204)",
+          "name": "19 Eliminar a Juan (204)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/players/{{playerJuanId}}"
+            "url": "{{baseUrl}}/players/{{playerJuanId}}",
+            "description": "Criterio HU-GD-04 #7: Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan."
           },
           "event": [
             {
@@ -2764,11 +3217,12 @@
           ]
         },
         {
-          "name": "18 Juan ya no existe (404)",
+          "name": "20 Juan ya no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/players/{{playerJuanId}}"
+            "url": "{{baseUrl}}/players/{{playerJuanId}}",
+            "description": "Criterio HU-GD-04 #9: Los cambios deben quedar almacenados correctamente."
           },
           "event": [
             {
@@ -2791,7 +3245,7 @@
     },
     {
       "name": "HU-GD-05 · Contratos de jugadores",
-      "description": "Contratos entre jugadores y equipos: `/api/deportiva/team-players`.\n\nRetirar a un jugador **cierra** el contrato (llena `retiredAt`) y la fila queda como historial de traspasos. El estado (`VIGENTE`, `FUTURO`, `FINALIZADO`, `RETIRADO`) se calcula con las fechas en cada consulta.\n\nEjecuta la carpeta completa en orden (Run folder). Como los contratos no se borran, el equipo y el jugador de prueba no se pueden eliminar: las últimas peticiones los dejan desactivados.",
+      "description": "Contratos entre jugadores y equipos: `/api/deportiva/team-players`.\n\nRetirar a un jugador **cierra** el contrato (llena `retiredAt` con la fecha de hoy) y la fila queda como historial de traspasos. El estado (`VIGENTE`, `FUTURO`, `FINALIZADO`, `RETIRADO`) se calcula con las fechas en cada consulta.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Como los contratos no se borran, los equipos y jugadores de prueba no se pueden eliminar: las últimas peticiones los dejan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el jugador como el equipo deben existir previamente. → peticiones 13, 14\n2. Se debe permitir asociar un jugador con un equipo definiendo la fecha de inicio y fin del contrato. → peticiones 05, 06, 10, 11, 12\n3. Un equipo puede estar conformado por varios jugadores. → peticiones 07, 15\n4. El sistema debe evitar registrar dos veces la misma asociación. → peticiones 08, 09\n5. Se deben poder consultar los jugadores pertenecientes a un equipo. → peticiones 15, 17, 27\n6. Se deben poder consultar los equipos asociados a un jugador. → peticiones 16, 18, 26\n7. Se debe permitir retirar un jugador de un equipo sin eliminar su información del sistema. → peticiones 21, 22\n8. Al retirar la asociación, el jugador debe continuar disponible para ser asignado a otros equipos para que sirva como historial de traspasos. → peticiones 25, 26, 27",
       "item": [
         {
           "name": "01 Preparar: crear el equipo Junior (201)",
@@ -2820,8 +3274,12 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// Sufijo nuevo en cada corrida para que los nombres y documentos no choquen.",
-                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));",
+                  "// Fecha de hoy (AAAA-MM-DD), la misma que usa el servidor si corre en este equipo.",
+                  "const now = new Date();",
+                  "const pad = (n) => String(n).padStart(2, \"0\");",
+                  "pm.collectionVariables.set(\"today\", `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);"
                 ]
               }
             },
@@ -2912,7 +3370,43 @@
           ]
         },
         {
-          "name": "04 Contrato antiguo con Junior (201)",
+          "name": "04 Preparar: crear al jugador Mateo Rojas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"21{{suffix}}\",\n  \"firstName\": \"Mateo\",\n  \"lastName\": \"Rojas\",\n  \"birthDate\": \"2000-07-19\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerMateoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Contrato antiguo de Carlos con Junior (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -2930,7 +3424,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-05 #2: Se debe permitir asociar un jugador con un equipo definiendo la fecha de inicio y fin del contrato."
           },
           "event": [
             {
@@ -2942,6 +3437,14 @@
                   "    pm.response.to.have.status(201);",
                   "});",
                   "pm.collectionVariables.set(\"contractOldId\", pm.response.json().id);",
+                  "pm.test(\"Guarda el equipo, el jugador y las fechas del contrato\", function () {",
+                  "    const contract = pm.response.json();",
+                  "    pm.expect(contract.team.id).to.eql(Number(pm.collectionVariables.get(\"teamJuniorId\")));",
+                  "    pm.expect(contract.player.id).to.eql(Number(pm.collectionVariables.get(\"playerCarlosId\")));",
+                  "    pm.expect(contract.startDate).to.eql(\"2018-01-01\");",
+                  "    pm.expect(contract.endDate).to.eql(\"2019-12-31\");",
+                  "    pm.expect(contract.retiredAt).to.eql(null);",
+                  "});",
                   "pm.test(\"Estado FINALIZADO\", function () {",
                   "    pm.expect(pm.response.json().status).to.eql(\"FINALIZADO\");",
                   "});"
@@ -2951,7 +3454,7 @@
           ]
         },
         {
-          "name": "05 Contrato vigente con Junior (201)",
+          "name": "06 Contrato vigente de Carlos con Junior (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -2970,7 +3473,7 @@
                 }
               }
             },
-            "description": "El mismo jugador puede volver a un equipo en el que ya estuvo: cada paso es un contrato nuevo."
+            "description": "Criterio HU-GD-05 #2: Se debe permitir asociar un jugador con un equipo definiendo la fecha de inicio y fin del contrato.\n\nUn jugador puede volver a un equipo en el que ya estuvo: cada paso es un contrato nuevo."
           },
           "event": [
             {
@@ -2991,7 +3494,7 @@
           ]
         },
         {
-          "name": "06 Contrato con Junior que se cruza con el antiguo (409)",
+          "name": "07 Contrato de Mateo con Junior (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -3003,14 +3506,54 @@
             "url": "{{baseUrl}}/team-players",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"teamId\": {{teamJuniorId}},\n  \"playerId\": {{playerCarlosId}},\n  \"startDate\": \"2019-06-01\",\n  \"endDate\": \"2020-06-01\"\n}",
+              "raw": "{\n  \"teamId\": {{teamJuniorId}},\n  \"playerId\": {{playerMateoId}},\n  \"startDate\": \"2025-01-01\",\n  \"endDate\": \"2099-12-31\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "\"Evitar registrar dos veces la misma asociación\": dos contratos del mismo jugador con el mismo equipo no pueden cruzarse en fechas."
+            "description": "Criterio HU-GD-05 #3: Un equipo puede estar conformado por varios jugadores."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"contractMateoId\", pm.response.json().id);",
+                  "pm.test(\"Estado VIGENTE\", function () {",
+                  "    pm.expect(pm.response.json().status).to.eql(\"VIGENTE\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 La misma asociación otra vez (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamJuniorId}},\n  \"playerId\": {{playerCarlosId}},\n  \"startDate\": \"2024-01-01\",\n  \"endDate\": \"2099-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-05 #4: El sistema debe evitar registrar dos veces la misma asociación."
           },
           "event": [
             {
@@ -3030,7 +3573,51 @@
           ]
         },
         {
-          "name": "07 Fecha de fin antes de la de inicio (400)",
+          "name": "09 Contrato con Junior que se cruza con el antiguo (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamJuniorId}},\n  \"playerId\": {{playerCarlosId}},\n  \"startDate\": \"2019-06-01\",\n  \"endDate\": \"2020-06-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-05 #4: El sistema debe evitar registrar dos veces la misma asociación.\n\nDos contratos del mismo jugador con el mismo equipo no pueden cruzarse en fechas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"2018-01-01\");",
+                  "    pm.expect(message).to.include(\"2019-12-31\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Fecha de fin antes de la de inicio (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -3048,7 +3635,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-05 #2: Se debe permitir asociar un jugador con un equipo definiendo la fecha de inicio y fin del contrato."
           },
           "event": [
             {
@@ -3059,7 +3647,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje del campo endDate\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.endDate).to.eql(\"La fecha de fin no puede ser anterior a la fecha de inicio\");",
                   "});"
@@ -3069,7 +3657,7 @@
           ]
         },
         {
-          "name": "08 Fecha con otro formato (400)",
+          "name": "11 Fecha con otro formato (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -3087,7 +3675,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-05 #2: Se debe permitir asociar un jugador con un equipo definiendo la fecha de inicio y fin del contrato."
           },
           "event": [
             {
@@ -3098,7 +3687,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Mensaje del campo startDate\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.startDate).to.eql(\"La fecha de inicio debe ser una fecha real con el formato AAAA-MM-DD\");",
                   "});"
@@ -3108,7 +3697,7 @@
           ]
         },
         {
-          "name": "09 Sin datos (400)",
+          "name": "12 Sin datos (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -3126,7 +3715,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-05 #2: Se debe permitir asociar un jugador con un equipo definiendo la fecha de inicio y fin del contrato."
           },
           "event": [
             {
@@ -3137,7 +3727,7 @@
                   "pm.test(\"Status 400\", function () {",
                   "    pm.response.to.have.status(400);",
                   "});",
-                  "pm.test(\"Un mensaje por cada campo obligatorio\", function () {",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.teamId).to.eql(\"El id del equipo es obligatorio\");",
                   "    pm.expect(body.playerId).to.eql(\"El id del jugador es obligatorio\");",
@@ -3150,7 +3740,7 @@
           ]
         },
         {
-          "name": "10 Jugador que no existe (404)",
+          "name": "13 Jugador que no existe (404)",
           "request": {
             "method": "POST",
             "header": [
@@ -3168,7 +3758,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Criterio HU-GD-05 #1: Tanto el jugador como el equipo deben existir previamente."
           },
           "event": [
             {
@@ -3181,6 +3772,10 @@
                   "});",
                   "pm.test(\"errorCase = NOT_FOUND\", function () {",
                   "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"jugador\");",
                   "});"
                 ]
               }
@@ -3188,7 +3783,7 @@
           ]
         },
         {
-          "name": "11 Equipo que no existe (404)",
+          "name": "14 Equipo que no existe (404)",
           "request": {
             "method": "POST",
             "header": [
@@ -3206,46 +3801,8 @@
                   "language": "json"
                 }
               }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 404\", function () {",
-                  "    pm.response.to.have.status(404);",
-                  "});",
-                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
-                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "12 Contrato futuro con Millonarios (201)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{baseUrl}}/team-players",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"teamId\": {{teamMillosId}},\n  \"playerId\": {{playerCarlosId}},\n  \"startDate\": \"2098-01-01\",\n  \"endDate\": \"2099-12-31\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
             },
-            "description": "Con equipos distintos sí puede haber contratos al mismo tiempo (por ejemplo, un equipo de fútbol y otro de baloncesto)."
+            "description": "Criterio HU-GD-05 #1: Tanto el jugador como el equipo deben existir previamente."
           },
           "event": [
             {
@@ -3253,12 +3810,15 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Status 201\", function () {",
-                  "    pm.response.to.have.status(201);",
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
                   "});",
-                  "pm.collectionVariables.set(\"contractMillosId\", pm.response.json().id);",
-                  "pm.test(\"Estado FUTURO\", function () {",
-                  "    pm.expect(pm.response.json().status).to.eql(\"FUTURO\");",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"equipo\");",
                   "});"
                 ]
               }
@@ -3266,37 +3826,12 @@
           ]
         },
         {
-          "name": "13 Jugadores de Junior (200)",
+          "name": "15 Jugadores de Junior (200)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/team-players/teams/{{teamJuniorId}}"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () {",
-                  "    pm.response.to.have.status(200);",
-                  "});",
-                  "pm.test(\"Los dos contratos de Carlos, del más reciente al más antiguo\", function () {",
-                  "    const ids = pm.response.json().map((item) => item.id);",
-                  "    const expected = [\"contractJuniorId\", \"contractOldId\"].map((key) => Number(pm.collectionVariables.get(key)));",
-                  "    pm.expect(ids).to.eql(expected);",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "14 Equipos de Carlos (200)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/team-players/players/{{playerCarlosId}}"
+            "url": "{{baseUrl}}/team-players/teams/{{teamJuniorId}}",
+            "description": "Criterio HU-GD-05 #3: Un equipo puede estar conformado por varios jugadores.\n\nCriterio HU-GD-05 #5: Se deben poder consultar los jugadores pertenecientes a un equipo."
           },
           "event": [
             {
@@ -3307,10 +3842,13 @@
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.test(\"Sus tres contratos, del más reciente al más antiguo\", function () {",
+                  "pm.test(\"Contratos de Rojas y de Ruiz (por apellido; los de Ruiz, del más reciente al más antiguo)\", function () {",
                   "    const ids = pm.response.json().map((item) => item.id);",
-                  "    const expected = [\"contractMillosId\", \"contractJuniorId\", \"contractOldId\"].map((key) => Number(pm.collectionVariables.get(key)));",
-                  "    pm.expect(ids).to.eql(expected);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"contractMateoId\")), Number(pm.collectionVariables.get(\"contractJuniorId\")), Number(pm.collectionVariables.get(\"contractOldId\"))]);",
+                  "});",
+                  "pm.test(\"Dos jugadores distintos en la plantilla\", function () {",
+                  "    const players = new Set(pm.response.json().map((c) => c.player.id));",
+                  "    pm.expect(players.size).to.eql(2);",
                   "});"
                 ]
               }
@@ -3318,11 +3856,38 @@
           ]
         },
         {
-          "name": "15 Jugadores de un equipo que no existe (404)",
+          "name": "16 Equipos de Carlos (200)",
           "request": {
             "method": "GET",
             "header": [],
-            "url": "{{baseUrl}}/team-players/teams/{{noExiste}}"
+            "url": "{{baseUrl}}/team-players/players/{{playerCarlosId}}",
+            "description": "Criterio HU-GD-05 #6: Se deben poder consultar los equipos asociados a un jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sus dos contratos, del más reciente al más antiguo\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"contractJuniorId\")), Number(pm.collectionVariables.get(\"contractOldId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Jugadores de un equipo que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/team-players/teams/{{noExiste}}",
+            "description": "Criterio HU-GD-05 #5: Se deben poder consultar los jugadores pertenecientes a un equipo."
           },
           "event": [
             {
@@ -3342,12 +3907,37 @@
           ]
         },
         {
-          "name": "16 Eliminar a Carlos, que tiene contratos (400)",
+          "name": "18 Equipos de un jugador que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/team-players/players/{{noExiste}}",
+            "description": "Criterio HU-GD-05 #6: Se deben poder consultar los equipos asociados a un jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Eliminar a Carlos, que tiene contratos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/players/{{playerCarlosId}}",
-            "description": "HU-GD-04: la eliminación de un jugador valida si tiene información asociada."
+            "description": "Criterio HU-GD-04 #8: La eliminación de un jugador debe validar previamente si tiene información asociada."
           },
           "event": [
             {
@@ -3360,6 +3950,11 @@
                   "});",
                   "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
                   "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"contratos\");",
+                  "    pm.expect(message).to.include(\"Junior\");",
                   "});"
                 ]
               }
@@ -3367,11 +3962,12 @@
           ]
         },
         {
-          "name": "17 Eliminar Junior, que tiene contratos (400)",
+          "name": "20 Eliminar Junior, que tiene contratos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": "{{baseUrl}}/teams/{{teamJuniorId}}"
+            "url": "{{baseUrl}}/teams/{{teamJuniorId}}",
+            "description": "Criterio HU-GD-02 #7: Antes de eliminar un equipo, el sistema debe validar si posee información asociada."
           },
           "event": [
             {
@@ -3384,6 +3980,10 @@
                   "});",
                   "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
                   "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"contratos\");",
                   "});"
                 ]
               }
@@ -3391,11 +3991,12 @@
           ]
         },
         {
-          "name": "18 Retirar a Carlos de Junior (200)",
+          "name": "21 Retirar a Carlos de Junior (200)",
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": "{{baseUrl}}/team-players/{{contractJuniorId}}/retire"
+            "url": "{{baseUrl}}/team-players/{{contractJuniorId}}/retire",
+            "description": "Criterio HU-GD-05 #7: Se debe permitir retirar un jugador de un equipo sin eliminar su información del sistema."
           },
           "event": [
             {
@@ -3406,12 +4007,10 @@
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "const contract = pm.response.json();",
                   "pm.test(\"Queda RETIRADO con la fecha de hoy\", function () {",
+                  "    const contract = pm.response.json();",
                   "    pm.expect(contract.status).to.eql(\"RETIRADO\");",
-                  "    const now = new Date();",
-                  "    const pad = (n) => String(n).padStart(2, \"0\");",
-                  "    pm.expect(contract.retiredAt).to.eql(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);",
+                  "    pm.expect(contract.retiredAt).to.eql(pm.collectionVariables.get(\"today\"));",
                   "});"
                 ]
               }
@@ -3419,7 +4018,34 @@
           ]
         },
         {
-          "name": "19 Retirarlo otra vez (400)",
+          "name": "22 Carlos sigue registrado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerCarlosId}}",
+            "description": "Criterio HU-GD-05 #7: Se debe permitir retirar un jugador de un equipo sin eliminar su información del sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sus datos siguen ahí\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.firstName).to.eql(\"Carlos\");",
+                  "    pm.expect(body.lastName).to.eql(\"Ruiz\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Retirarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -3443,7 +4069,7 @@
           ]
         },
         {
-          "name": "20 Retirar el contrato antiguo, que ya terminó (400)",
+          "name": "24 Retirar el contrato antiguo, que ya terminó (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -3467,11 +4093,149 @@
           ]
         },
         {
-          "name": "21 Retirar el contrato futuro con Millonarios (200)",
+          "name": "25 Traspaso: Carlos firma con Millonarios desde hoy (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamMillosId}},\n  \"playerId\": {{playerCarlosId}},\n  \"startDate\": \"{{today}}\",\n  \"endDate\": \"2099-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-05 #8: Al retirar la asociación, el jugador debe continuar disponible para ser asignado a otros equipos para que sirva como historial de traspasos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"contractMillosId\", pm.response.json().id);",
+                  "pm.test(\"Estado VIGENTE\", function () {",
+                  "    pm.expect(pm.response.json().status).to.eql(\"VIGENTE\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Historial de traspasos de Carlos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/team-players/players/{{playerCarlosId}}",
+            "description": "Criterio HU-GD-05 #6: Se deben poder consultar los equipos asociados a un jugador.\n\nCriterio HU-GD-05 #8: Al retirar la asociación, el jugador debe continuar disponible para ser asignado a otros equipos para que sirva como historial de traspasos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Millonarios, Junior y Junior\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"contractMillosId\")), Number(pm.collectionVariables.get(\"contractJuniorId\")), Number(pm.collectionVariables.get(\"contractOldId\"))]);",
+                  "});",
+                  "pm.test(\"Cada contrato con su estado\", function () {",
+                  "    const contracts = pm.response.json();",
+                  "    pm.expect(contracts.map((c) => c.status)).to.eql([\"VIGENTE\", \"RETIRADO\", \"FINALIZADO\"]);",
+                  "    pm.expect(contracts.map((c) => c.team.id)).to.eql([Number(pm.collectionVariables.get(\"teamMillosId\")), Number(pm.collectionVariables.get(\"teamJuniorId\")), Number(pm.collectionVariables.get(\"teamJuniorId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Jugadores de Junior después del traspaso (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/team-players/teams/{{teamJuniorId}}",
+            "description": "Criterio HU-GD-05 #5: Se deben poder consultar los jugadores pertenecientes a un equipo.\n\nCriterio HU-GD-05 #8: Al retirar la asociación, el jugador debe continuar disponible para ser asignado a otros equipos para que sirva como historial de traspasos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Carlos aparece retirado y Mateo sigue vigente\", function () {",
+                  "    const contracts = pm.response.json();",
+                  "    const status = (id) => contracts.find((c) => c.id === id).status;",
+                  "    pm.expect(status(Number(pm.collectionVariables.get(\"contractJuniorId\")))).to.eql(\"RETIRADO\");",
+                  "    pm.expect(status(Number(pm.collectionVariables.get(\"contractMateoId\")))).to.eql(\"VIGENTE\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Contrato futuro de Mateo con Millonarios (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamMillosId}},\n  \"playerId\": {{playerMateoId}},\n  \"startDate\": \"2098-01-01\",\n  \"endDate\": \"2099-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"contractFutureId\", pm.response.json().id);",
+                  "pm.test(\"Estado FUTURO\", function () {",
+                  "    pm.expect(pm.response.json().status).to.eql(\"FUTURO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Cancelar el contrato futuro (200)",
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": "{{baseUrl}}/team-players/{{contractMillosId}}/retire",
+            "url": "{{baseUrl}}/team-players/{{contractFutureId}}/retire",
             "description": "Retirar un contrato que todavía no empieza equivale a cancelarlo."
           },
           "event": [
@@ -3492,73 +4256,7 @@
           ]
         },
         {
-          "name": "22 Volver a Junior después del retiro (201)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{baseUrl}}/team-players",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"teamId\": {{teamJuniorId}},\n  \"playerId\": {{playerCarlosId}},\n  \"startDate\": \"2097-01-01\",\n  \"endDate\": \"2097-12-31\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "description": "Al retirarlo, el jugador sigue disponible para otros contratos, incluso con el mismo equipo."
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 201\", function () {",
-                  "    pm.response.to.have.status(201);",
-                  "});",
-                  "pm.collectionVariables.set(\"contractReturnId\", pm.response.json().id);",
-                  "pm.test(\"Estado FUTURO\", function () {",
-                  "    pm.expect(pm.response.json().status).to.eql(\"FUTURO\");",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "23 Historial completo de Carlos (200)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/team-players/players/{{playerCarlosId}}"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Status 200\", function () {",
-                  "    pm.response.to.have.status(200);",
-                  "});",
-                  "pm.test(\"Cuatro contratos con su estado\", function () {",
-                  "    const contracts = pm.response.json();",
-                  "    pm.expect(contracts.map((c) => c.status)).to.eql([\"RETIRADO\", \"FUTURO\", \"RETIRADO\", \"FINALIZADO\"]);",
-                  "    pm.expect(contracts[1].id).to.eql(Number(pm.collectionVariables.get(\"contractReturnId\")));",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "24 Retirar un contrato que no existe (404)",
+          "name": "30 Retirar un contrato que no existe (404)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -3582,11 +4280,11 @@
           ]
         },
         {
-          "name": "25 Desactivar a Carlos (200)",
+          "name": "31 Desactivar a Mateo (200)",
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": "{{baseUrl}}/players/{{playerCarlosId}}/disable"
+            "url": "{{baseUrl}}/players/{{playerMateoId}}/disable"
           },
           "event": [
             {
@@ -3603,7 +4301,7 @@
           ]
         },
         {
-          "name": "26 Contrato con un jugador desactivado (400)",
+          "name": "32 Contrato con un jugador desactivado (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -3615,7 +4313,7 @@
             "url": "{{baseUrl}}/team-players",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"teamId\": {{teamMillosId}},\n  \"playerId\": {{playerCarlosId}},\n  \"startDate\": \"2096-01-01\",\n  \"endDate\": \"2096-12-31\"\n}",
+              "raw": "{\n  \"teamId\": {{teamMillosId}},\n  \"playerId\": {{playerMateoId}},\n  \"startDate\": \"2096-01-01\",\n  \"endDate\": \"2096-12-31\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3641,7 +4339,7 @@
           ]
         },
         {
-          "name": "27 Limpieza: desactivar Junior (200)",
+          "name": "33 Desactivar Junior (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -3662,11 +4360,2152 @@
           ]
         },
         {
-          "name": "28 Limpieza: desactivar Millonarios (200)",
+          "name": "34 Contrato con un equipo desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamJuniorId}},\n  \"playerId\": {{playerCarlosId}},\n  \"startDate\": \"2097-01-01\",\n  \"endDate\": \"2097-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Limpieza: desactivar a Carlos (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerCarlosId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Limpieza: desactivar Millonarios (200)",
           "request": {
             "method": "PATCH",
             "header": [],
             "url": "{{baseUrl}}/teams/{{teamMillosId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GD-06 · Habilidades",
+      "description": "CRUD de habilidades: `/api/deportiva/skills` (sin pantalla propia, solo API). La HU solo pide eliminar, así que no hay activar/desactivar. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar nuevas habilidades. → peticiones 01, 05\n2. Los campos requeridos deben ser validados. → peticiones 03, 04\n3. No se deben permitir habilidades duplicadas. → peticiones 02, 11\n4. El sistema debe permitir consultar las habilidades registradas. → peticiones 06\n5. Se debe poder consultar el detalle de una habilidad. → peticiones 07, 08\n6. Se debe permitir actualizar la información de una habilidad. → peticiones 09, 10\n7. Se debe permitir eliminar una habilidad cuando no existan restricciones que lo impidan. → peticiones 12, 13, 15; carpeta HU-GD-07: 26\n8. Si la habilidad se encuentra asociada con jugadores, el sistema debe validar si puede ser eliminada. → carpeta HU-GD-07: 16",
+      "item": [
+        {
+          "name": "01 Crear Visión de juego (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"  Visión de juego {{suffix}} \",\n  \"description\": \"Leer el partido y encontrar el pase\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-06 #1: El sistema debe permitir registrar nuevas habilidades."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"skillVisionId\", pm.response.json().id);",
+                  "pm.test(\"Nombre sin espacios sobrantes y con su descripción\", function () {",
+                  "    const skill = pm.response.json();",
+                  "    pm.expect(skill.name).to.eql(\"Visión de juego \" + pm.collectionVariables.get(\"suffix\"));",
+                  "    pm.expect(skill.description).to.eql(\"Leer el partido y encontrar el pase\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Duplicado sin tilde y en mayúsculas (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"VISION DE JUEGO {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-06 #3: No se deben permitir habilidades duplicadas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Nombre vacío (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"  \",\n  \"description\": \"Sin nombre\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-06 #2: Los campos requeridos deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.name).to.eql(\"El nombre es obligatorio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Nombre de más de 60 caracteres (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-06 #2: Los campos requeridos deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.name).to.eql(\"El nombre debe tener máximo 60 caracteres\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Crear Regate sin descripción (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Regate {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-06 #1: El sistema debe permitir registrar nuevas habilidades."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"skillRegateId\", pm.response.json().id);",
+                  "pm.test(\"La descripción queda vacía\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.description).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Listar habilidades (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/skills",
+            "description": "Criterio HU-GD-06 #4: El sistema debe permitir consultar las habilidades registradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Aparecen las dos habilidades creadas\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"skillVisionId\")));",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"skillRegateId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Detalle de Visión de juego (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillVisionId}}",
+            "description": "Criterio HU-GD-06 #5: Se debe poder consultar el detalle de una habilidad."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Datos de la habilidad\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.description).to.eql(\"Leer el partido y encontrar el pase\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Detalle de un id que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{noExiste}}",
+            "description": "Criterio HU-GD-06 #5: Se debe poder consultar el detalle de una habilidad."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Actualizar Regate (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills/{{skillRegateId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Regate {{suffix}}\",\n  \"description\": \"Superar rivales con el balón\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-06 #6: Se debe permitir actualizar la información de una habilidad."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Descripción nueva\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.description).to.eql(\"Superar rivales con el balón\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Detalle de Regate: el cambio quedó guardado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillRegateId}}",
+            "description": "Criterio HU-GD-06 #6: Se debe permitir actualizar la información de una habilidad."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Descripción guardada\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.description).to.eql(\"Superar rivales con el balón\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Renombrar Regate como Visión de juego (409)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills/{{skillRegateId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Visión de juego {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-06 #3: No se deben permitir habilidades duplicadas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Eliminar Regate (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillRegateId}}",
+            "description": "Criterio HU-GD-06 #7: Se debe permitir eliminar una habilidad cuando no existan restricciones que lo impidan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Regate ya no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillRegateId}}",
+            "description": "Criterio HU-GD-06 #7: Se debe permitir eliminar una habilidad cuando no existan restricciones que lo impidan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Eliminar una habilidad que no existe (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{noExiste}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Eliminar Visión de juego (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillVisionId}}",
+            "description": "Criterio HU-GD-06 #7: Se debe permitir eliminar una habilidad cuando no existan restricciones que lo impidan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GD-07 · Habilidades de jugadores",
+      "description": "Asignación de habilidades a jugadores: `/api/deportiva/player-skills`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las primeras peticiones crean dos habilidades y dos jugadores de prueba, y las últimas los borran.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el jugador como la habilidad deben existir previamente. → peticiones 09, 10\n2. Un jugador puede tener una o varias habilidades. → peticiones 06, 12\n3. Una misma habilidad puede pertenecer a diferentes jugadores. → peticiones 07, 13\n4. No se debe permitir asignar dos veces la misma habilidad al mismo jugador. → peticiones 08\n5. El sistema debe permitir consultar las habilidades asociadas a un jugador. → peticiones 12, 14\n6. Se debe permitir consultar los jugadores que poseen determinada habilidad. → peticiones 13, 15\n7. Se deben poder agregar o retirar habilidades de un jugador. → peticiones 05, 18, 21\n8. Retirar una habilidad de un jugador no debe eliminar la habilidad del sistema. → peticiones 20",
+      "item": [
+        {
+          "name": "01 Preparar: crear la habilidad Remate (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Remate {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"skillRemateId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: crear la habilidad Cabeceo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cabeceo {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"skillCabeceoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear al jugador Luis Mora (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"40{{suffix}}\",\n  \"firstName\": \"Luis\",\n  \"lastName\": \"Mora\",\n  \"birthDate\": \"1999-03-02\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerLuisId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear a la jugadora Sara Vélez (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"41{{suffix}}\",\n  \"firstName\": \"Sara\",\n  \"lastName\": \"Vélez\",\n  \"birthDate\": \"2002-11-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerSaraId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Asignar Remate a Luis (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerLuisId}},\n  \"skillId\": {{skillRemateId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-07 #7: Se deben poder agregar o retirar habilidades de un jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Responde el jugador y la habilidad\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.player.id).to.eql(Number(pm.collectionVariables.get(\"playerLuisId\")));",
+                  "    pm.expect(body.skill.id).to.eql(Number(pm.collectionVariables.get(\"skillRemateId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Asignar Cabeceo a Luis (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerLuisId}},\n  \"skillId\": {{skillCabeceoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-07 #2: Un jugador puede tener una o varias habilidades."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Asignar Remate también a Sara (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerSaraId}},\n  \"skillId\": {{skillRemateId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-07 #3: Una misma habilidad puede pertenecer a diferentes jugadores."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Asignar Remate a Luis otra vez (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerLuisId}},\n  \"skillId\": {{skillRemateId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-07 #4: No se debe permitir asignar dos veces la misma habilidad al mismo jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Jugador que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{noExiste}},\n  \"skillId\": {{skillRemateId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-07 #1: Tanto el jugador como la habilidad deben existir previamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"jugador\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Habilidad que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerLuisId}},\n  \"skillId\": {{noExiste}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-07 #1: Tanto el jugador como la habilidad deben existir previamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"habilidad\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Sin datos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.playerId).to.eql(\"El id del jugador es obligatorio\");",
+                  "    pm.expect(body.skillId).to.eql(\"El id de la habilidad es obligatorio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Habilidades de Luis (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/players/{{playerLuisId}}",
+            "description": "Criterio HU-GD-07 #2: Un jugador puede tener una o varias habilidades.\n\nCriterio HU-GD-07 #5: El sistema debe permitir consultar las habilidades asociadas a un jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cabeceo y Remate, por nombre\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"skillCabeceoId\")), Number(pm.collectionVariables.get(\"skillRemateId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Jugadores con Remate (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/skills/{{skillRemateId}}",
+            "description": "Criterio HU-GD-07 #3: Una misma habilidad puede pertenecer a diferentes jugadores.\n\nCriterio HU-GD-07 #6: Se debe permitir consultar los jugadores que poseen determinada habilidad."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Luis Mora y Sara Vélez, por apellido\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"playerLuisId\")), Number(pm.collectionVariables.get(\"playerSaraId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Habilidades de un jugador que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/players/{{noExiste}}",
+            "description": "Criterio HU-GD-07 #5: El sistema debe permitir consultar las habilidades asociadas a un jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Jugadores de una habilidad que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/skills/{{noExiste}}",
+            "description": "Criterio HU-GD-07 #6: Se debe permitir consultar los jugadores que poseen determinada habilidad."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Eliminar Remate, que está asignada a jugadores (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillRemateId}}",
+            "description": "Criterio HU-GD-06 #8: Si la habilidad se encuentra asociada con jugadores, el sistema debe validar si puede ser eliminada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"2 jugadores\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Eliminar a Luis, que tiene habilidades (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerLuisId}}",
+            "description": "Criterio HU-GD-04 #8: La eliminación de un jugador debe validar previamente si tiene información asociada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"habilidades\");",
+                  "    pm.expect(message).to.include(\"Cabeceo\");",
+                  "    pm.expect(message).to.include(\"Remate\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Retirar Cabeceo a Luis (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/{{playerLuisId}}/{{skillCabeceoId}}",
+            "description": "Criterio HU-GD-07 #7: Se deben poder agregar o retirar habilidades de un jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Retirarla otra vez (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/{{playerLuisId}}/{{skillCabeceoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Cabeceo sigue existiendo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillCabeceoId}}",
+            "description": "Criterio HU-GD-07 #8: Retirar una habilidad de un jugador no debe eliminar la habilidad del sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Habilidades de Luis, ya sin Cabeceo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/players/{{playerLuisId}}",
+            "description": "Criterio HU-GD-07 #7: Se deben poder agregar o retirar habilidades de un jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Solo Remate\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"skillRemateId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Desactivar a Sara (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSaraId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Asignar una habilidad a una jugadora desactivada (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerSaraId}},\n  \"skillId\": {{skillCabeceoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Retirar Remate a Luis (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/{{playerLuisId}}/{{skillRemateId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Retirar Remate a Sara (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/{{playerSaraId}}/{{skillRemateId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Eliminar Remate, ya sin jugadores (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillRemateId}}",
+            "description": "Criterio HU-GD-06 #7: Se debe permitir eliminar una habilidad cuando no existan restricciones que lo impidan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Eliminar a Luis, ya sin habilidades (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerLuisId}}",
+            "description": "Criterio HU-GD-04 #7: Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Limpieza: eliminar a Sara (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSaraId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Limpieza: eliminar Cabeceo (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillCabeceoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GD-08 · Perfil deportivo",
+      "description": "Perfil deportivo del jugador: `GET /api/deportiva/players/{id}/profile`. Para buscar al jugador: `GET /api/deportiva/players?search=texto` (nombre, apellido o documento; no distingue tildes ni mayúsculas).\n\nEl perfil separa `teams` (contratos vigentes y futuros: los equipos con los que se encuentra asociado) de `teamHistory` (finalizados y retirados). `teamsMessage` y `skillsMessage` traen el aviso para mostrar cuando no tiene equipos o habilidades (null si sí tiene).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede; el jugador y los equipos con contratos quedan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir seleccionar o buscar un jugador registrado. → peticiones 09, 10, 11, 12, 13, 15\n2. Se debe mostrar la información básica del jugador. → peticiones 13, 14\n3. Se deben mostrar los equipos con los que se encuentra asociado. → peticiones 13\n4. Se deben mostrar las habilidades que tiene asignadas. → peticiones 13\n5. Si el jugador no tiene equipos asociados, el sistema debe indicarlo. → peticiones 14, 18\n6. Si el jugador no tiene habilidades registradas, el sistema debe indicarlo. → peticiones 14",
+      "item": [
+        {
+          "name": "01 Preparar: crear el equipo Santa Fe (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Santa Fe {{suffix}}\",\n  \"city\": \"Bogotá\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamSantaFeId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: crear el equipo América (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"América {{suffix}}\",\n  \"city\": \"Cali\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamAmericaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear la habilidad Liderazgo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Liderazgo {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"skillLiderazgoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear al jugador Tomás Ángel (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"50{{suffix}}\",\n  \"firstName\": \"Tomás\",\n  \"lastName\": \"Ángel\",\n  \"birthDate\": \"1997-05-14\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerTomasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: crear al jugador Diego Vargas, sin equipos ni habilidades (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"51{{suffix}}\",\n  \"firstName\": \"Diego\",\n  \"lastName\": \"Vargas\",\n  \"birthDate\": \"2003-09-09\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerDiegoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: contrato terminado de Tomás con América (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamAmericaId}},\n  \"playerId\": {{playerTomasId}},\n  \"startDate\": \"2019-01-01\",\n  \"endDate\": \"2020-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"contractAmericaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: contrato vigente de Tomás con Santa Fe (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamSantaFeId}},\n  \"playerId\": {{playerTomasId}},\n  \"startDate\": \"2021-01-01\",\n  \"endDate\": \"2099-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"contractSantaFeId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: asignar Liderazgo a Tomás (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerTomasId}},\n  \"skillId\": {{skillLiderazgoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Buscar por nombre, sin tildes y en mayúsculas (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players?search=TOMAS%20ANGEL",
+            "description": "Criterio HU-GD-08 #1: El sistema debe permitir seleccionar o buscar un jugador registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Encuentra a Tomás Ángel\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"playerTomasId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Buscar por apellido y nombre (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players?search=angel%20tomas",
+            "description": "Criterio HU-GD-08 #1: El sistema debe permitir seleccionar o buscar un jugador registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Encuentra a Tomás Ángel\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"playerTomasId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Buscar por número de documento (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players?search=50{{suffix}}",
+            "description": "Criterio HU-GD-08 #1: El sistema debe permitir seleccionar o buscar un jugador registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Solo Tomás Ángel\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"playerTomasId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Búsqueda sin resultados (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players?search=zzz{{suffix}}",
+            "description": "Criterio HU-GD-08 #1: El sistema debe permitir seleccionar o buscar un jugador registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lista vacía\", function () {",
+                  "    pm.expect(pm.response.json()).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Perfil de Tomás (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerTomasId}}/profile",
+            "description": "Criterio HU-GD-08 #1: El sistema debe permitir seleccionar o buscar un jugador registrado.\n\nCriterio HU-GD-08 #2: Se debe mostrar la información básica del jugador.\n\nCriterio HU-GD-08 #3: Se deben mostrar los equipos con los que se encuentra asociado.\n\nCriterio HU-GD-08 #4: Se deben mostrar las habilidades que tiene asignadas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Información básica del jugador\", function () {",
+                  "    const player = pm.response.json().player;",
+                  "    pm.expect(player.id).to.eql(Number(pm.collectionVariables.get(\"playerTomasId\")));",
+                  "    pm.expect(player.firstName).to.eql(\"Tomás\");",
+                  "    pm.expect(player.lastName).to.eql(\"Ángel\");",
+                  "    pm.expect(player.documentType).to.eql(\"CC\");",
+                  "    pm.expect(player.documentNumber).to.eql(\"50\" + pm.collectionVariables.get(\"suffix\"));",
+                  "    pm.expect(player.birthDate).to.eql(\"1997-05-14\");",
+                  "});",
+                  "pm.test(\"Equipos con los que se encuentra asociado: Santa Fe (y América en el historial)\", function () {",
+                  "    const profile = pm.response.json();",
+                  "    pm.expect(profile.teams.map((c) => c.team.id)).to.eql([Number(pm.collectionVariables.get(\"teamSantaFeId\"))]);",
+                  "    pm.expect(profile.teams[0].status).to.eql(\"VIGENTE\");",
+                  "    pm.expect(profile.teamHistory.map((c) => c.team.id)).to.eql([Number(pm.collectionVariables.get(\"teamAmericaId\"))]);",
+                  "    pm.expect(profile.teamHistory[0].status).to.eql(\"FINALIZADO\");",
+                  "    pm.expect(profile.teamsMessage).to.eql(null);",
+                  "});",
+                  "pm.test(\"Habilidades asignadas: Liderazgo\", function () {",
+                  "    const profile = pm.response.json();",
+                  "    pm.expect(profile.skills.map((s) => s.id)).to.eql([Number(pm.collectionVariables.get(\"skillLiderazgoId\"))]);",
+                  "    pm.expect(profile.skillsMessage).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Perfil de Diego, sin equipos ni habilidades (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerDiegoId}}/profile",
+            "description": "Criterio HU-GD-08 #2: Se debe mostrar la información básica del jugador.\n\nCriterio HU-GD-08 #5: Si el jugador no tiene equipos asociados, el sistema debe indicarlo.\n\nCriterio HU-GD-08 #6: Si el jugador no tiene habilidades registradas, el sistema debe indicarlo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Indica que no tiene equipos\", function () {",
+                  "    const profile = pm.response.json();",
+                  "    pm.expect(profile.teams).to.eql([]);",
+                  "    pm.expect(profile.teamHistory).to.eql([]);",
+                  "    pm.expect(profile.teamsMessage).to.eql(\"El jugador no tiene equipos asociados\");",
+                  "});",
+                  "pm.test(\"Indica que no tiene habilidades\", function () {",
+                  "    const profile = pm.response.json();",
+                  "    pm.expect(profile.skills).to.eql([]);",
+                  "    pm.expect(profile.skillsMessage).to.eql(\"El jugador no tiene habilidades registradas\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Perfil de un jugador que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{noExiste}}/profile",
+            "description": "Criterio HU-GD-08 #1: El sistema debe permitir seleccionar o buscar un jugador registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Id no numérico en la URL (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/abc/profile"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Retirar a Tomás de Santa Fe (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/team-players/{{contractSantaFeId}}/retire"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Perfil de Tomás, ya sin equipos actuales (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerTomasId}}/profile",
+            "description": "Criterio HU-GD-08 #5: Si el jugador no tiene equipos asociados, el sistema debe indicarlo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Indica que no tiene equipos asociados actualmente y conserva el historial\", function () {",
+                  "    const profile = pm.response.json();",
+                  "    pm.expect(profile.teams).to.eql([]);",
+                  "    pm.expect(profile.teamHistory.map((c) => c.id)).to.eql([Number(pm.collectionVariables.get(\"contractSantaFeId\")), Number(pm.collectionVariables.get(\"contractAmericaId\"))]);",
+                  "    pm.expect(profile.teamsMessage).to.eql(\"El jugador no tiene equipos asociados actualmente\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Limpieza: retirar Liderazgo a Tomás (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/{{playerTomasId}}/{{skillLiderazgoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Limpieza: eliminar Liderazgo (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/skills/{{skillLiderazgoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Limpieza: eliminar a Diego (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerDiegoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Limpieza: desactivar a Tomás (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerTomasId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Limpieza: desactivar Santa Fe (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamSantaFeId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Limpieza: desactivar América (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamAmericaId}}/disable"
           },
           "event": [
             {
