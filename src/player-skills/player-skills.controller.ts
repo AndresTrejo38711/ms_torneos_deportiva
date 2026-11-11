@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ParseIdPipe } from '../common/validation/parse-id.pipe';
 import { PlayerSummaryDto } from '../players/dto/player-response.dto';
-import { SkillResponseDto } from '../skills/dto/skill-response.dto';
+import { SkillSummaryDto } from '../skills/dto/skill-response.dto';
 import { CreatePlayerSkillDto } from './dto/create-player-skill.dto';
 import { PlayerSkillResponseDto } from './dto/player-skill-response.dto';
 import { PlayerSkillsService } from './player-skills.service';
@@ -30,7 +30,7 @@ export class PlayerSkillsController {
   @Get('players/:playerId')
   findSkillsByPlayer(
     @Param('playerId', ParseIdPipe) playerId: number,
-  ): Promise<SkillResponseDto[]> {
+  ): Promise<SkillSummaryDto[]> {
     return this.playerSkillsService.findSkillsByPlayer(playerId);
   }
 

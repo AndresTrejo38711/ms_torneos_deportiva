@@ -22,6 +22,7 @@ export class SkillsService {
 
     const skill = this.skillRepository.create({
       name: dto.name,
+      category: dto.category,
       description: dto.description || null,
     });
     const saved = await this.skillRepository.save(skill);
@@ -29,13 +30,24 @@ export class SkillsService {
     return this.findOne(saved.id);
   }
 
+  // Con playerSkills se cuenta a cuántos jugadores está asignada cada una (playersCount).
   async findAll(): Promise<SkillResponseDto[]> {
-    const skills = await this.skillRepository.find({ order: { name: 'ASC' } });
+    const skills = await this.skillRepository.find({
+      relations: { playerSkills: true },
+      order: { name: 'ASC' },
+    });
     return skills.map(toSkillResponse);
   }
 
   async findOne(id: number): Promise<SkillResponseDto> {
-    return toSkillResponse(await this.findSkill(id));
+    const skill = await this.skillRepository.findOne({
+      where: { id },
+      relations: { playerSkills: true },
+    });
+    if (!skill) {
+      throw notFound(id);
+    }
+    return toSkillResponse(skill);
   }
 
   async update(id: number, dto: UpdateSkillDto): Promise<SkillResponseDto> {
@@ -43,14 +55,42 @@ export class SkillsService {
     await this.ensureNameAvailable(dto.name, id);
 
     skill.name = dto.name;
+    skill.category = dto.category;
     skill.description = dto.description || null;
     await this.skillRepository.save(skill);
 
     return this.findOne(id);
   }
 
+  // Una habilidad desactivada no se puede asignar a más jugadores; los que ya la tienen la conservan.
+  async disable(id: number): Promise<SkillResponseDto> {
+    const skill = await this.findSkill(id);
+    if (!skill.active) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `La habilidad "${skill.name}" ya está desactivada`,
+      );
+    }
+    skill.active = false;
+    await this.skillRepository.save(skill);
+    return this.findOne(id);
+  }
+
+  async enable(id: number): Promise<SkillResponseDto> {
+    const skill = await this.findSkill(id);
+    if (skill.active) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `La habilidad "${skill.name}" ya está activa`,
+      );
+    }
+    skill.active = true;
+    await this.skillRepository.save(skill);
+    return this.findOne(id);
+  }
+
   // Se elimina solo si no está asignada a ningún jugador. Si lo está, se informa a cuántos y
-  // se indica que primero hay que retirársela (HU-GD-07).
+  // se indica que primero hay que retirársela (HU-GD-07) o desactivarla.
   async remove(id: number): Promise<void> {
     const skill = await this.skillRepository.findOne({
       where: { id },
@@ -64,7 +104,7 @@ export class SkillsService {
     if (players > 0) {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
-        `No se puede eliminar "${skill.name}" porque está asignada a ${players} ${players === 1 ? 'jugador' : 'jugadores'}. Retírasela primero a ${players === 1 ? 'ese jugador' : 'esos jugadores'}`,
+        `No se puede eliminar "${skill.name}" porque está asignada a ${players} ${players === 1 ? 'jugador' : 'jugadores'}. Retírasela primero a ${players === 1 ? 'ese jugador' : 'esos jugadores'} o desactívala`,
       );
     }
 

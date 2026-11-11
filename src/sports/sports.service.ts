@@ -32,9 +32,10 @@ export class SportsService {
   }
 
   // Todos los deportes, principales y subdeportes, ordenados por nombre.
+  // Con teamSports se cuentan los equipos de cada uno (teamsCount).
   async findAll(): Promise<SportResponseDto[]> {
     const sports = await this.sportRepository.find({
-      relations: { parent: true, subSports: true },
+      relations: { parent: true, subSports: true, teamSports: true },
       order: { name: 'ASC', subSports: { name: 'ASC' } },
     });
     return sports.map(toSportResponse);
@@ -43,7 +44,7 @@ export class SportsService {
   async findOne(id: number): Promise<SportResponseDto> {
     const sport = await this.sportRepository.findOne({
       where: { id },
-      relations: { parent: true, subSports: true },
+      relations: { parent: true, subSports: true, teamSports: true },
       order: { subSports: { name: 'ASC' } },
     });
     if (!sport) {

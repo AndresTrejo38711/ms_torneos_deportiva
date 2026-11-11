@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -41,6 +42,16 @@ export class SkillsController {
     @Body() dto: UpdateSkillDto,
   ): Promise<SkillResponseDto> {
     return this.skillsService.update(id, dto);
+  }
+
+  @Patch(':id/disable')
+  disable(@Param('id', ParseIdPipe) id: number): Promise<SkillResponseDto> {
+    return this.skillsService.disable(id);
+  }
+
+  @Patch(':id/enable')
+  enable(@Param('id', ParseIdPipe) id: number): Promise<SkillResponseDto> {
+    return this.skillsService.enable(id);
   }
 
   @Delete(':id')

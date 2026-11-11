@@ -13,4 +13,6 @@ export class SportResponseDto {
   active: boolean;
   parent: SportSummaryDto | null;
   subSports: SportSummaryDto[];
+  // Cuántos equipos participan en este deporte (HU-GD-03), para mostrarlo sin otra petición.
+  teamsCount: number;
 }

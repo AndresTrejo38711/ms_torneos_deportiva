@@ -6,8 +6,8 @@ import { ErrorCase } from '../common/errors/error-case.enum';
 import { PlayerSummaryDto } from '../players/dto/player-response.dto';
 import { toPlayerSummary } from '../players/players.mapper';
 import { PlayersService } from '../players/players.service';
-import { SkillResponseDto } from '../skills/dto/skill-response.dto';
-import { toSkillResponse } from '../skills/skills.mapper';
+import { SkillSummaryDto } from '../skills/dto/skill-response.dto';
+import { toSkillSummary } from '../skills/skills.mapper';
 import { SkillsService } from '../skills/skills.service';
 import { CreatePlayerSkillDto } from './dto/create-player-skill.dto';
 import { PlayerSkillResponseDto } from './dto/player-skill-response.dto';
@@ -33,6 +33,12 @@ export class PlayerSkillsService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `El jugador ${playerName} está desactivado: actívalo antes de asignarle habilidades`,
+      );
+    }
+    if (!skill.active) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `La habilidad "${skill.name}" está desactivada: actívala antes de asignarla a jugadores`,
       );
     }
 
@@ -61,19 +67,19 @@ export class PlayerSkillsService {
     });
     return {
       player: toPlayerSummary(row.player),
-      skill: toSkillResponse(row.skill),
+      skill: toSkillSummary(row.skill),
     };
   }
 
   // Habilidades de un jugador, ordenadas por nombre.
-  async findSkillsByPlayer(playerId: number): Promise<SkillResponseDto[]> {
+  async findSkillsByPlayer(playerId: number): Promise<SkillSummaryDto[]> {
     await this.playersService.findOne(playerId); // 404 si el jugador no existe
     const rows = await this.playerSkillRepository.find({
       where: { player: { id: playerId } },
       relations: { skill: true },
       order: { skill: { name: 'ASC' } },
     });
-    return rows.map((row) => toSkillResponse(row.skill));
+    return rows.map((row) => toSkillSummary(row.skill));
   }
 
   // Jugadores que tienen una habilidad, ordenados por apellidos y nombres.
