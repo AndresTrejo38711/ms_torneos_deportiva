@@ -36,6 +36,12 @@ export class Team {
   @Column({ name: 'foundation_date', type: 'date', nullable: true })
   foundationDate: string | null;
 
+  // Opcional: el escudo, como imagen pequeña en texto ("data:image/webp;base64,..."). No se trae
+  // por defecto (select: false): solo lo piden la lista y el detalle de equipos, no las respuestas
+  // que traen equipos de paso (los de un deporte, el equipo actual de cada jugador...).
+  @Column({ type: 'mediumtext', nullable: true, select: false })
+  shield: string | null;
+
   // Desactivar es la alternativa a eliminar cuando el equipo ya tiene información asociada.
   @Column({ default: true })
   active: boolean;

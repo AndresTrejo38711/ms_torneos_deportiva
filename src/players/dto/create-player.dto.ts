@@ -14,16 +14,13 @@ import {
   IsDateOnly,
   IsNotFutureDate,
 } from '../../common/validation/date.validators';
+import {
+  IMAGE_DATA_URL,
+  IMAGE_MAX_LENGTH,
+} from '../../common/validation/image';
 import { Trim } from '../../common/validation/trim.decorator';
 import { DocumentType } from '../entities/document-type.enum';
 import { DominantFoot } from '../entities/dominant-foot.enum';
-
-// La foto llega ya reducida por el front (256 × 256 px, unos 20 KB) como texto
-// "data:image/jpeg;base64,...". El límite deja margen y cabe en los 100 KB que Nest acepta por
-// petición. No se aceptan SVG: pueden llevar código adentro.
-const PHOTO_MAX_LENGTH = 90_000;
-const PHOTO_FORMAT =
-  /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
 
 export class CreatePlayerDto {
   // " cc " también se acepta: se limpia y se pasa a mayúsculas antes de validar.
@@ -104,13 +101,14 @@ export class CreatePlayerDto {
   })
   dominantFoot?: DominantFoot | null;
 
-  // Opcional. Imagen pequeña como texto: "data:image/jpeg;base64,...".
+  // Opcional. Imagen pequeña como texto: "data:image/jpeg;base64,..." (common/validation/image.ts).
+  // El front la recorta en cuadrado y la reduce a 256 × 256 px.
   @IsOptional()
   @IsString({ message: 'La foto debe ser una imagen JPG, PNG o WEBP' })
-  @MaxLength(PHOTO_MAX_LENGTH, {
+  @MaxLength(IMAGE_MAX_LENGTH, {
     message: 'La foto es demasiado grande: debe llegar reducida',
   })
-  @Matches(PHOTO_FORMAT, {
+  @Matches(IMAGE_DATA_URL, {
     message: 'La foto debe ser una imagen JPG, PNG o WEBP',
   })
   photo?: string | null;

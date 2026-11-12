@@ -7,7 +7,7 @@ import { TeamResponseDto, TeamSummaryDto } from './dto/team-response.dto';
 import { Team } from './entities/team.entity';
 
 // Entidad → DTO de respuesta. Para el resumen, el equipo debe venir con teamSports (y su sport)
-// y teamPlayers (y su player) cargados.
+// y teamPlayers (y su player) cargados, y con el escudo pedido aparte (select: false).
 export function toTeamResponse(team: Team): TeamResponseDto {
   const sports = (team.teamSports ?? [])
     .map((row) => toSportSummary(row.sport))
@@ -27,6 +27,7 @@ export function toTeamResponse(team: Team): TeamResponseDto {
     city: team.city,
     description: team.description,
     foundationDate: team.foundationDate,
+    shield: team.shield ?? null,
     active: team.active,
     sports,
     playersCount: currentPlayers.size,

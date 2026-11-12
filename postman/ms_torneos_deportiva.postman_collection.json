@@ -76,6 +76,11 @@
       "type": "string"
     },
     {
+      "key": "bigPhoto",
+      "value": "",
+      "type": "string"
+    },
+    {
       "key": "teamOnceId",
       "value": "",
       "type": "string"
@@ -102,11 +107,6 @@
     },
     {
       "key": "playerAnaId",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "bigPhoto",
       "value": "",
       "type": "string"
     },
@@ -1111,7 +1111,7 @@
     },
     {
       "name": "HU-GD-02 · Equipos",
-      "description": "CRUD de equipos: `/api/deportiva/teams`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un equipo con su información básica. → peticiones 01, 09\n2. Los campos obligatorios deben ser validados. → peticiones 03, 04, 05, 06, 07, 08\n3. El sistema debe permitir consultar los equipos registrados. → peticiones 10\n4. Se debe poder consultar la información detallada de un equipo. → peticiones 11, 12\n5. Se debe permitir actualizar la información del equipo. → peticiones 13\n6. Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan. → peticiones 16, 20, 21; carpeta HU-GD-03: 27\n7. Antes de eliminar un equipo, el sistema debe validar si posee información asociada. → carpeta HU-GD-03: 18; carpeta HU-GD-05: 22\n8. Los cambios realizados deben quedar almacenados correctamente. → peticiones 14, 17, 22",
+      "description": "CRUD de equipos: `/api/deportiva/teams`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un equipo con su información básica. → peticiones 01, 11\n2. Los campos obligatorios deben ser validados. → peticiones 03, 04, 05, 06, 07, 08, 09, 10\n3. El sistema debe permitir consultar los equipos registrados. → peticiones 12\n4. Se debe poder consultar la información detallada de un equipo. → peticiones 13, 14\n5. Se debe permitir actualizar la información del equipo. → peticiones 15, 22\n6. Se debe permitir eliminar o desactivar un equipo cuando las reglas del sistema lo permitan. → peticiones 18, 23, 24; carpeta HU-GD-03: 27\n7. Antes de eliminar un equipo, el sistema debe validar si posee información asociada. → carpeta HU-GD-03: 18; carpeta HU-GD-05: 22\n8. Los cambios realizados deben quedar almacenados correctamente. → peticiones 16, 19, 25",
       "item": [
         {
           "name": "01 Crear Atlético Nacional (201)",
@@ -1126,7 +1126,7 @@
             "url": "{{baseUrl}}/teams",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"  Atlético Nacional {{suffix}} \",\n  \"shortName\": \"  Nacional \",\n  \"city\": \"Medellín\",\n  \"foundationDate\": \"1947-03-07\",\n  \"description\": \"  El equipo verdolaga.  \"\n}",
+              "raw": "{\n  \"name\": \"  Atlético Nacional {{suffix}} \",\n  \"shortName\": \"  Nacional \",\n  \"city\": \"Medellín\",\n  \"foundationDate\": \"1947-03-07\",\n  \"description\": \"  El equipo verdolaga.  \",\n  \"shield\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1162,6 +1162,9 @@
                   "    pm.expect(team.description).to.eql(\"El equipo verdolaga.\");",
                   "    pm.expect(team.foundationDate).to.eql(\"1947-03-07\");",
                   "    pm.expect(team.active).to.eql(true);",
+                  "});",
+                  "pm.test(\"Devuelve el escudo tal como se envió\", function () {",
+                  "    pm.expect(pm.response.json().shield).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});",
                   "pm.test(\"Resumen de un equipo nuevo: sin deportes ni jugadores\", function () {",
                   "    const team = pm.response.json();",
@@ -1453,7 +1456,96 @@
           ]
         },
         {
-          "name": "09 Crear Once Caldas solo con lo obligatorio (201)",
+          "name": "09 Escudo que no es una imagen (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Millonarios {{suffix}}\",\n  \"city\": \"Bogotá\",\n  \"shield\": \"https://ejemplo.com/escudo.png\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-02 #2: Los campos obligatorios deben ser validados.\n\nEl escudo se envía como texto data:image/...;base64, ya reducido. No se aceptan enlaces ni SVG."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.shield).to.eql(\"El escudo debe ser una imagen JPG, PNG o WEBP\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Escudo demasiado grande (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Millonarios {{suffix}}\",\n  \"city\": \"Bogotá\",\n  \"shield\": \"{{bigPhoto}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-02 #2: Los campos obligatorios deben ser validados."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.variables.set(\"bigPhoto\", \"data:image/png;base64,\" + \"A\".repeat(90000));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.shield).to.eql(\"El escudo es demasiado grande: debe llegar reducido\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Crear Once Caldas solo con lo obligatorio (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -1489,6 +1581,7 @@
                   "    pm.expect(body.shortName).to.eql(null);",
                   "    pm.expect(body.foundationDate).to.eql(null);",
                   "    pm.expect(body.description).to.eql(null);",
+                  "    pm.expect(body.shield).to.eql(null);",
                   "});"
                 ]
               }
@@ -1496,7 +1589,7 @@
           ]
         },
         {
-          "name": "10 Listar equipos (200)",
+          "name": "12 Listar equipos (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1516,6 +1609,11 @@
                   "    const ids = pm.response.json().map((item) => item.id);",
                   "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"teamNacionalId\")));",
                   "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"teamOnceId\")));",
+                  "});",
+                  "pm.test(\"La lista trae el escudo de cada equipo (o null)\", function () {",
+                  "    const byId = new Map(pm.response.json().map((team) => [team.id, team]));",
+                  "    pm.expect(byId.get(Number(pm.collectionVariables.get(\"teamNacionalId\"))).shield).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
+                  "    pm.expect(byId.get(Number(pm.collectionVariables.get(\"teamOnceId\"))).shield).to.eql(null);",
                   "});"
                 ]
               }
@@ -1523,7 +1621,7 @@
           ]
         },
         {
-          "name": "11 Detalle de Atlético Nacional (200)",
+          "name": "13 Detalle de Atlético Nacional (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1543,6 +1641,7 @@
                   "    const body = pm.response.json();",
                   "    pm.expect(body.city).to.eql(\"Medellín\");",
                   "    pm.expect(body.foundationDate).to.eql(\"1947-03-07\");",
+                  "    pm.expect(body.shield).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -1550,7 +1649,7 @@
           ]
         },
         {
-          "name": "12 Detalle de un id que no existe (404)",
+          "name": "14 Detalle de un id que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1575,7 +1674,7 @@
           ]
         },
         {
-          "name": "13 Actualizar Once Caldas (200)",
+          "name": "15 Actualizar Once Caldas (200)",
           "request": {
             "method": "PUT",
             "header": [
@@ -1587,7 +1686,7 @@
             "url": "{{baseUrl}}/teams/{{teamOnceId}}",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Once Caldas {{suffix}}\",\n  \"shortName\": \"Once\",\n  \"city\": \"Manizales, Caldas\",\n  \"foundationDate\": \"1961-01-15\",\n  \"description\": \"El blanco de Manizales.\"\n}",
+              "raw": "{\n  \"name\": \"Once Caldas {{suffix}}\",\n  \"shortName\": \"Once\",\n  \"city\": \"Manizales, Caldas\",\n  \"foundationDate\": \"1961-01-15\",\n  \"description\": \"El blanco de Manizales.\",\n  \"shield\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1611,6 +1710,7 @@
                   "    pm.expect(body.city).to.eql(\"Manizales, Caldas\");",
                   "    pm.expect(body.foundationDate).to.eql(\"1961-01-15\");",
                   "    pm.expect(body.description).to.eql(\"El blanco de Manizales.\");",
+                  "    pm.expect(body.shield).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -1618,7 +1718,7 @@
           ]
         },
         {
-          "name": "14 Detalle de Once Caldas: los cambios quedaron guardados (200)",
+          "name": "16 Detalle de Once Caldas: los cambios quedaron guardados (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1640,6 +1740,7 @@
                   "    pm.expect(body.city).to.eql(\"Manizales, Caldas\");",
                   "    pm.expect(body.foundationDate).to.eql(\"1961-01-15\");",
                   "    pm.expect(body.description).to.eql(\"El blanco de Manizales.\");",
+                  "    pm.expect(body.shield).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -1647,7 +1748,7 @@
           ]
         },
         {
-          "name": "15 Renombrar Once Caldas como Atlético Nacional (409)",
+          "name": "17 Renombrar Once Caldas como Atlético Nacional (409)",
           "request": {
             "method": "PUT",
             "header": [
@@ -1685,7 +1786,7 @@
           ]
         },
         {
-          "name": "16 Desactivar Once Caldas (200)",
+          "name": "18 Desactivar Once Caldas (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1701,9 +1802,10 @@
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.test(\"Queda inactivo\", function () {",
+                  "pm.test(\"Queda inactivo y conserva su escudo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.active).to.eql(false);",
+                  "    pm.expect(body.shield).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -1711,7 +1813,7 @@
           ]
         },
         {
-          "name": "17 Detalle: Once Caldas quedó desactivado (200)",
+          "name": "19 Detalle: Once Caldas quedó desactivado (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -1737,7 +1839,7 @@
           ]
         },
         {
-          "name": "18 Desactivarlo otra vez (400)",
+          "name": "20 Desactivarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1761,7 +1863,7 @@
           ]
         },
         {
-          "name": "19 Activar Once Caldas (200)",
+          "name": "21 Activar Once Caldas (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1786,7 +1888,50 @@
           ]
         },
         {
-          "name": "20 Eliminar Once Caldas (204)",
+          "name": "22 Actualizar Once Caldas sin escudo: se borra (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams/{{teamOnceId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Once Caldas {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GD-02 #5: Se debe permitir actualizar la información del equipo.\n\nPUT reemplaza todo: el escudo que no se envía se quita."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lo que no se envió se borra\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.shortName).to.eql(null);",
+                  "    pm.expect(body.description).to.eql(null);",
+                  "    pm.expect(body.foundationDate).to.eql(null);",
+                  "    pm.expect(body.shield).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Eliminar Once Caldas (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -1808,7 +1953,7 @@
           ]
         },
         {
-          "name": "21 Eliminar Atlético Nacional (204)",
+          "name": "24 Eliminar Atlético Nacional (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -1830,7 +1975,7 @@
           ]
         },
         {
-          "name": "22 Once Caldas ya no existe (404)",
+          "name": "25 Once Caldas ya no existe (404)",
           "request": {
             "method": "GET",
             "header": [],

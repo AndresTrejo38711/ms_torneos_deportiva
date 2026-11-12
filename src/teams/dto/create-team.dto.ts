@@ -1,8 +1,18 @@
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+} from 'class-validator';
 import {
   IsDateOnly,
   IsNotFutureDate,
 } from '../../common/validation/date.validators';
+import {
+  IMAGE_DATA_URL,
+  IMAGE_MAX_LENGTH,
+} from '../../common/validation/image';
 import { Trim } from '../../common/validation/trim.decorator';
 
 export class CreateTeamDto {
@@ -43,4 +53,16 @@ export class CreateTeamDto {
     message: 'La fecha de fundación no puede ser posterior a hoy',
   })
   foundationDate?: string | null;
+
+  // Opcional. El escudo como imagen pequeña en texto: "data:image/webp;base64,..."
+  // (common/validation/image.ts). El front lo reduce a 192 × 192 px sin recortarlo.
+  @IsOptional()
+  @IsString({ message: 'El escudo debe ser una imagen JPG, PNG o WEBP' })
+  @MaxLength(IMAGE_MAX_LENGTH, {
+    message: 'El escudo es demasiado grande: debe llegar reducido',
+  })
+  @Matches(IMAGE_DATA_URL, {
+    message: 'El escudo debe ser una imagen JPG, PNG o WEBP',
+  })
+  shield?: string | null;
 }

@@ -26,6 +26,7 @@ export class TeamsService {
       city: dto.city,
       description: dto.description || null,
       foundationDate: dto.foundationDate ?? null,
+      shield: dto.shield || null,
     });
     const saved = await this.teamRepository.save(team);
 
@@ -33,10 +34,9 @@ export class TeamsService {
   }
 
   async findAll(): Promise<TeamResponseDto[]> {
-    const teams = await this.teamRepository.find({
-      relations: SUMMARY_RELATIONS,
-      order: { name: 'ASC' },
-    });
+    const teams = await this.summaryQuery()
+      .orderBy('team.name', 'ASC')
+      .getMany();
     return teams.map(toTeamResponse);
   }
 
@@ -53,6 +53,7 @@ export class TeamsService {
     team.city = dto.city;
     team.description = dto.description || null;
     team.foundationDate = dto.foundationDate ?? null;
+    team.shield = dto.shield || null;
     await this.teamRepository.save(team);
 
     return this.findOne(id);
@@ -66,8 +67,8 @@ export class TeamsService {
         `El equipo "${team.name}" ya está desactivado`,
       );
     }
-    team.active = false;
-    await this.teamRepository.save(team);
+    // Solo cambia el estado: no se vuelve a escribir el resto (el escudo incluido).
+    await this.teamRepository.update(id, { active: false });
     return this.findOne(id);
   }
 
@@ -79,8 +80,7 @@ export class TeamsService {
         `El equipo "${team.name}" ya está activo`,
       );
     }
-    team.active = true;
-    await this.teamRepository.save(team);
+    await this.teamRepository.update(id, { active: true });
     return this.findOne(id);
   }
 
@@ -121,14 +121,25 @@ export class TeamsService {
   // ---------------------------------------------------------------------------------------------
 
   private async findTeam(id: number): Promise<Team> {
-    const team = await this.teamRepository.findOne({
-      where: { id },
-      relations: SUMMARY_RELATIONS,
-    });
+    const team = await this.summaryQuery()
+      .where('team.id = :id', { id })
+      .getOne();
     if (!team) {
       throw notFound(id);
     }
     return team;
+  }
+
+  // Lo que necesita la respuesta: los deportes del equipo, sus contratos con el jugador de cada uno
+  // (para contar los jugadores actuales) y el escudo, que no viene por defecto (select: false).
+  private summaryQuery() {
+    return this.teamRepository
+      .createQueryBuilder('team')
+      .addSelect('team.shield')
+      .leftJoinAndSelect('team.teamSports', 'teamSport')
+      .leftJoinAndSelect('teamSport.sport', 'sport')
+      .leftJoinAndSelect('team.teamPlayers', 'contract')
+      .leftJoinAndSelect('contract.player', 'player');
   }
 
   // No se permiten dos equipos con el mismo nombre. Al editar, el nombre puede seguir siendo el suyo.
@@ -145,13 +156,6 @@ export class TeamsService {
     }
   }
 }
-
-// Lo que necesita el resumen de la respuesta: los deportes del equipo y sus contratos con el
-// jugador de cada uno (para contar los jugadores actuales).
-const SUMMARY_RELATIONS = {
-  teamSports: { sport: true },
-  teamPlayers: { player: true },
-} as const;
 
 function notFound(id: number): ApplicationException {
   return new ApplicationException(

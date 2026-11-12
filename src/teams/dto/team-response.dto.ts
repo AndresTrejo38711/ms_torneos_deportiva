@@ -8,6 +8,7 @@ export class TeamResponseDto {
   city: string;
   description: string | null;
   foundationDate: string | null;
+  shield: string | null; // "data:image/webp;base64,..." o null si no tiene
   active: boolean;
   // Resumen para las listas, sin otra petición por equipo:
   // sus deportes (HU-GD-03), ordenados por nombre...
@@ -16,7 +17,8 @@ export class TeamResponseDto {
   playersCount: number;
 }
 
-// Lo mínimo para mostrar un equipo relacionado (por ejemplo, los equipos de un deporte).
+// Lo mínimo para mostrar un equipo relacionado (por ejemplo, los equipos de un deporte). No lleva
+// el escudo: se repetiría en cada jugador o contrato; el front lo toma de la lista de equipos.
 export class TeamSummaryDto {
   id: number;
   name: string;
