@@ -6,13 +6,17 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { ParseIdPipe } from '../common/validation/parse-id.pipe';
 import { PlayerSummaryDto } from '../players/dto/player-response.dto';
-import { SkillSummaryDto } from '../skills/dto/skill-response.dto';
 import { CreatePlayerSkillDto } from './dto/create-player-skill.dto';
-import { PlayerSkillResponseDto } from './dto/player-skill-response.dto';
+import {
+  PlayerSkillResponseDto,
+  PlayerSkillSummaryDto,
+} from './dto/player-skill-response.dto';
+import { UpdatePlayerSkillDto } from './dto/update-player-skill.dto';
 import { PlayerSkillsService } from './player-skills.service';
 
 // HU-GD-07 · /api/deportiva/player-skills
@@ -20,17 +24,17 @@ import { PlayerSkillsService } from './player-skills.service';
 export class PlayerSkillsController {
   constructor(private readonly playerSkillsService: PlayerSkillsService) {}
 
-  // Agregar una habilidad: { "playerId": 1, "skillId": 2 }
+  // Agregar una habilidad: { "playerId": 1, "skillId": 2 } o, con nivel, { ..., "level": 84 }
   @Post()
   create(@Body() dto: CreatePlayerSkillDto): Promise<PlayerSkillResponseDto> {
     return this.playerSkillsService.create(dto);
   }
 
-  // Habilidades de un jugador.
+  // Habilidades de un jugador, cada una con su nivel.
   @Get('players/:playerId')
   findSkillsByPlayer(
     @Param('playerId', ParseIdPipe) playerId: number,
-  ): Promise<SkillSummaryDto[]> {
+  ): Promise<PlayerSkillSummaryDto[]> {
     return this.playerSkillsService.findSkillsByPlayer(playerId);
   }
 
@@ -40,6 +44,16 @@ export class PlayerSkillsController {
     @Param('skillId', ParseIdPipe) skillId: number,
   ): Promise<PlayerSummaryDto[]> {
     return this.playerSkillsService.findPlayersBySkill(skillId);
+  }
+
+  // Cambiar el nivel que el jugador tiene en una habilidad: { "level": 90 }
+  @Patch(':playerId/:skillId')
+  updateLevel(
+    @Param('playerId', ParseIdPipe) playerId: number,
+    @Param('skillId', ParseIdPipe) skillId: number,
+    @Body() dto: UpdatePlayerSkillDto,
+  ): Promise<PlayerSkillResponseDto> {
+    return this.playerSkillsService.updateLevel(playerId, skillId, dto);
   }
 
   // Retirar la habilidad del jugador (la habilidad no se elimina del sistema).

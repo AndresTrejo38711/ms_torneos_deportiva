@@ -1,5 +1,5 @@
 import { PlayerResponseDto } from '../../players/dto/player-response.dto';
-import { SkillSummaryDto } from '../../skills/dto/skill-response.dto';
+import { PlayerSkillSummaryDto } from '../../player-skills/dto/player-skill-response.dto';
 import { TeamSummaryDto } from '../../teams/dto/team-response.dto';
 import { ContractStatus } from '../../team-players/contract-status';
 
@@ -22,7 +22,8 @@ export class PlayerProfileDto {
   teamHistory: ProfileContractDto[];
   // Mensaje para mostrar cuando no tiene equipos asociados; null si sí tiene.
   teamsMessage: string | null;
-  skills: SkillSummaryDto[];
+  // Sus habilidades, cada una con el nivel (1–100) que tiene en ella.
+  skills: PlayerSkillSummaryDto[];
   // Mensaje para mostrar cuando no tiene habilidades; null si sí tiene.
   skillsMessage: string | null;
 }

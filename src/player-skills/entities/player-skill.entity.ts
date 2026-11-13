@@ -1,4 +1,5 @@
 import {
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -36,4 +37,9 @@ export class PlayerSkill {
     foreignKeyConstraintName: 'fk_player_skill_skill',
   })
   skill: Skill;
+
+  // Qué tan desarrollada tiene el jugador esa habilidad, de 1 (lo más bajo) a 100. No lo pide el
+  // Anexo 2: es el dato que dibuja el radar de capacidades del front. Si no se envía, queda en 50.
+  @Column({ type: 'tinyint', unsigned: true, default: 50 })
+  level: number;
 }

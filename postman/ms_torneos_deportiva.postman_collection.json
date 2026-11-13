@@ -2883,7 +2883,7 @@
     },
     {
       "name": "HU-GD-04 · Jugadores",
-      "description": "CRUD de jugadores: `/api/deportiva/players`. El identificador único es el documento (tipo + número). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un jugador con su información requerida. → peticiones 01\n2. Los campos obligatorios deben ser validados. → peticiones 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14\n3. No se deben permitir jugadores duplicados cuando exista un identificador único. → peticiones 02, 03, 20\n4. El sistema debe permitir consultar los jugadores registrados. → peticiones 15\n5. Se debe poder consultar el detalle de un jugador. → peticiones 16, 17\n6. Se debe permitir actualizar la información de un jugador. → peticiones 18\n7. Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan. → peticiones 21, 25, 26; carpeta HU-GD-07: 31\n8. La eliminación de un jugador debe validar previamente si tiene información asociada. → carpeta HU-GD-05: 21; carpeta HU-GD-07: 18\n9. Los cambios deben quedar almacenados correctamente. → peticiones 19, 22, 27",
+      "description": "CRUD de jugadores: `/api/deportiva/players`. El identificador único es el documento (tipo + número). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un jugador con su información requerida. → peticiones 01\n2. Los campos obligatorios deben ser validados. → peticiones 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14\n3. No se deben permitir jugadores duplicados cuando exista un identificador único. → peticiones 02, 03, 20\n4. El sistema debe permitir consultar los jugadores registrados. → peticiones 15\n5. Se debe poder consultar el detalle de un jugador. → peticiones 16, 17\n6. Se debe permitir actualizar la información de un jugador. → peticiones 18\n7. Se debe permitir eliminar o desactivar un jugador cuando las reglas del sistema lo permitan. → peticiones 21, 25, 26; carpeta HU-GD-07: 38\n8. La eliminación de un jugador debe validar previamente si tiene información asociada. → carpeta HU-GD-05: 21; carpeta HU-GD-07: 25\n9. Los cambios deben quedar almacenados correctamente. → peticiones 19, 22, 27",
       "item": [
         {
           "name": "01 Crear a Juan Pérez (201)",
@@ -5147,7 +5147,7 @@
     },
     {
       "name": "HU-GD-06 · Habilidades",
-      "description": "CRUD de habilidades: `/api/deportiva/skills`. Cada habilidad tiene una categoría (FISICA, TECNICA, TACTICA o MENTAL) y el catálogo trae `playersCount`, a cuántos jugadores está asignada. Además de eliminarla, se puede desactivar (`PATCH /skills/{id}/disable` y `/enable`): deja de poder asignarse, pero los jugadores que ya la tienen la conservan (ver HU-GD-07). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar nuevas habilidades. → peticiones 01, 07\n2. Los campos requeridos deben ser validados. → peticiones 03, 04, 05, 06, 13\n3. No se deben permitir habilidades duplicadas. → peticiones 02, 14\n4. El sistema debe permitir consultar las habilidades registradas. → peticiones 08\n5. Se debe poder consultar el detalle de una habilidad. → peticiones 09, 10\n6. Se debe permitir actualizar la información de una habilidad. → peticiones 11, 12\n7. Se debe permitir eliminar una habilidad cuando no existan restricciones que lo impidan. → peticiones 21, 22, 24; carpeta HU-GD-07: 30\n8. Si la habilidad se encuentra asociada con jugadores, el sistema debe validar si puede ser eliminada. → carpeta HU-GD-07: 17",
+      "description": "CRUD de habilidades: `/api/deportiva/skills`. Cada habilidad tiene una categoría (FISICA, TECNICA, TACTICA o MENTAL) y el catálogo trae `playersCount`, a cuántos jugadores está asignada. Además de eliminarla, se puede desactivar (`PATCH /skills/{id}/disable` y `/enable`): deja de poder asignarse, pero los jugadores que ya la tienen la conservan (ver HU-GD-07). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar nuevas habilidades. → peticiones 01, 07\n2. Los campos requeridos deben ser validados. → peticiones 03, 04, 05, 06, 13\n3. No se deben permitir habilidades duplicadas. → peticiones 02, 14\n4. El sistema debe permitir consultar las habilidades registradas. → peticiones 08\n5. Se debe poder consultar el detalle de una habilidad. → peticiones 09, 10\n6. Se debe permitir actualizar la información de una habilidad. → peticiones 11, 12\n7. Se debe permitir eliminar una habilidad cuando no existan restricciones que lo impidan. → peticiones 21, 22, 24; carpeta HU-GD-07: 37\n8. Si la habilidad se encuentra asociada con jugadores, el sistema debe validar si puede ser eliminada. → carpeta HU-GD-07: 24",
       "item": [
         {
           "name": "01 Crear Visión de juego (201)",
@@ -5929,7 +5929,7 @@
     },
     {
       "name": "HU-GD-07 · Habilidades de jugadores",
-      "description": "Asignación de habilidades a jugadores: `/api/deportiva/player-skills`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las primeras peticiones crean dos habilidades y dos jugadores de prueba, y las últimas los borran.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el jugador como la habilidad deben existir previamente. → peticiones 09, 10\n2. Un jugador puede tener una o varias habilidades. → peticiones 06, 12\n3. Una misma habilidad puede pertenecer a diferentes jugadores. → peticiones 07, 13, 14\n4. No se debe permitir asignar dos veces la misma habilidad al mismo jugador. → peticiones 08\n5. El sistema debe permitir consultar las habilidades asociadas a un jugador. → peticiones 12, 15\n6. Se debe permitir consultar los jugadores que poseen determinada habilidad. → peticiones 13, 16\n7. Se deben poder agregar o retirar habilidades de un jugador. → peticiones 05, 19, 22\n8. Retirar una habilidad de un jugador no debe eliminar la habilidad del sistema. → peticiones 21",
+      "description": "Asignación de habilidades a jugadores: `/api/deportiva/player-skills`. Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las primeras peticiones crean dos habilidades y dos jugadores de prueba, y las últimas los borran.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Tanto el jugador como la habilidad deben existir previamente. → peticiones 09, 10\n2. Un jugador puede tener una o varias habilidades. → peticiones 06, 14\n3. Una misma habilidad puede pertenecer a diferentes jugadores. → peticiones 07, 20, 21\n4. No se debe permitir asignar dos veces la misma habilidad al mismo jugador. → peticiones 08\n5. El sistema debe permitir consultar las habilidades asociadas a un jugador. → peticiones 14, 19, 22\n6. Se debe permitir consultar los jugadores que poseen determinada habilidad. → peticiones 20, 23\n7. Se deben poder agregar o retirar habilidades de un jugador. → peticiones 05, 26, 29\n8. Retirar una habilidad de un jugador no debe eliminar la habilidad del sistema. → peticiones 28",
       "item": [
         {
           "name": "01 Preparar: crear la habilidad Remate (201)",
@@ -6098,14 +6098,14 @@
             "url": "{{baseUrl}}/player-skills",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"playerId\": {{playerLuisId}},\n  \"skillId\": {{skillRemateId}}\n}",
+              "raw": "{\n  \"playerId\": {{playerLuisId}},\n  \"skillId\": {{skillRemateId}},\n  \"level\": 84\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Criterio HU-GD-07 #7: Se deben poder agregar o retirar habilidades de un jugador."
+            "description": "Criterio HU-GD-07 #7: Se deben poder agregar o retirar habilidades de un jugador.\n\nEl nivel (1 a 100) dice qué tan desarrollada tiene el jugador la habilidad; lo usa el radar del front."
           },
           "event": [
             {
@@ -6116,11 +6116,12 @@
                   "pm.test(\"Status 201\", function () {",
                   "    pm.response.to.have.status(201);",
                   "});",
-                  "pm.test(\"Responde el jugador y la habilidad\", function () {",
+                  "pm.test(\"Responde el jugador, la habilidad y el nivel\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.player.id).to.eql(Number(pm.collectionVariables.get(\"playerLuisId\")));",
                   "    pm.expect(body.skill.id).to.eql(Number(pm.collectionVariables.get(\"skillRemateId\")));",
                   "    pm.expect(body.skill.category).to.eql(\"TECNICA\");",
+                  "    pm.expect(body.level).to.eql(84);",
                   "});"
                 ]
               }
@@ -6128,7 +6129,7 @@
           ]
         },
         {
-          "name": "06 Asignar Cabeceo a Luis (201)",
+          "name": "06 Asignar Cabeceo a Luis sin nivel: queda en 50 (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -6147,7 +6148,7 @@
                 }
               }
             },
-            "description": "Criterio HU-GD-07 #2: Un jugador puede tener una o varias habilidades."
+            "description": "Criterio HU-GD-07 #2: Un jugador puede tener una o varias habilidades.\n\nEl nivel es opcional: sin él, la asignación queda en el punto medio."
           },
           "event": [
             {
@@ -6157,6 +6158,10 @@
                 "exec": [
                   "pm.test(\"Status 201\", function () {",
                   "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Nivel por defecto\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.level).to.eql(50);",
                   "});"
                 ]
               }
@@ -6365,7 +6370,85 @@
           ]
         },
         {
-          "name": "12 Habilidades de Luis (200)",
+          "name": "12 Nivel fuera de 1 a 100 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerSaraId}},\n  \"skillId\": {{skillCabeceoId}},\n  \"level\": 101\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.level).to.eql(\"El nivel debe estar entre 1 y 100\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Nivel con decimales (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": {{playerSaraId}},\n  \"skillId\": {{skillCabeceoId}},\n  \"level\": 70.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.level).to.eql(\"El nivel debe ser un número entero\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Habilidades de Luis (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -6384,6 +6467,10 @@
                   "pm.test(\"Cabeceo y Remate, por nombre\", function () {",
                   "    const ids = pm.response.json().map((item) => item.id);",
                   "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"skillCabeceoId\")), Number(pm.collectionVariables.get(\"skillRemateId\"))]);",
+                  "});",
+                  "pm.test(\"Cada habilidad trae su nivel\", function () {",
+                  "    const levels = pm.response.json().map((skill) => skill.level);",
+                  "    pm.expect(levels).to.eql([50, 84]);",
                   "});"
                 ]
               }
@@ -6391,7 +6478,193 @@
           ]
         },
         {
-          "name": "13 Jugadores con Remate (200)",
+          "name": "15 Cambiar el nivel de Cabeceo de Luis (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills/{{playerLuisId}}/{{skillCabeceoId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": 91\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Cambia solo el nivel: el jugador conserva la habilidad."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Nivel nuevo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.level).to.eql(91);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Cambiar el nivel sin enviarlo (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills/{{playerLuisId}}/{{skillCabeceoId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.level).to.eql(\"El nivel es obligatorio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Cambiar el nivel a 0 (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills/{{playerLuisId}}/{{skillCabeceoId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.level).to.eql(\"El nivel debe estar entre 1 y 100\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Cambiar el nivel de una habilidad que Sara no tiene (404)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/player-skills/{{playerSaraId}}/{{skillCabeceoId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no tiene la habilidad\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Habilidades de Luis: Cabeceo quedó en 91 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/player-skills/players/{{playerLuisId}}",
+            "description": "Criterio HU-GD-07 #5: El sistema debe permitir consultar las habilidades asociadas a un jugador."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"El cambio quedó guardado\", function () {",
+                  "    const levels = pm.response.json().map((skill) => skill.level);",
+                  "    pm.expect(levels).to.eql([91, 84]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Jugadores con Remate (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -6417,7 +6690,7 @@
           ]
         },
         {
-          "name": "14 Detalle de Remate: cuenta 2 jugadores (200)",
+          "name": "21 Detalle de Remate: cuenta 2 jugadores (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -6443,7 +6716,7 @@
           ]
         },
         {
-          "name": "15 Habilidades de un jugador que no existe (404)",
+          "name": "22 Habilidades de un jugador que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -6468,7 +6741,7 @@
           ]
         },
         {
-          "name": "16 Jugadores de una habilidad que no existe (404)",
+          "name": "23 Jugadores de una habilidad que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -6493,7 +6766,7 @@
           ]
         },
         {
-          "name": "17 Eliminar Remate, que está asignada a jugadores (400)",
+          "name": "24 Eliminar Remate, que está asignada a jugadores (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6523,7 +6796,7 @@
           ]
         },
         {
-          "name": "18 Eliminar a Luis, que tiene habilidades (400)",
+          "name": "25 Eliminar a Luis, que tiene habilidades (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6554,7 +6827,7 @@
           ]
         },
         {
-          "name": "19 Retirar Cabeceo a Luis (204)",
+          "name": "26 Retirar Cabeceo a Luis (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6576,7 +6849,7 @@
           ]
         },
         {
-          "name": "20 Retirarla otra vez (404)",
+          "name": "27 Retirarla otra vez (404)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6600,7 +6873,7 @@
           ]
         },
         {
-          "name": "21 Cabeceo sigue existiendo (200)",
+          "name": "28 Cabeceo sigue existiendo (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -6622,7 +6895,7 @@
           ]
         },
         {
-          "name": "22 Habilidades de Luis, ya sin Cabeceo (200)",
+          "name": "29 Habilidades de Luis, ya sin Cabeceo (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -6648,7 +6921,7 @@
           ]
         },
         {
-          "name": "23 Desactivar Cabeceo (200)",
+          "name": "30 Desactivar Cabeceo (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -6669,7 +6942,7 @@
           ]
         },
         {
-          "name": "24 Asignar una habilidad desactivada (400)",
+          "name": "31 Asignar una habilidad desactivada (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -6712,7 +6985,7 @@
           ]
         },
         {
-          "name": "25 Activar Cabeceo (200)",
+          "name": "32 Activar Cabeceo (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -6733,7 +7006,7 @@
           ]
         },
         {
-          "name": "26 Desactivar a Sara (200)",
+          "name": "33 Desactivar a Sara (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -6754,7 +7027,7 @@
           ]
         },
         {
-          "name": "27 Asignar una habilidad a una jugadora desactivada (400)",
+          "name": "34 Asignar una habilidad a una jugadora desactivada (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -6792,7 +7065,7 @@
           ]
         },
         {
-          "name": "28 Retirar Remate a Luis (204)",
+          "name": "35 Retirar Remate a Luis (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6813,7 +7086,7 @@
           ]
         },
         {
-          "name": "29 Retirar Remate a Sara (204)",
+          "name": "36 Retirar Remate a Sara (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6834,7 +7107,7 @@
           ]
         },
         {
-          "name": "30 Eliminar Remate, ya sin jugadores (204)",
+          "name": "37 Eliminar Remate, ya sin jugadores (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6856,7 +7129,7 @@
           ]
         },
         {
-          "name": "31 Eliminar a Luis, ya sin habilidades (204)",
+          "name": "38 Eliminar a Luis, ya sin habilidades (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6878,7 +7151,7 @@
           ]
         },
         {
-          "name": "32 Limpieza: eliminar a Sara (204)",
+          "name": "39 Limpieza: eliminar a Sara (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -6899,7 +7172,7 @@
           ]
         },
         {
-          "name": "33 Limpieza: eliminar Cabeceo (204)",
+          "name": "40 Limpieza: eliminar Cabeceo (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -7200,7 +7473,7 @@
             "url": "{{baseUrl}}/player-skills",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"playerId\": {{playerTomasId}},\n  \"skillId\": {{skillLiderazgoId}}\n}",
+              "raw": "{\n  \"playerId\": {{playerTomasId}},\n  \"skillId\": {{skillLiderazgoId}},\n  \"level\": 77\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7362,6 +7635,7 @@
                   "pm.test(\"Habilidades asignadas: Liderazgo\", function () {",
                   "    const profile = pm.response.json();",
                   "    pm.expect(profile.skills.map((s) => s.id)).to.eql([Number(pm.collectionVariables.get(\"skillLiderazgoId\"))]);",
+                  "    pm.expect(profile.skills[0].level).to.eql(77);",
                   "    pm.expect(profile.skillsMessage).to.eql(null);",
                   "});"
                 ]
