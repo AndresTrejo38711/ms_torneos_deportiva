@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "ms_torneos_deportiva · Anexo 2 (Gestión Deportiva)",
-    "description": "Pruebas del módulo de gestión deportiva, una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
+    "name": "ms_torneos_deportiva · Anexos 2 y 3 (Gestión Deportiva y de Competencias)",
+    "description": "Pruebas de los módulos de gestión deportiva (HU-GD) y de competencias (HU-GC), una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -217,6 +217,91 @@
     },
     {
       "key": "contractSantaFeId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sportGcFutbolId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sportGcBasketId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sportGcPoloId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentEliteId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentAndinaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamGcHalconesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sportGcVoleyId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sportGcTenisId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentCopaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentLigaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentStartedId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentClosedId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamAguilasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamBuhosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamCondoresId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamErizosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamDelfinesId",
       "value": "",
       "type": "string"
     }
@@ -7894,6 +7979,3328 @@
                 "exec": [
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GC-01 · Torneos",
+      "description": "CRUD de torneos: `/api/deportiva/tournaments`. El estado (`POR_INICIAR`, `EN_CURSO`, `FINALIZADO`) y `registrationOpen` se calculan con las fechas de hoy. Se permiten fechas pasadas, para registrar torneos que ya se jugaron.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un torneo con la información requerida. → peticiones 05, 14\n2. Cada torneo debe estar asociado con un deporte previamente registrado. → peticiones 05, 11, 12\n3. Los campos obligatorios deben ser validados antes de guardar la información. → peticiones 06, 07, 08, 09, 10, 13\n4. El sistema debe permitir consultar los torneos registrados. → peticiones 15\n5. Se debe poder consultar la información detallada de un torneo. → peticiones 16, 17\n6. Se debe permitir actualizar la información de un torneo existente. → peticiones 19, 21, 25\n7. Se debe permitir eliminar o desactivar un torneo cuando las reglas del sistema lo permitan. → peticiones 26, 27, 32\n8. Antes de eliminar un torneo, se debe validar si posee fases, partidos u otra información asociada. → peticiones 26\n9. Los cambios realizados deben quedar almacenados correctamente. → peticiones 16, 20, 28, 33",
+      "item": [
+        {
+          "name": "01 Preparar: crear el deporte Fútbol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol GC {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportGcFutbolId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: crear el deporte Baloncesto (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Baloncesto GC {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportGcBasketId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear el deporte Polo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Polo GC {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportGcPoloId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: desactivar Polo (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportGcPoloId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Crear el torneo Copa Élite (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"  Copa Élite {{suffix}}  \",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \" masculino \",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\",\n  \"registrationDeadline\": \"2030-01-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #1: El sistema debe permitir registrar un torneo con la información requerida.\n\nCriterio HU-GC-01 #2: Cada torneo debe estar asociado con un deporte previamente registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentEliteId\", pm.response.json().id);",
+                  "pm.test(\"Datos guardados, por iniciar y con inscripciones abiertas\", function () {",
+                  "    const t = pm.response.json();",
+                  "    pm.expect(t.name).to.eql(\"Copa Élite \" + pm.collectionVariables.get(\"suffix\"));",
+                  "    pm.expect(t.sport.id).to.eql(Number(pm.collectionVariables.get(\"sportGcFutbolId\")));",
+                  "    pm.expect(t.category).to.eql(\"MASCULINO\");",
+                  "    pm.expect(t.startDate).to.eql(\"2030-02-01\");",
+                  "    pm.expect(t.endDate).to.eql(\"2030-06-30\");",
+                  "    pm.expect(t.registrationDeadline).to.eql(\"2030-01-20\");",
+                  "    pm.expect(t.active).to.eql(true);",
+                  "    pm.expect(t.status).to.eql(\"POR_INICIAR\");",
+                  "    pm.expect(t.registrationOpen).to.eql(true);",
+                  "    pm.expect(t.teamsCount).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Campos obligatorios vacíos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #3: Los campos obligatorios deben ser validados antes de guardar la información."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.name).to.eql(\"El nombre es obligatorio\");",
+                  "    pm.expect(body.sportId).to.eql(\"El id del deporte es obligatorio\");",
+                  "    pm.expect(body.category).to.eql(\"La categoría es obligatoria\");",
+                  "    pm.expect(body.startDate).to.eql(\"La fecha de inicio es obligatoria\");",
+                  "    pm.expect(body.endDate).to.eql(\"La fecha de fin es obligatoria\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Nombre muy corto y categoría que no existe (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ab\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"JUVENIL\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #3: Los campos obligatorios deben ser validados antes de guardar la información."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.name).to.eql(\"El nombre debe tener al menos 3 caracteres\");",
+                  "    pm.expect(body.category).to.eql(\"La categoría debe ser MASCULINO, FEMENINO o MIXTO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Fecha de fin anterior al inicio (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Revés {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-06-30\",\n  \"endDate\": \"2030-02-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #3: Los campos obligatorios deben ser validados antes de guardar la información."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.endDate).to.eql(\"La fecha de fin no puede ser anterior a la fecha de inicio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Cierre de inscripciones después del inicio (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Tarde {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\",\n  \"registrationDeadline\": \"2030-02-05\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #3: Los campos obligatorios deben ser validados antes de guardar la información."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.registrationDeadline).to.eql(\"El cierre de inscripciones debe ser anterior a la fecha de inicio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Fecha que no existe (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Febrero {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-30\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #3: Los campos obligatorios deben ser validados antes de guardar la información."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.startDate).to.eql(\"La fecha de inicio debe ser una fecha real con el formato AAAA-MM-DD\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Deporte que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Fantasma {{suffix}}\",\n  \"sportId\": {{noExiste}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #2: Cada torneo debe estar asociado con un deporte previamente registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Deporte desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Polo {{suffix}}\",\n  \"sportId\": {{sportGcPoloId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #2: Cada torneo debe estar asociado con un deporte previamente registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Nombre repetido sin tilde y en mayúsculas (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"COPA ELITE {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #3: Los campos obligatorios deben ser validados antes de guardar la información.\n\nLa base no distingue mayúsculas ni tildes: COPA ELITE y Copa Élite son el mismo nombre."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Crear un torneo que ya se jugó: Liga Andina 2025 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Liga Andina {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"FEMENINO\",\n  \"startDate\": \"2025-02-01\",\n  \"endDate\": \"2025-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #1: El sistema debe permitir registrar un torneo con la información requerida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentAndinaId\", pm.response.json().id);",
+                  "pm.test(\"Finalizado y sin inscripciones abiertas\", function () {",
+                  "    const t = pm.response.json();",
+                  "    pm.expect(t.status).to.eql(\"FINALIZADO\");",
+                  "    pm.expect(t.registrationOpen).to.eql(false);",
+                  "    pm.expect(t.registrationDeadline).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Listar torneos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments",
+            "description": "Criterio HU-GC-01 #4: El sistema debe permitir consultar los torneos registrados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Aparecen los dos torneos creados\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"tournamentEliteId\")));",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"tournamentAndinaId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Detalle de Copa Élite (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}",
+            "description": "Criterio HU-GC-01 #5: Se debe poder consultar la información detallada de un torneo.\n\nCriterio HU-GC-01 #9: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Información detallada con su deporte\", function () {",
+                  "    const t = pm.response.json();",
+                  "    pm.expect(t.id).to.eql(Number(pm.collectionVariables.get(\"tournamentEliteId\")));",
+                  "    pm.expect(t.sport.id).to.eql(Number(pm.collectionVariables.get(\"sportGcFutbolId\")));",
+                  "    pm.expect(t.sport.name).to.eql(\"Fútbol GC \" + pm.collectionVariables.get(\"suffix\"));",
+                  "    pm.expect(t.registrationDeadline).to.eql(\"2030-01-20\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Detalle de un id que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{noExiste}}",
+            "description": "Criterio HU-GC-01 #5: Se debe poder consultar la información detallada de un torneo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Id no numérico en la URL (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/abc"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Actualizar Copa Élite: pasa a Baloncesto, mixto y sin cierre de inscripciones (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Élite {{suffix}}\",\n  \"sportId\": {{sportGcBasketId}},\n  \"category\": \"MIXTO\",\n  \"startDate\": \"2030-03-01\",\n  \"endDate\": \"2030-07-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #6: Se debe permitir actualizar la información de un torneo existente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Datos nuevos\", function () {",
+                  "    const t = pm.response.json();",
+                  "    pm.expect(t.sport.id).to.eql(Number(pm.collectionVariables.get(\"sportGcBasketId\")));",
+                  "    pm.expect(t.category).to.eql(\"MIXTO\");",
+                  "    pm.expect(t.startDate).to.eql(\"2030-03-01\");",
+                  "    pm.expect(t.registrationDeadline).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Detalle: los cambios quedaron guardados (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}",
+            "description": "Criterio HU-GC-01 #9: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cambios guardados\", function () {",
+                  "    const t = pm.response.json();",
+                  "    pm.expect(t.sport.id).to.eql(Number(pm.collectionVariables.get(\"sportGcBasketId\")));",
+                  "    pm.expect(t.endDate).to.eql(\"2030-07-31\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Renombrar Liga Andina con el nombre de Copa Élite (409)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments/{{tournamentAndinaId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"copa élite {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"FEMENINO\",\n  \"startDate\": \"2025-02-01\",\n  \"endDate\": \"2025-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #6: Se debe permitir actualizar la información de un torneo existente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Preparar: crear el equipo Halcones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Halcones GC {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamGcHalconesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Preparar: asociar Halcones a Baloncesto (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamGcHalconesId}},\n  \"sportId\": {{sportGcBasketId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Preparar: inscribir Halcones en Copa Élite (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentEliteId}},\n  \"teamIds\": [\n    {{teamGcHalconesId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Cambiar el deporte de un torneo con equipos inscritos (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Élite {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"MIXTO\",\n  \"startDate\": \"2030-03-01\",\n  \"endDate\": \"2030-07-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #6: Se debe permitir actualizar la información de un torneo existente.\n\nLos equipos inscritos están asociados al deporte actual: cambiarlo los dejaría por fuera."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"equipos inscritos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Eliminar Copa Élite, que tiene equipos inscritos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}",
+            "description": "Criterio HU-GC-01 #7: Se debe permitir eliminar o desactivar un torneo cuando las reglas del sistema lo permitan.\n\nCriterio HU-GC-01 #8: Antes de eliminar un torneo, se debe validar si posee fases, partidos u otra información asociada.\n\nLas fases y los partidos se suman a esta validación cuando existan (HU-GC-03 a 06)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"equipos inscritos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Desactivar Copa Élite (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}/disable",
+            "description": "Criterio HU-GC-01 #7: Se debe permitir eliminar o desactivar un torneo cuando las reglas del sistema lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Queda inactivo y sin inscripciones abiertas\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "    pm.expect(body.registrationOpen).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Detalle: Copa Élite quedó desactivado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}",
+            "description": "Criterio HU-GC-01 #9: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Inactivo en la base\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Desactivarlo otra vez (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Activar Copa Élite (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}/enable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Queda activo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Eliminar el deporte Fútbol, que tiene torneos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportGcFutbolId}}",
+            "description": "Un deporte con torneos no se elimina: se desactiva."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"torneos\");",
+                  "    pm.expect(message).to.include(\"Liga Andina\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Eliminar Liga Andina, sin información asociada (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentAndinaId}}",
+            "description": "Criterio HU-GC-01 #7: Se debe permitir eliminar o desactivar un torneo cuando las reglas del sistema lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Liga Andina ya no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentAndinaId}}",
+            "description": "Criterio HU-GC-01 #9: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Limpieza: retirar la inscripción de Halcones (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentEliteId}}/{{teamGcHalconesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Limpieza: eliminar Copa Élite (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Limpieza: retirar la asociación de Halcones con Baloncesto (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamGcHalconesId}}/{{sportGcBasketId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Limpieza: eliminar Halcones (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamGcHalconesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Limpieza: eliminar Fútbol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportGcFutbolId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Limpieza: eliminar Baloncesto (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportGcBasketId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Limpieza: eliminar Polo (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportGcPoloId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GC-02 · Inscripciones",
+      "description": "Inscripciones de equipos en torneos: `/api/deportiva/tournament-teams`. `POST` recibe uno o varios equipos (`teamIds`) y es todo o nada: si uno no cumple, no se inscribe ninguno. Inscribir y retirar solo se puede mientras el torneo esté activo, no haya empezado y no haya pasado su cierre de inscripciones.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe estar previamente registrado en el sistema. → peticiones 29, 46\n2. El equipo debe estar previamente registrado en el sistema. → peticiones 28, 47\n3. El equipo debe estar asociado con el deporte correspondiente al torneo. → peticiones 24\n4. El sistema debe permitir inscribir uno o varios equipos en un torneo. → peticiones 18, 19, 25, 26\n5. Un mismo equipo puede estar inscrito en diferentes torneos. → peticiones 19, 22\n6. Un torneo puede contar con varios equipos inscritos. → peticiones 18, 20, 21\n7. No se debe permitir registrar dos veces al mismo equipo en el mismo torneo. → peticiones 23\n8. El sistema debe permitir consultar los equipos inscritos en un torneo. → peticiones 20\n9. El sistema debe permitir consultar los torneos en los que se encuentra inscrito un equipo. → peticiones 22\n10. Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan. → peticiones 39, 40, 45\n11. Retirar una inscripción no debe eliminar el equipo ni el torneo del sistema. → peticiones 41, 42\n12. La información de la inscripción debe quedar asociada al equipo y al torneo correspondientes. → peticiones 18, 20, 22\n13. Si el torneo ya inició o el periodo de inscripciones se encuentra cerrado, el sistema debe impedir nuevas inscripciones o retiros cuando corresponda. → peticiones 33, 34, 45\n14. El sistema debe informar al usuario cuando una inscripción se haya realizado o retirado correctamente. → peticiones 18, 39",
+      "item": [
+        {
+          "name": "01 Preparar: crear el deporte Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Voleibol GC {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));",
+                  "// Fecha de hoy (AAAA-MM-DD), la misma que usa el servidor si corre en este equipo.",
+                  "const now = new Date();",
+                  "const pad = (n) => String(n).padStart(2, \"0\");",
+                  "pm.collectionVariables.set(\"today\", `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportGcVoleyId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: crear el deporte Tenis (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tenis GC {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportGcTenisId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear el torneo Copa Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Voleibol {{suffix}}\",\n  \"sportId\": {{sportGcVoleyId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\",\n  \"registrationDeadline\": \"2030-01-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentCopaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear el torneo Liga Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Liga Voleibol {{suffix}}\",\n  \"sportId\": {{sportGcVoleyId}},\n  \"category\": \"FEMENINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentLigaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: crear un torneo que ya inició (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Torneo en curso {{suffix}}\",\n  \"sportId\": {{sportGcVoleyId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2025-01-10\",\n  \"endDate\": \"2099-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentStartedId\", pm.response.json().id);",
+                  "pm.test(\"En curso\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_CURSO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: crear un torneo con las inscripciones cerradas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Cerrada {{suffix}}\",\n  \"sportId\": {{sportGcVoleyId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2099-03-01\",\n  \"endDate\": \"2099-06-30\",\n  \"registrationDeadline\": \"2025-01-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentClosedId\", pm.response.json().id);",
+                  "pm.test(\"Por iniciar, pero sin inscripciones abiertas\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"POR_INICIAR\");",
+                  "    pm.expect(body.registrationOpen).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: crear el equipo Águilas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Águilas GC {{suffix}}\",\n  \"city\": \"Cali\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamAguilasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: crear el equipo Búhos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Búhos GC {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamBuhosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Preparar: crear el equipo Cóndores (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cóndores GC {{suffix}}\",\n  \"city\": \"Pasto\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamCondoresId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Preparar: crear el equipo Erizos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Erizos GC {{suffix}}\",\n  \"city\": \"Tunja\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamErizosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Preparar: crear el equipo Delfines, solo de tenis (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Delfines GC {{suffix}}\",\n  \"city\": \"Cartagena\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamDelfinesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Preparar: asociar Águilas a Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamAguilasId}},\n  \"sportId\": {{sportGcVoleyId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Preparar: asociar Búhos a Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamBuhosId}},\n  \"sportId\": {{sportGcVoleyId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Preparar: asociar Cóndores a Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamCondoresId}},\n  \"sportId\": {{sportGcVoleyId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Preparar: asociar Erizos a Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamErizosId}},\n  \"sportId\": {{sportGcVoleyId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Preparar: asociar Delfines a Tenis (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamDelfinesId}},\n  \"sportId\": {{sportGcTenisId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Preparar: desactivar Cóndores (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamCondoresId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Inscribir Águilas y Búhos en Copa Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentCopaId}},\n  \"teamIds\": [\n    {{teamBuhosId}},\n    {{teamAguilasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #4: El sistema debe permitir inscribir uno o varios equipos en un torneo.\n\nCriterio HU-GC-02 #6: Un torneo puede contar con varios equipos inscritos.\n\nCriterio HU-GC-02 #12: La información de la inscripción debe quedar asociada al equipo y al torneo correspondientes.\n\nCriterio HU-GC-02 #14: El sistema debe informar al usuario cuando una inscripción se haya realizado o retirado correctamente.\n\nEl 201 con las inscripciones creadas es la confirmación de que se realizaron correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Quedan inscritos los dos, ordenados por nombre\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamAguilasId\")), Number(pm.collectionVariables.get(\"teamBuhosId\"))]);",
+                  "});",
+                  "pm.test(\"Cada inscripción queda asociada al torneo y lleva la fecha de hoy\", function () {",
+                  "    const rows = pm.response.json();",
+                  "    rows.forEach((row) => pm.expect(row.tournament.id).to.eql(Number(pm.collectionVariables.get(\"tournamentCopaId\"))));",
+                  "    rows.forEach((row) => pm.expect(row.registeredAt).to.eql(pm.collectionVariables.get(\"today\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Inscribir Águilas también en Liga Voleibol (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentLigaId}},\n  \"teamIds\": [\n    {{teamAguilasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #4: El sistema debe permitir inscribir uno o varios equipos en un torneo.\n\nCriterio HU-GC-02 #5: Un mismo equipo puede estar inscrito en diferentes torneos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Águilas inscrito\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamAguilasId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Equipos inscritos en Copa Voleibol (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/tournaments/{{tournamentCopaId}}",
+            "description": "Criterio HU-GC-02 #6: Un torneo puede contar con varios equipos inscritos.\n\nCriterio HU-GC-02 #8: El sistema debe permitir consultar los equipos inscritos en un torneo.\n\nCriterio HU-GC-02 #12: La información de la inscripción debe quedar asociada al equipo y al torneo correspondientes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Águilas y Búhos\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamAguilasId\")), Number(pm.collectionVariables.get(\"teamBuhosId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Detalle de Copa Voleibol: cuenta 2 equipos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentCopaId}}",
+            "description": "Criterio HU-GC-02 #6: Un torneo puede contar con varios equipos inscritos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"teamsCount\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.teamsCount).to.eql(2);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Torneos de Águilas (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/teams/{{teamAguilasId}}",
+            "description": "Criterio HU-GC-02 #5: Un mismo equipo puede estar inscrito en diferentes torneos.\n\nCriterio HU-GC-02 #9: El sistema debe permitir consultar los torneos en los que se encuentra inscrito un equipo.\n\nCriterio HU-GC-02 #12: La información de la inscripción debe quedar asociada al equipo y al torneo correspondientes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Está inscrito en Copa Voleibol y en Liga Voleibol\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.tournament.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"tournamentCopaId\")));",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"tournamentLigaId\")));",
+                  "    pm.expect(ids.length).to.eql(2);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Inscribir otra vez a Búhos en Copa Voleibol (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentCopaId}},\n  \"teamIds\": [\n    {{teamBuhosId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #7: No se debe permitir registrar dos veces al mismo equipo en el mismo torneo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Búhos\");",
+                  "    pm.expect(message).to.include(\"ya está inscrito\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Inscribir Delfines, que no es de voleibol (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentCopaId}},\n  \"teamIds\": [\n    {{teamDelfinesId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #3: El equipo debe estar asociado con el deporte correspondiente al torneo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Delfines\");",
+                  "    pm.expect(message).to.include(\"no está asociado al deporte\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Inscribir Erizos y Delfines a la vez: Delfines no cumple (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentCopaId}},\n  \"teamIds\": [\n    {{teamErizosId}},\n    {{teamDelfinesId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #4: El sistema debe permitir inscribir uno o varios equipos en un torneo.\n\nEs todo o nada: como Delfines no cumple, Erizos tampoco queda inscrito."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No se inscribió ningún equipo\");",
+                  "    pm.expect(message).to.include(\"Delfines\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Erizos no quedó inscrito (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/tournaments/{{tournamentCopaId}}",
+            "description": "Criterio HU-GC-02 #4: El sistema debe permitir inscribir uno o varios equipos en un torneo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Siguen solo Águilas y Búhos\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamAguilasId\")), Number(pm.collectionVariables.get(\"teamBuhosId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Inscribir Cóndores, que está desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentCopaId}},\n  \"teamIds\": [\n    {{teamCondoresId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Cóndores\");",
+                  "    pm.expect(message).to.include(\"desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Inscribir un equipo que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentCopaId}},\n  \"teamIds\": [\n    {{noExiste}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #2: El equipo debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Inscribir en un torneo que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{noExiste}},\n  \"teamIds\": [\n    {{teamErizosId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #1: El torneo debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Lista de equipos vacía (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentCopaId}},\n  \"teamIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.teamIds).to.eql(\"Elige al menos un equipo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 El mismo equipo dos veces en la lista (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentCopaId}},\n  \"teamIds\": [\n    {{teamErizosId}},\n    {{teamErizosId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.teamIds).to.eql(\"Un equipo no puede aparecer dos veces en la lista\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Sin el torneo (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamErizosId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.tournamentId).to.eql(\"El id del torneo es obligatorio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Inscribir en un torneo que ya inició (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentStartedId}},\n  \"teamIds\": [\n    {{teamErizosId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #13: Si el torneo ya inició o el periodo de inscripciones se encuentra cerrado, el sistema debe impedir nuevas inscripciones o retiros cuando corresponda."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya inició\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Inscribir con las inscripciones cerradas (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentClosedId}},\n  \"teamIds\": [\n    {{teamErizosId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-02 #13: Si el torneo ya inició o el periodo de inscripciones se encuentra cerrado, el sistema debe impedir nuevas inscripciones o retiros cuando corresponda."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"cerraron\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Preparar: desactivar Liga Voleibol (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentLigaId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Inscribir en un torneo desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentLigaId}},\n  \"teamIds\": [\n    {{teamErizosId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Preparar: activar Liga Voleibol (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentLigaId}}/enable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Eliminar Águilas, que está inscrito en torneos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamAguilasId}}",
+            "description": "Un equipo inscrito no se elimina: primero se retiran sus inscripciones o se desactiva."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"inscrito en torneos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Retirar a Búhos de Copa Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentCopaId}}/{{teamBuhosId}}",
+            "description": "Criterio HU-GC-02 #10: Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan.\n\nCriterio HU-GC-02 #14: El sistema debe informar al usuario cuando una inscripción se haya realizado o retirado correctamente.\n\nEl 204 es la confirmación de que la inscripción se retiró correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Equipos inscritos en Copa Voleibol: queda Águilas (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/tournaments/{{tournamentCopaId}}",
+            "description": "Criterio HU-GC-02 #10: Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Solo Águilas\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamAguilasId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Búhos sigue registrado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamBuhosId}}",
+            "description": "Criterio HU-GC-02 #11: Retirar una inscripción no debe eliminar el equipo ni el torneo del sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Activo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Copa Voleibol sigue registrado, con 1 equipo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentCopaId}}",
+            "description": "Criterio HU-GC-02 #11: Retirar una inscripción no debe eliminar el equipo ni el torneo del sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Un equipo inscrito\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.teamsCount).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Retirar otra vez a Búhos (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentCopaId}}/{{teamBuhosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no está inscrito\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Preparar: Copa Voleibol empieza antes de hoy (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments/{{tournamentCopaId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Voleibol {{suffix}}\",\n  \"sportId\": {{sportGcVoleyId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2025-01-10\",\n  \"endDate\": \"2099-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"En curso\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_CURSO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 Retirar a Águilas cuando el torneo ya inició (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentCopaId}}/{{teamAguilasId}}",
+            "description": "Criterio HU-GC-02 #10: Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan.\n\nCriterio HU-GC-02 #13: Si el torneo ya inició o el periodo de inscripciones se encuentra cerrado, el sistema debe impedir nuevas inscripciones o retiros cuando corresponda."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya inició\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 Equipos de un torneo que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/tournaments/{{noExiste}}",
+            "description": "Criterio HU-GC-02 #1: El torneo debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 Torneos de un equipo que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/teams/{{noExiste}}",
+            "description": "Criterio HU-GC-02 #2: El equipo debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 Limpieza: Copa Voleibol vuelve a empezar en 2030 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments/{{tournamentCopaId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Voleibol {{suffix}}\",\n  \"sportId\": {{sportGcVoleyId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Limpieza: retirar a Águilas de Copa Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentCopaId}}/{{teamAguilasId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "50 Limpieza: retirar a Águilas de Liga Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentLigaId}}/{{teamAguilasId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Limpieza: eliminar Copa Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentCopaId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "52 Limpieza: eliminar Liga Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentLigaId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "53 Limpieza: eliminar el torneo en curso (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentStartedId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "54 Limpieza: eliminar Copa Cerrada (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentClosedId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "55 Limpieza: retirar Águilas de Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamAguilasId}}/{{sportGcVoleyId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "56 Limpieza: retirar Búhos de Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamBuhosId}}/{{sportGcVoleyId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "57 Limpieza: retirar Cóndores de Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamCondoresId}}/{{sportGcVoleyId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "58 Limpieza: retirar Erizos de Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamErizosId}}/{{sportGcVoleyId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "59 Limpieza: retirar Delfines de Tenis (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamDelfinesId}}/{{sportGcTenisId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "60 Limpieza: eliminar Águilas (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamAguilasId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "61 Limpieza: eliminar Búhos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamBuhosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "62 Limpieza: eliminar Cóndores (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamCondoresId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "63 Limpieza: eliminar Erizos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamErizosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64 Limpieza: eliminar Delfines (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamDelfinesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "65 Limpieza: eliminar Voleibol (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportGcVoleyId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "66 Limpieza: eliminar Tenis (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportGcTenisId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
                   "});"
                 ]
               }

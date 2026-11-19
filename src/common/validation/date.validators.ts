@@ -86,3 +86,27 @@ export function IsNotBeforeDate(
     options,
   );
 }
+
+// Decorador para los DTO: la fecha debe ser anterior (estrictamente) a la de otro campo del mismo
+// DTO (por ejemplo, el cierre de inscripciones frente al inicio del torneo). Si alguna de las dos
+// no es una fecha válida no repite el error: de eso se encarga IsDateOnly.
+export function IsBeforeDate(
+  property: string,
+  options?: ValidationOptions,
+): PropertyDecorator {
+  return ValidateBy(
+    {
+      name: 'isBeforeDate',
+      constraints: [property],
+      validator: {
+        validate: (value, args) => {
+          const dto = args?.object as Record<string, unknown> | undefined;
+          const other = dto?.[property];
+          return !isDateOnly(value) || !isDateOnly(other) || value < other;
+        },
+        defaultMessage: () => `La fecha debe ser anterior a ${property}`,
+      },
+    },
+    options,
+  );
+}

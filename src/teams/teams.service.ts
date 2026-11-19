@@ -85,13 +85,20 @@ export class TeamsService {
   }
 
   // Antes de eliminar se valida si el equipo tiene información asociada: sus contratos con
-  // jugadores (HU-GD-05) y sus deportes (HU-GD-03).
+  // jugadores (HU-GD-05), sus inscripciones en torneos (HU-GC-02) y sus deportes (HU-GD-03).
   async remove(id: number): Promise<void> {
     // teamSports: { sport: true } carga las filas de team_sports y, de cada una, su deporte.
     const team = await this.teamRepository.findOne({
       where: { id },
-      relations: { teamSports: { sport: true }, teamPlayers: true },
-      order: { teamSports: { sport: { name: 'ASC' } } },
+      relations: {
+        teamSports: { sport: true },
+        teamPlayers: true,
+        tournamentTeams: { tournament: true },
+      },
+      order: {
+        teamSports: { sport: { name: 'ASC' } },
+        tournamentTeams: { tournament: { name: 'ASC' } },
+      },
     });
     if (!team) {
       throw notFound(id);
@@ -104,6 +111,16 @@ export class TeamsService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `No se puede eliminar "${team.name}" porque tiene historial de contratos con jugadores (${contracts} ${contracts === 1 ? 'contrato' : 'contratos'}). Desactívalo en su lugar`,
+      );
+    }
+
+    if (team.tournamentTeams.length > 0) {
+      const names = team.tournamentTeams
+        .map((row) => row.tournament.name)
+        .join(', ');
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${team.name}" porque está inscrito en torneos (${names}). Retira esas inscripciones primero o desactiva el equipo`,
       );
     }
 

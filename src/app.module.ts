@@ -10,6 +10,8 @@ import { SportsModule } from './sports/sports.module';
 import { TeamPlayersModule } from './team-players/team-players.module';
 import { TeamSportsModule } from './team-sports/team-sports.module';
 import { TeamsModule } from './teams/teams.module';
+import { TournamentTeamsModule } from './tournament-teams/tournament-teams.module';
+import { TournamentsModule } from './tournaments/tournaments.module';
 
 @Module({
   imports: [
@@ -48,6 +50,10 @@ import { TeamsModule } from './teams/teams.module';
     SkillsModule, // HU-GD-06
     PlayerSkillsModule, // HU-GD-07
     PlayerProfilesModule, // HU-GD-08
+
+    // Anexo 3 (Gestión de Competencias).
+    TournamentsModule, // HU-GC-01
+    TournamentTeamsModule, // HU-GC-02
   ],
 })
 export class AppModule {}

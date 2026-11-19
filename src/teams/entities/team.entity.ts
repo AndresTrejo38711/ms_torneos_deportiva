@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { TeamPlayer } from '../../team-players/entities/team-player.entity';
 import { TeamSport } from '../../team-sports/entities/team-sport.entity';
+import { TournamentTeam } from '../../tournament-teams/entities/tournament-team.entity';
 
 // HU-GD-02. Organización que puede participar en las competencias. Sus deportes (HU-GD-03) y
 // sus jugadores (HU-GD-05) se relacionan con tablas intermedias.
@@ -55,4 +56,8 @@ export class Team {
   // está en team_players.
   @OneToMany(() => TeamPlayer, (teamPlayer) => teamPlayer.team)
   teamPlayers: TeamPlayer[];
+
+  // HU-GC-02. Torneos en los que está inscrito. La llave foránea team_id está en tournament_teams.
+  @OneToMany(() => TournamentTeam, (tournamentTeam) => tournamentTeam.team)
+  tournamentTeams: TournamentTeam[];
 }
