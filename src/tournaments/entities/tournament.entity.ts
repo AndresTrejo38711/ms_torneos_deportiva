@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { Phase } from '../../phases/entities/phase.entity';
 import { Sport } from '../../sports/entities/sport.entity';
 import { TournamentTeam } from '../../tournament-teams/entities/tournament-team.entity';
 import { TournamentCategory } from './tournament-category.enum';
@@ -64,4 +65,8 @@ export class Tournament {
     (tournamentTeam) => tournamentTeam.tournament,
   )
   tournamentTeams: TournamentTeam[];
+
+  // HU-GC-03. Sus fases (de grupos y finales). La llave foránea tournament_id está en phases.
+  @OneToMany(() => Phase, (phase) => phase.tournament)
+  phases: Phase[];
 }

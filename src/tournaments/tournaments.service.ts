@@ -108,10 +108,24 @@ export class TournamentsService {
     return this.findOne(id);
   }
 
-  // Antes de eliminar se valida si el torneo tiene información asociada: sus equipos inscritos
-  // (HU-GC-02). Las fases y los partidos se suman cuando existan.
+  // Antes de eliminar se valida si el torneo tiene información asociada: sus fases (HU-GC-03), que
+  // a su vez tienen los grupos y los partidos, y sus equipos inscritos (HU-GC-02).
   async remove(id: number): Promise<void> {
     const tournament = await this.findTournament(id);
+
+    const withPhases = await this.tournamentRepository.findOne({
+      where: { id },
+      relations: { phases: true },
+      order: { phases: { order: 'ASC' } },
+    });
+    const phases = withPhases?.phases ?? [];
+    if (phases.length > 0) {
+      const names = phases.map((phase) => phase.name).join(', ');
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${tournament.name}" porque tiene fases (${names}). Elimínalas primero o desactiva el torneo`,
+      );
+    }
 
     const teams = tournament.tournamentTeams.length;
     if (teams > 0) {

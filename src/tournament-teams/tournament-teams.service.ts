@@ -4,6 +4,7 @@ import { In, Repository } from 'typeorm';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { today } from '../common/validation/date.validators';
+import { GroupTeam } from '../group-teams/entities/group-team.entity';
 import { TeamResponseDto } from '../teams/dto/team-response.dto';
 import { TeamsService } from '../teams/teams.service';
 import { TournamentResponseDto } from '../tournaments/dto/tournament-response.dto';
@@ -19,9 +20,16 @@ import { toTournamentTeamResponse } from './tournament-teams.mapper';
 export class TournamentTeamsService {
   // TournamentsService y TeamsService llegan porque este módulo importa los suyos. Con ellos se
   // valida que el torneo y el equipo existan, con los mismos mensajes de sus HU.
+  //
+  // El repositorio de group_teams sirve solo para una consulta: si el equipo ya está en un grupo
+  // del torneo (HU-GC-04). Se usa la tabla directamente, y no el service de group-teams, porque ese
+  // módulo ya depende de este (valida las inscripciones) y la dependencia no puede ir en los dos
+  // sentidos.
   constructor(
     @InjectRepository(TournamentTeam)
     private readonly tournamentTeamRepository: Repository<TournamentTeam>,
+    @InjectRepository(GroupTeam)
+    private readonly groupTeamRepository: Repository<GroupTeam>,
     private readonly tournamentsService: TournamentsService,
     private readonly teamsService: TeamsService,
   ) {}
@@ -109,8 +117,16 @@ export class TournamentTeamsService {
     return rows.map(toTournamentTeamResponse);
   }
 
+  // Lo usan los grupos (HU-GC-04): solo un equipo inscrito en el torneo entra a sus grupos.
+  isEnrolled(tournamentId: number, teamId: number): Promise<boolean> {
+    return this.tournamentTeamRepository.existsBy({
+      tournament: { id: tournamentId },
+      team: { id: teamId },
+    });
+  }
+
   // Retirar la inscripción borra solo la fila de tournament_teams: el equipo y el torneo siguen
-  // igual. Solo mientras las inscripciones estén abiertas.
+  // igual. Solo mientras las inscripciones estén abiertas y el equipo no esté en un grupo.
   async remove(tournamentId: number, teamId: number): Promise<void> {
     const tournament = await this.tournamentsService.findOne(tournamentId);
     const team = await this.teamsService.findOne(teamId);
@@ -123,6 +139,21 @@ export class TournamentTeamsService {
       throw new ApplicationException(
         ErrorCase.NOT_FOUND,
         `El equipo "${team.name}" no está inscrito en "${tournament.name}"`,
+      );
+    }
+
+    // HU-GC-04: si ya está en un grupo del torneo, primero hay que sacarlo de ahí.
+    const membership = await this.groupTeamRepository.findOne({
+      where: {
+        team: { id: teamId },
+        group: { phase: { tournament: { id: tournamentId } } },
+      },
+      relations: { group: { phase: true } },
+    });
+    if (membership) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El equipo "${team.name}" está en el grupo "${membership.group.name}" (${membership.group.phase.name}): sácalo del grupo antes de retirar su inscripción`,
       );
     }
 
