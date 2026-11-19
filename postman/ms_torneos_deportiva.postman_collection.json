@@ -619,6 +619,146 @@
       "key": "scoreVueltaId",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "sportDesarrolloId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentDesarrolloId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentAisladaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseDGId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseDSId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseDFId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseAUId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamAlcesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamBueyesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamCebrasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamDingosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamEmuesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamFaisanesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamGorilasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "groupDAId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "groupDBId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "groupAUId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerBrunoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDA1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDB1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDA2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDB2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDA3Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDB3Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDAXId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "scoreBrunoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDS1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchDS2Id",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -21770,6 +21910,2668 @@
             "method": "PATCH",
             "header": [],
             "url": "{{baseUrl}}/teams/{{teamJaguaresId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GC-08 · Desarrollo del torneo",
+      "description": "Desarrollo de un torneo: `GET /api/deportiva/tournaments/{id}/development`. Una sola respuesta con la información general (`tournament`), el resumen (`summary`: partidos finalizados, pendientes y cancelados, % completado, fase actual, equipos activos y eliminados, total anotado) y cada fase en su orden (`phases`): las de grupos con la tabla de posiciones de cada grupo, las finales con su llave, y todas con sus partidos y las anotaciones de cada uno.\n\nTabla: solo cuentan los partidos finalizados (3 puntos ganar, 1 empatar, 0 perder); desempate por puntos, diferencia, goles a favor y nombre. Llave: una posición por partido, con su ganador cuando finaliza (por marcador o por penales).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los partidos finalizados son historial y no se eliminan, así que Copa Desarrollo, sus equipos y el jugador quedan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir seleccionar un torneo registrado. → peticiones 57, 68\n2. Se debe mostrar la información general del torneo. → peticiones 57, 65\n3. Se deben mostrar las fases que conforman la competencia. → peticiones 57\n4. En las fases de grupos se deben mostrar los grupos y los equipos que los conforman. → peticiones 58\n5. Si son grupos la tabla de posiciones. → peticiones 59, 60, 67\n6. Si es fase final a manera de llaves. → peticiones 61\n7. Se deben mostrar los partidos asociados con cada fase. → peticiones 62\n8. Se debe indicar cuáles partidos tienen resultados registrados y cuáles están pendientes. → peticiones 63, 65\n9. Se deben poder consultar las anotaciones correspondientes a cada partido. → peticiones 64\n10. La información presentada debe corresponder únicamente al torneo seleccionado. → peticiones 66, 67",
+      "item": [
+        {
+          "name": "01 Preparar: crear el deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol Desarrollo {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportDesarrolloId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: crear el torneo Copa Desarrollo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Desarrollo {{suffix}}\",\n  \"sportId\": {{sportDesarrolloId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentDesarrolloId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear el torneo Copa Aislada (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Aislada {{suffix}}\",\n  \"sportId\": {{sportDesarrolloId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentAisladaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear la Fase de grupos, clasifican 2 por grupo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentDesarrolloId}},\n  \"type\": \"GRUPOS\",\n  \"name\": \"Fase de grupos\",\n  \"qualifiersPerGroup\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseDGId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: crear la Semifinal, de 4 equipos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentDesarrolloId}},\n  \"type\": \"FINAL\",\n  \"name\": \"Semifinal\",\n  \"teamsCount\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseDSId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: crear la Final, de 2 equipos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentDesarrolloId}},\n  \"type\": \"FINAL\",\n  \"name\": \"Final\",\n  \"teamsCount\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseDFId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: crear la Fase única de Copa Aislada, clasifica 1 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentAisladaId}},\n  \"type\": \"GRUPOS\",\n  \"name\": \"Fase única\",\n  \"qualifiersPerGroup\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseAUId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: crear el equipo Alces (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alces GC {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamAlcesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Preparar: crear el equipo Bueyes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bueyes GC {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamBueyesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Preparar: crear el equipo Cebras (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cebras GC {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamCebrasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Preparar: crear el equipo Dingos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dingos GC {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamDingosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Preparar: crear el equipo Emúes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Emúes GC {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamEmuesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Preparar: crear el equipo Faisanes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Faisanes GC {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamFaisanesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Preparar: crear el equipo Gorilas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gorilas GC {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamGorilasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Preparar: asociar Alces al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamAlcesId}},\n  \"sportId\": {{sportDesarrolloId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Preparar: asociar Bueyes al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamBueyesId}},\n  \"sportId\": {{sportDesarrolloId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Preparar: asociar Cebras al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamCebrasId}},\n  \"sportId\": {{sportDesarrolloId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Preparar: asociar Dingos al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamDingosId}},\n  \"sportId\": {{sportDesarrolloId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Preparar: asociar Emúes al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamEmuesId}},\n  \"sportId\": {{sportDesarrolloId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Preparar: asociar Faisanes al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamFaisanesId}},\n  \"sportId\": {{sportDesarrolloId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Preparar: asociar Gorilas al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamGorilasId}},\n  \"sportId\": {{sportDesarrolloId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Preparar: inscribir seis equipos en Copa Desarrollo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentDesarrolloId}},\n  \"teamIds\": [\n    {{teamAlcesId}},\n    {{teamBueyesId}},\n    {{teamCebrasId}},\n    {{teamDingosId}},\n    {{teamEmuesId}},\n    {{teamFaisanesId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Preparar: inscribir Alces y Gorilas en Copa Aislada (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentAisladaId}},\n  \"teamIds\": [\n    {{teamAlcesId}},\n    {{teamGorilasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Preparar: crear el Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"name\": \"Grupo A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"groupDAId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Preparar: crear el Grupo B (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"name\": \"Grupo B\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"groupDBId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Preparar: crear el Grupo Único de Copa Aislada (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseAUId}},\n  \"name\": \"Grupo Único\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"groupAUId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Preparar: Alces, Bueyes y Cebras al Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/group-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": {{groupDAId}},\n  \"teamIds\": [\n    {{teamAlcesId}},\n    {{teamBueyesId}},\n    {{teamCebrasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Preparar: Dingos, Emúes y Faisanes al Grupo B (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/group-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": {{groupDBId}},\n  \"teamIds\": [\n    {{teamDingosId}},\n    {{teamEmuesId}},\n    {{teamFaisanesId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Preparar: Alces y Gorilas al Grupo Único (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/group-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": {{groupAUId}},\n  \"teamIds\": [\n    {{teamAlcesId}},\n    {{teamGorilasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Preparar: crear al jugador Bruno Castaño (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"90{{suffix}}\",\n  \"firstName\": \"Bruno\",\n  \"lastName\": \"Castaño\",\n  \"birthDate\": \"1999-06-12\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerBrunoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Preparar: contrato de Bruno con Alces (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamAlcesId}},\n  \"playerId\": {{playerBrunoId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Preparar: programar Alces vs Bueyes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"homeTeamId\": {{teamAlcesId}},\n  \"awayTeamId\": {{teamBueyesId}},\n  \"scheduledAt\": \"2030-02-10T16:00\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDA1Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Preparar: iniciar Alces vs Bueyes (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDA1Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Preparar: resultado Alces vs Bueyes, 2-0 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchDA1Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 2,\n  \"awayScore\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Preparar: programar Emúes vs Dingos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"homeTeamId\": {{teamEmuesId}},\n  \"awayTeamId\": {{teamDingosId}},\n  \"scheduledAt\": \"2030-02-11T16:00\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDB1Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Preparar: iniciar Emúes vs Dingos (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDB1Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Preparar: resultado Emúes vs Dingos, 0-0 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchDB1Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 0,\n  \"awayScore\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Preparar: programar Bueyes vs Cebras (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"homeTeamId\": {{teamBueyesId}},\n  \"awayTeamId\": {{teamCebrasId}},\n  \"scheduledAt\": \"2030-02-14T16:00\",\n  \"round\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDA2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Preparar: iniciar Bueyes vs Cebras (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDA2Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Preparar: resultado Bueyes vs Cebras, 1-1 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchDA2Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Preparar: programar Emúes vs Faisanes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"homeTeamId\": {{teamEmuesId}},\n  \"awayTeamId\": {{teamFaisanesId}},\n  \"scheduledAt\": \"2030-02-15T16:00\",\n  \"round\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDB2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Preparar: iniciar Emúes vs Faisanes (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDB2Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Preparar: resultado Emúes vs Faisanes, 3-2 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchDB2Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 3,\n  \"awayScore\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Preparar: programar Cebras vs Alces (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"homeTeamId\": {{teamCebrasId}},\n  \"awayTeamId\": {{teamAlcesId}},\n  \"scheduledAt\": \"2030-02-18T16:00\",\n  \"round\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDA3Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 Preparar: iniciar Cebras vs Alces (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDA3Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 Preparar: resultado Cebras vs Alces, 0-1 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchDA3Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 0,\n  \"awayScore\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 Preparar: programar Dingos vs Faisanes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"homeTeamId\": {{teamDingosId}},\n  \"awayTeamId\": {{teamFaisanesId}},\n  \"scheduledAt\": \"2030-02-19T16:00\",\n  \"round\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDB3Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 Preparar: iniciar Dingos vs Faisanes (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDB3Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Preparar: resultado Dingos vs Faisanes, 1-0 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchDB3Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "50 Preparar: programar la revancha Bueyes vs Alces (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDGId}},\n  \"homeTeamId\": {{teamBueyesId}},\n  \"awayTeamId\": {{teamAlcesId}},\n  \"scheduledAt\": \"2030-02-22T16:00\",\n  \"round\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDAXId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Preparar: cancelar la revancha (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDAXId}}/cancel"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "52 Preparar: gol de Bruno en Alces vs Bueyes, minuto 30 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchDA1Id}},\n  \"teamId\": {{teamAlcesId}},\n  \"playerId\": {{playerBrunoId}},\n  \"minute\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"scoreBrunoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "53 Preparar: Semifinal 1, Alces vs Dingos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDSId}},\n  \"homeTeamId\": {{teamAlcesId}},\n  \"awayTeamId\": {{teamDingosId}},\n  \"scheduledAt\": \"2030-05-10T15:00\",\n  \"bracketPosition\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDS1Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "54 Preparar: iniciar la Semifinal 1 (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDS1Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "55 Preparar: Semifinal 1 empatada 1-1, Dingos gana 4-3 en penales (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchDS1Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 1,\n  \"homePenalties\": 3,\n  \"awayPenalties\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "56 Preparar: Semifinal 2, Emúes vs Cebras, sin jugar (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseDSId}},\n  \"homeTeamId\": {{teamEmuesId}},\n  \"awayTeamId\": {{teamCebrasId}},\n  \"scheduledAt\": \"2030-05-11T15:00\",\n  \"bracketPosition\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchDS2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "57 Información general y fases de Copa Desarrollo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #1: El sistema debe permitir seleccionar un torneo registrado.\n\nCriterio HU-GC-08 #2: Se debe mostrar la información general del torneo.\n\nCriterio HU-GC-08 #3: Se deben mostrar las fases que conforman la competencia."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"El torneo pedido, con sus datos\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.tournament.id).to.eql(Number(pm.collectionVariables.get(\"tournamentDesarrolloId\")));",
+                  "    pm.expect(d.tournament.name).to.include(\"Copa Desarrollo\");",
+                  "    pm.expect(d.tournament.category).to.eql(\"MASCULINO\");",
+                  "    pm.expect(d.tournament.startDate).to.eql(\"2030-02-01\");",
+                  "    pm.expect(d.tournament.endDate).to.eql(\"2030-06-30\");",
+                  "    pm.expect(d.tournament.teamsCount).to.eql(6);",
+                  "});",
+                  "pm.test(\"Sus fases, en orden\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.phases.map((p) => p.name)).to.eql([\"Fase de grupos\", \"Semifinal\", \"Final\"]);",
+                  "    pm.expect(d.phases.map((p) => p.type)).to.eql([\"GRUPOS\", \"FINAL\", \"FINAL\"]);",
+                  "    pm.expect(d.phases.map((p) => p.order)).to.eql([1, 2, 3]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "58 Grupos de la fase y sus equipos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #4: En las fases de grupos se deben mostrar los grupos y los equipos que los conforman."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Grupo A y Grupo B, cada uno con sus tres equipos\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const groups = d.phases[0].groups;",
+                  "    pm.expect(groups.map((g) => g.name)).to.eql([\"Grupo A\", \"Grupo B\"]);",
+                  "    const teams = (g) => g.standings.map((r) => r.team.id).sort((a, b) => a - b);",
+                  "    pm.expect(teams(groups[0])).to.eql([Number(pm.collectionVariables.get(\"teamAlcesId\")), Number(pm.collectionVariables.get(\"teamBueyesId\")), Number(pm.collectionVariables.get(\"teamCebrasId\"))]);",
+                  "    pm.expect(teams(groups[1])).to.eql([Number(pm.collectionVariables.get(\"teamDingosId\")), Number(pm.collectionVariables.get(\"teamEmuesId\")), Number(pm.collectionVariables.get(\"teamFaisanesId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "59 Tabla del Grupo A: Cebras supera a Bueyes por diferencia (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #5: Si son grupos la tabla de posiciones.\n\nLa revancha Bueyes vs Alces está cancelada: no cuenta en la tabla."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Alces 6 pts; Cebras y Bueyes 1 pt, pero Cebras con mejor diferencia (-1 contra -2)\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const t = d.phases[0].groups[0].standings;",
+                  "    pm.expect(t.map((r) => r.team.id)).to.eql([Number(pm.collectionVariables.get(\"teamAlcesId\")), Number(pm.collectionVariables.get(\"teamCebrasId\")), Number(pm.collectionVariables.get(\"teamBueyesId\"))]);",
+                  "    pm.expect([t[0].position, t[0].played, t[0].won, t[0].drawn, t[0].lost, t[0].scoredFor, t[0].scoredAgainst, t[0].difference, t[0].points, t[0].qualifies]).to.eql([1, 2, 2, 0, 0, 3, 0, 3, 6, true]);",
+                  "    pm.expect([t[1].position, t[1].played, t[1].won, t[1].drawn, t[1].lost, t[1].scoredFor, t[1].scoredAgainst, t[1].difference, t[1].points, t[1].qualifies]).to.eql([2, 2, 0, 1, 1, 1, 2, -1, 1, true]);",
+                  "    pm.expect([t[2].position, t[2].played, t[2].won, t[2].drawn, t[2].lost, t[2].scoredFor, t[2].scoredAgainst, t[2].difference, t[2].points, t[2].qualifies]).to.eql([3, 2, 0, 1, 1, 1, 3, -2, 1, false]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "60 Tabla del Grupo B: Emúes supera a Dingos por goles a favor (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #5: Si son grupos la tabla de posiciones.\n\nPor nombre, Dingos iría antes: queda segundo porque el desempate por goles a favor va primero."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Emúes y Dingos con 4 pts y diferencia +1; Emúes hizo 3 goles y Dingos 1\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const t = d.phases[0].groups[1].standings;",
+                  "    pm.expect(t.map((r) => r.team.id)).to.eql([Number(pm.collectionVariables.get(\"teamEmuesId\")), Number(pm.collectionVariables.get(\"teamDingosId\")), Number(pm.collectionVariables.get(\"teamFaisanesId\"))]);",
+                  "    pm.expect([t[0].position, t[0].played, t[0].won, t[0].drawn, t[0].lost, t[0].scoredFor, t[0].scoredAgainst, t[0].difference, t[0].points, t[0].qualifies]).to.eql([1, 2, 1, 1, 0, 3, 2, 1, 4, true]);",
+                  "    pm.expect([t[1].position, t[1].played, t[1].won, t[1].drawn, t[1].lost, t[1].scoredFor, t[1].scoredAgainst, t[1].difference, t[1].points, t[1].qualifies]).to.eql([2, 2, 1, 1, 0, 1, 0, 1, 4, true]);",
+                  "    pm.expect([t[2].position, t[2].played, t[2].won, t[2].drawn, t[2].lost, t[2].scoredFor, t[2].scoredAgainst, t[2].difference, t[2].points, t[2].qualifies]).to.eql([3, 2, 0, 0, 2, 2, 4, -2, 0, false]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "61 Llaves de la Semifinal y la Final (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #6: Si es fase final a manera de llaves."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Semifinal: llave 1 ganada por Dingos en penales, llave 2 sin jugar\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const b = d.phases[1].bracket;",
+                  "    pm.expect(b.map((s) => s.position)).to.eql([1, 2]);",
+                  "    pm.expect(b[0].match.id).to.eql(Number(pm.collectionVariables.get(\"matchDS1Id\")));",
+                  "    pm.expect(b[0].winner.id).to.eql(Number(pm.collectionVariables.get(\"teamDingosId\")));",
+                  "    pm.expect(b[1].match.id).to.eql(Number(pm.collectionVariables.get(\"matchDS2Id\")));",
+                  "    pm.expect(b[1].winner).to.eql(null);",
+                  "});",
+                  "pm.test(\"Final: una llave, todavía sin partido\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.phases[2].bracket).to.eql([{\"position\": 1, \"match\": null, \"winner\": null}]);",
+                  "});",
+                  "pm.test(\"La fase de grupos no tiene llave y las finales no tienen grupos\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.phases[0].bracket).to.eql(null);",
+                  "    pm.expect(d.phases[1].groups).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "62 Partidos de cada fase, por fecha (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #7: Se deben mostrar los partidos asociados con cada fase."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cada fase con los suyos\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.phases[0].matches.map((m) => m.id)).to.eql([Number(pm.collectionVariables.get(\"matchDA1Id\")), Number(pm.collectionVariables.get(\"matchDB1Id\")), Number(pm.collectionVariables.get(\"matchDA2Id\")), Number(pm.collectionVariables.get(\"matchDB2Id\")), Number(pm.collectionVariables.get(\"matchDA3Id\")), Number(pm.collectionVariables.get(\"matchDB3Id\")), Number(pm.collectionVariables.get(\"matchDAXId\"))]);",
+                  "    pm.expect(d.phases[1].matches.map((m) => m.id)).to.eql([Number(pm.collectionVariables.get(\"matchDS1Id\")), Number(pm.collectionVariables.get(\"matchDS2Id\"))]);",
+                  "    pm.expect(d.phases[2].matches).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "63 Partidos con resultado y pendientes (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #8: Se debe indicar cuáles partidos tienen resultados registrados y cuáles están pendientes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cuántos hay de cada uno en cada fase\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.phases.map((p) => [p.finished, p.pending, p.cancelled])).to.eql([[6, 0, 1], [1, 1, 0], [0, 0, 0]]);",
+                  "});",
+                  "pm.test(\"La Semifinal 1 tiene resultado; la 2 está pendiente\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const [s1, s2] = d.phases[1].matches;",
+                  "    pm.expect(s1.status).to.eql(\"FINALIZADO\");",
+                  "    pm.expect(s1.result).to.eql({\"homeScore\": 1, \"awayScore\": 1, \"homePenalties\": 3, \"awayPenalties\": 4});",
+                  "    pm.expect(s2.status).to.eql(\"PROGRAMADO\");",
+                  "    pm.expect(s2.result).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64 Anotaciones de cada partido (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #9: Se deben poder consultar las anotaciones correspondientes a cada partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"El gol de Bruno en Alces vs Bueyes\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const scores = d.phases[0].matches[0].scores;",
+                  "    pm.expect(scores.length).to.eql(1);",
+                  "    pm.expect(scores[0].minute).to.eql(30);",
+                  "    pm.expect(scores[0].player.id).to.eql(Number(pm.collectionVariables.get(\"playerBrunoId\")));",
+                  "    pm.expect(scores[0].team.id).to.eql(Number(pm.collectionVariables.get(\"teamAlcesId\")));",
+                  "});",
+                  "pm.test(\"Un partido sin anotaciones trae la lista vacía\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.phases[0].matches[1].scores).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "65 Resumen de Copa Desarrollo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #2: Se debe mostrar la información general del torneo.\n\nCriterio HU-GC-08 #8: Se debe indicar cuáles partidos tienen resultados registrados y cuáles están pendientes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"8 partidos (sin el cancelado), 7 finalizados: 88 %; eliminados Bueyes, Faisanes y Alces\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const s = d.summary;",
+                  "    pm.expect([s.teams, s.matches, s.finished, s.pending, s.cancelled, s.progress]).to.eql([6, 8, 7, 1, 1, 88]);",
+                  "    pm.expect([s.activeTeams, s.eliminatedTeams]).to.eql([3, 3]);",
+                  "    pm.expect(s.currentPhase.id).to.eql(Number(pm.collectionVariables.get(\"phaseDSId\")));",
+                  "    pm.expect(s.currentPhase.name).to.eql(\"Semifinal\");",
+                  "});",
+                  "pm.test(\"Total anotado: la suma de los marcadores oficiales (los penales no cuentan)\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.summary.totalScored).to.eql(13);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "66 Copa Desarrollo no trae nada de Copa Aislada (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/development",
+            "description": "Criterio HU-GC-08 #10: La información presentada debe corresponder únicamente al torneo seleccionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Ni la Fase única ni a Gorilas\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.phases.map((p) => p.name)).to.not.include(\"Fase única\");",
+                  "    const teams = d.phases[0].groups.flatMap((g) => g.standings.map((r) => r.team.id));",
+                  "    pm.expect(teams).to.not.include(Number(pm.collectionVariables.get(\"teamGorilasId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "67 Desarrollo de Copa Aislada: solo lo suyo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentAisladaId}}/development",
+            "description": "Criterio HU-GC-08 #10: La información presentada debe corresponder únicamente al torneo seleccionado.\n\nCriterio HU-GC-08 #5: Si son grupos la tabla de posiciones.\n\nEmpatados en todo, Alces y Gorilas quedan por nombre."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Su única fase y su grupo\", function () {",
+                  "    const d = pm.response.json();",
+                  "    pm.expect(d.tournament.id).to.eql(Number(pm.collectionVariables.get(\"tournamentAisladaId\")));",
+                  "    pm.expect(d.phases.map((p) => p.name)).to.eql([\"Fase única\"]);",
+                  "    pm.expect(d.phases[0].groups.map((g) => g.name)).to.eql([\"Grupo Único\"]);",
+                  "});",
+                  "pm.test(\"Alces llega en cero: sus partidos de Copa Desarrollo no cuentan aquí\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const t = d.phases[0].groups[0].standings;",
+                  "    pm.expect(t.map((r) => r.team.id)).to.eql([Number(pm.collectionVariables.get(\"teamAlcesId\")), Number(pm.collectionVariables.get(\"teamGorilasId\"))]);",
+                  "    pm.expect([t[0].position, t[0].played, t[0].won, t[0].drawn, t[0].lost, t[0].scoredFor, t[0].scoredAgainst, t[0].difference, t[0].points, t[0].qualifies]).to.eql([1, 0, 0, 0, 0, 0, 0, 0, 0, true]);",
+                  "    pm.expect([t[1].position, t[1].played, t[1].won, t[1].drawn, t[1].lost, t[1].scoredFor, t[1].scoredAgainst, t[1].difference, t[1].points, t[1].qualifies]).to.eql([2, 0, 0, 0, 0, 0, 0, 0, 0, false]);",
+                  "});",
+                  "pm.test(\"Resumen sin partidos\", function () {",
+                  "    const d = pm.response.json();",
+                  "    const s = d.summary;",
+                  "    pm.expect([s.teams, s.matches, s.finished, s.pending, s.cancelled, s.progress]).to.eql([2, 0, 0, 0, 0, 0]);",
+                  "    pm.expect([s.activeTeams, s.eliminatedTeams, s.totalScored]).to.eql([2, 0, 0]);",
+                  "    pm.expect(s.currentPhase).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "68 Desarrollo de un torneo que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{noExiste}}/development",
+            "description": "Criterio HU-GC-08 #1: El sistema debe permitir seleccionar un torneo registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "69 Limpieza: eliminar el gol de Bruno (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scoreBrunoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "70 Limpieza: eliminar la Semifinal 2, sin jugar (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDS2Id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "71 Limpieza: eliminar la revancha cancelada (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchDAXId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "72 Limpieza: eliminar el Grupo Único (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/groups/{{groupAUId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "73 Limpieza: eliminar la Fase única (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/phases/{{phaseAUId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "74 Limpieza: retirar a Alces de Copa Aislada (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentAisladaId}}/{{teamAlcesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "75 Limpieza: retirar a Gorilas de Copa Aislada (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentAisladaId}}/{{teamGorilasId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "76 Limpieza: eliminar Copa Aislada (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentAisladaId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "77 Limpieza: retirar a Gorilas del deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamGorilasId}}/{{sportDesarrolloId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "78 Limpieza: eliminar Gorilas (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamGorilasId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "79 Limpieza: desactivar Copa Desarrollo (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentDesarrolloId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "80 Limpieza: desactivar a Bruno (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerBrunoId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "81 Limpieza: desactivar Alces (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamAlcesId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "82 Limpieza: desactivar Bueyes (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamBueyesId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "83 Limpieza: desactivar Cebras (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamCebrasId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "84 Limpieza: desactivar Dingos (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamDingosId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "85 Limpieza: desactivar Emúes (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamEmuesId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "86 Limpieza: desactivar Faisanes (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamFaisanesId}}/disable"
           },
           "event": [
             {

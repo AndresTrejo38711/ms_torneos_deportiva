@@ -10,6 +10,7 @@ import { ScoresService } from './scores.service';
 
 // HU-GC-07 (anotaciones). Usa los services que exportan partidos, jugadores y contratos, y la
 // dependencia va en un solo sentido: los partidos no importan este módulo, solo ScoreTotalsModule.
+// Se exporta el service para el desarrollo del torneo (HU-GC-08), que muestra las anotaciones.
 @Module({
   imports: [
     TypeOrmModule.forFeature([Score]),
@@ -20,5 +21,6 @@ import { ScoresService } from './scores.service';
   ],
   controllers: [ScoresController],
   providers: [ScoresService],
+  exports: [ScoresService],
 })
 export class ScoresModule {}

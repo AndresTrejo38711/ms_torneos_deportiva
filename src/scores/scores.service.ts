@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { MatchResponseDto } from '../matches/dto/match-response.dto';
@@ -56,6 +56,28 @@ export class ScoresService {
       order: { minute: 'ASC', id: 'ASC' },
     });
     return scores.map(toScoreResponse);
+  }
+
+  // HU-GC-08: las anotaciones de varios partidos en una sola consulta, agrupadas por partido y por
+  // minuto. Un partido sin anotaciones no aparece en el mapa.
+  async findByMatches(
+    matchIds: number[],
+  ): Promise<Map<number, ScoreResponseDto[]>> {
+    const byMatch = new Map<number, ScoreResponseDto[]>();
+    if (matchIds.length === 0) {
+      return byMatch;
+    }
+    const scores = await this.scoreRepository.find({
+      where: { match: { id: In(matchIds) } },
+      relations: { match: true, team: true, player: true },
+      order: { minute: 'ASC', id: 'ASC' },
+    });
+    for (const score of scores) {
+      const list = byMatch.get(score.match.id) ?? [];
+      list.push(toScoreResponse(score));
+      byMatch.set(score.match.id, list);
+    }
+    return byMatch;
   }
 
   async findOne(id: number): Promise<ScoreResponseDto> {

@@ -15,6 +15,7 @@ import { SportsModule } from './sports/sports.module';
 import { TeamPlayersModule } from './team-players/team-players.module';
 import { TeamSportsModule } from './team-sports/team-sports.module';
 import { TeamsModule } from './teams/teams.module';
+import { TournamentDevelopmentModule } from './tournament-development/tournament-development.module';
 import { TournamentTeamsModule } from './tournament-teams/tournament-teams.module';
 import { TournamentsModule } from './tournaments/tournaments.module';
 
@@ -64,6 +65,7 @@ import { TournamentsModule } from './tournaments/tournaments.module';
     GroupTeamsModule, // HU-GC-04 (equipos de cada grupo)
     MatchesModule, // HU-GC-06 y HU-GC-07 (resultado)
     ScoresModule, // HU-GC-07 (anotaciones)
+    TournamentDevelopmentModule, // HU-GC-08
   ],
 })
 export class AppModule {}
