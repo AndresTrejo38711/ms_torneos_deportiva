@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
+import { MatchUsageService } from '../matches/match-usage.service';
 import { TournamentsService } from '../tournaments/tournaments.service';
 import { CreatePhaseDto } from './dto/create-phase.dto';
 import { DEFAULT_QUALIFIERS_PER_GROUP } from './dto/phase-fields.dto';
@@ -13,7 +14,12 @@ import { FinalPhase } from './entities/final-phase.entity';
 import { GroupPhase } from './entities/group-phase.entity';
 import { Phase } from './entities/phase.entity';
 import { PhaseType } from './entities/phase-type.enum';
-import { isGroupPhase, phaseTypeLabel, phaseTypeOf } from './phase-kind';
+import {
+  isFinalPhase,
+  isGroupPhase,
+  phaseTypeLabel,
+  phaseTypeOf,
+} from './phase-kind';
 import { toPhaseResponse } from './phases.mapper';
 
 // HU-GC-03 (fases de un torneo) y HU-GC-05 (fases finales). Las dos clases hijas se manejan aquí
@@ -26,6 +32,7 @@ export class PhasesService {
     @InjectRepository(Phase)
     private readonly phaseRepository: Repository<Phase>,
     private readonly tournamentsService: TournamentsService,
+    private readonly matchUsage: MatchUsageService,
   ) {}
 
   // La fase nueva queda de última en el orden del torneo.
@@ -107,6 +114,17 @@ export class PhasesService {
           dto.qualifiersPerGroup ?? DEFAULT_QUALIFIERS_PER_GROUP,
       });
     } else {
+      // HU-GC-05: con partidos, la llave ya está armada para ese número de equipos.
+      const teamsCount = Number(dto.teamsCount);
+      if (isFinalPhase(phase) && teamsCount !== phase.teamsCount) {
+        const matches = await this.matchUsage.countInPhase(id);
+        if (matches > 0) {
+          throw new ApplicationException(
+            ErrorCase.INVALID_OPERATION,
+            `No se puede cambiar el número de equipos de "${phase.name}" porque ya tiene partidos (${matches}). Elimínalos primero`,
+          );
+        }
+      }
       await manager.update(FinalPhase, id, {
         name: dto.name,
         teamsCount: Number(dto.teamsCount),
@@ -155,11 +173,19 @@ export class PhasesService {
     return this.findByTournament(tournamentId);
   }
 
-  // Solo se elimina si no tiene información asociada: sus grupos (HU-GC-04). Los partidos se suman
-  // cuando existan (HU-GC-06). El torneo y las demás fases no se eliminan: solo se corre el orden
-  // de las que iban después, para no dejar huecos.
+  // Solo se elimina si no tiene información asociada: sus partidos (HU-GC-06) y sus grupos
+  // (HU-GC-04). El torneo y las demás fases no se eliminan: solo se corre el orden de las que iban
+  // después, para no dejar huecos.
   async remove(id: number): Promise<void> {
     const phase = await this.findPhase(id);
+
+    const matches = await this.matchUsage.countInPhase(id);
+    if (matches > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${phase.name}" porque tiene partidos (${matches}). Elimínalos primero`,
+      );
+    }
 
     if (isGroupPhase(phase) && phase.groups.length > 0) {
       const names = phase.groups

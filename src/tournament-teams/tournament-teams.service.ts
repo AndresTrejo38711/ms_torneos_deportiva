@@ -5,6 +5,7 @@ import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { today } from '../common/validation/date.validators';
 import { GroupTeam } from '../group-teams/entities/group-team.entity';
+import { MatchUsageService } from '../matches/match-usage.service';
 import { TeamResponseDto } from '../teams/dto/team-response.dto';
 import { TeamsService } from '../teams/teams.service';
 import { TournamentResponseDto } from '../tournaments/dto/tournament-response.dto';
@@ -32,6 +33,7 @@ export class TournamentTeamsService {
     private readonly groupTeamRepository: Repository<GroupTeam>,
     private readonly tournamentsService: TournamentsService,
     private readonly teamsService: TeamsService,
+    private readonly matchUsage: MatchUsageService,
   ) {}
 
   // Inscribe uno o varios equipos. Es todo o nada: si uno no cumple, no se inscribe ninguno y el
@@ -139,6 +141,18 @@ export class TournamentTeamsService {
       throw new ApplicationException(
         ErrorCase.NOT_FOUND,
         `El equipo "${team.name}" no está inscrito en "${tournament.name}"`,
+      );
+    }
+
+    // HU-GC-06: un equipo que ya tiene partidos en el torneo hace parte de su historial.
+    const matches = await this.matchUsage.countForTeamInTournament(
+      tournamentId,
+      teamId,
+    );
+    if (matches > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El equipo "${team.name}" ya tiene partidos en "${tournament.name}" (${matches}): no se puede retirar su inscripción`,
       );
     }
 

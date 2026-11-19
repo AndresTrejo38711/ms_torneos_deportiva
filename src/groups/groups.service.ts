@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
+import { MatchUsageService } from '../matches/match-usage.service';
 import { PhaseType } from '../phases/entities/phase-type.enum';
 import { PhasesService } from '../phases/phases.service';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -21,6 +22,7 @@ export class GroupsService {
     @InjectRepository(Group)
     private readonly groupRepository: Repository<Group>,
     private readonly phasesService: PhasesService,
+    private readonly matchUsage: MatchUsageService,
   ) {}
 
   async create(dto: CreateGroupDto): Promise<GroupResponseDto> {
@@ -75,10 +77,21 @@ export class GroupsService {
   }
 
   // Eliminar un grupo saca a sus equipos del grupo (la base borra sus filas de group_teams), pero
-  // los equipos siguen registrados en la plataforma. Los partidos del grupo se suman a esta
-  // validación cuando existan (HU-GC-06).
+  // los equipos siguen registrados en la plataforma. No se permite si sus equipos ya tienen
+  // partidos en la fase (HU-GC-06): esos partidos son del grupo.
   async remove(id: number): Promise<void> {
-    await this.findGroup(id); // 404 si el grupo no existe
+    const group = await this.findGroup(id);
+    const teamIds = group.groupTeams.map((row) => row.team.id);
+    const matches = await this.matchUsage.countWithTeamsInPhase(
+      group.phase.id,
+      teamIds,
+    );
+    if (matches > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${group.name}" porque sus equipos ya tienen partidos en "${group.phase.name}" (${matches}). Elimínalos primero`,
+      );
+    }
     await this.groupRepository.delete(id);
   }
 

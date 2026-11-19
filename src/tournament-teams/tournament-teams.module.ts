@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupTeam } from '../group-teams/entities/group-team.entity';
+import { MatchUsageModule } from '../matches/match-usage.module';
 import { TeamsModule } from '../teams/teams.module';
 import { TournamentsModule } from '../tournaments/tournaments.module';
 import { TournamentTeam } from './entities/tournament-team.entity';
@@ -16,6 +17,7 @@ import { TournamentTeamsService } from './tournament-teams.service';
     TypeOrmModule.forFeature([TournamentTeam, GroupTeam]),
     TournamentsModule,
     TeamsModule,
+    MatchUsageModule,
   ],
   controllers: [TournamentTeamsController],
   providers: [TournamentTeamsService],

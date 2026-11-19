@@ -110,3 +110,36 @@ export function IsBeforeDate(
     options,
   );
 }
+
+// Fecha y hora local, sin zona horaria: "2030-02-10T18:00" (como un <input type="datetime-local">).
+const LOCAL_DATE_TIME = /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})$/;
+
+// "2030-02-10T18:00" sí; "2030-02-30T18:00", "2030-02-10 18:00" o "2030-02-10T24:00" no.
+export function isLocalDateTime(value: unknown): value is string {
+  if (typeof value !== 'string') {
+    return false;
+  }
+  const match = LOCAL_DATE_TIME.exec(value);
+  if (!match) {
+    return false;
+  }
+  const [, date, hours, minutes] = match;
+  return isDateOnly(date) && Number(hours) < 24 && Number(minutes) < 60;
+}
+
+// Decorador para los DTO: el campo debe ser una fecha y hora real con formato AAAA-MM-DDTHH:mm.
+export function IsLocalDateTime(
+  options?: ValidationOptions,
+): PropertyDecorator {
+  return ValidateBy(
+    {
+      name: 'isLocalDateTime',
+      validator: {
+        validate: (value) => isLocalDateTime(value),
+        defaultMessage: () =>
+          'La fecha y hora debe tener el formato AAAA-MM-DDTHH:mm',
+      },
+    },
+    options,
+  );
+}

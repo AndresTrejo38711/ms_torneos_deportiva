@@ -3,10 +3,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   TableInheritance,
   Unique,
 } from 'typeorm';
+import { Match } from '../../matches/entities/match.entity';
 import { Tournament } from '../../tournaments/entities/tournament.entity';
 import { PhaseType } from './phase-type.enum';
 
@@ -43,4 +45,8 @@ export abstract class Phase {
   // final) y se cambia con "reordenar". La columna no se llama "order" porque es palabra de SQL.
   @Column({ name: 'phase_order', type: 'int' })
   order: number;
+
+  // HU-GC-06. Partidos de la fase (de grupos o final). La llave foránea phase_id está en matches.
+  @OneToMany(() => Match, (match) => match.phase)
+  matches: Match[];
 }

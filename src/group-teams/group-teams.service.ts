@@ -5,6 +5,7 @@ import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { GroupResponseDto } from '../groups/dto/group-response.dto';
 import { GroupsService } from '../groups/groups.service';
+import { MatchUsageService } from '../matches/match-usage.service';
 import { TeamResponseDto } from '../teams/dto/team-response.dto';
 import { TeamsService } from '../teams/teams.service';
 import { TournamentTeamsService } from '../tournament-teams/tournament-teams.service';
@@ -22,6 +23,7 @@ export class GroupTeamsService {
     private readonly groupsService: GroupsService,
     private readonly teamsService: TeamsService,
     private readonly tournamentTeamsService: TournamentTeamsService,
+    private readonly matchUsage: MatchUsageService,
   ) {}
 
   // Asigna uno o varios equipos al grupo. Es todo o nada: si uno no cumple, no se asigna ninguno y
@@ -75,7 +77,7 @@ export class GroupTeamsService {
   }
 
   // Saca al equipo del grupo: borra solo la fila de group_teams; el equipo y el grupo siguen igual.
-  // Los partidos del equipo en el grupo se suman a esta validación cuando existan (HU-GC-06).
+  // No se permite si el equipo ya tiene partidos en la fase (HU-GC-06): son partidos del grupo.
   async remove(groupId: number, teamId: number): Promise<void> {
     const group = await this.groupsService.findOne(groupId);
     const team = await this.teamsService.findOne(teamId);
@@ -88,6 +90,17 @@ export class GroupTeamsService {
       throw new ApplicationException(
         ErrorCase.NOT_FOUND,
         `El equipo "${team.name}" no está en el grupo "${group.name}"`,
+      );
+    }
+
+    const matches = await this.matchUsage.countWithTeamsInPhase(
+      group.phase.id,
+      [teamId],
+    );
+    if (matches > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El equipo "${team.name}" ya tiene partidos en "${group.phase.name}" (${matches}): no puede salir del grupo "${group.name}"`,
       );
     }
 

@@ -1,0 +1,381 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ApplicationException } from '../common/errors/application.exception';
+import { ErrorCase } from '../common/errors/error-case.enum';
+import { GroupsService } from '../groups/groups.service';
+import { PhaseResponseDto } from '../phases/dto/phase-response.dto';
+import { PhaseType } from '../phases/entities/phase-type.enum';
+import { isGroupPhase } from '../phases/phase-kind';
+import { PhasesService } from '../phases/phases.service';
+import { TeamResponseDto } from '../teams/dto/team-response.dto';
+import { TeamsService } from '../teams/teams.service';
+import { TournamentTeamsService } from '../tournament-teams/tournament-teams.service';
+import { TournamentResponseDto } from '../tournaments/dto/tournament-response.dto';
+import { TournamentsService } from '../tournaments/tournaments.service';
+import { CreateMatchDto } from './dto/create-match.dto';
+import { MatchFieldsDto } from './dto/match-fields.dto';
+import { MatchGroupDto, MatchResponseDto } from './dto/match-response.dto';
+import { UpdateMatchDto } from './dto/update-match.dto';
+import { MATCH_STATUS_LABEL, MatchStatus } from './entities/match-status.enum';
+import { Match } from './entities/match.entity';
+import { toMatchResponse } from './matches.mapper';
+
+// HU-GC-06 · Gestionar partidos.
+@Injectable()
+export class MatchesService {
+  // Los services de fases, torneos, grupos, equipos e inscripciones llegan porque MatchesModule
+  // importa sus módulos: con ellos se valida todo lo que el partido necesita, con los mismos
+  // mensajes de sus HU.
+  constructor(
+    @InjectRepository(Match)
+    private readonly matchRepository: Repository<Match>,
+    private readonly phasesService: PhasesService,
+    private readonly tournamentsService: TournamentsService,
+    private readonly groupsService: GroupsService,
+    private readonly teamsService: TeamsService,
+    private readonly tournamentTeamsService: TournamentTeamsService,
+  ) {}
+
+  // El partido nuevo queda PROGRAMADO.
+  async create(dto: CreateMatchDto): Promise<MatchResponseDto> {
+    const phase = await this.phasesService.findOne(dto.phaseId);
+    const tournament = await this.tournamentsService.findOne(
+      phase.tournament.id,
+    );
+    if (!tournament.active) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El torneo "${tournament.name}" está desactivado: actívalo antes de programarle partidos`,
+      );
+    }
+    await this.validate(dto, phase, tournament);
+
+    // Para guardar las relaciones basta con los ids.
+    const saved = await this.matchRepository.save(
+      this.matchRepository.create({
+        phase: { id: phase.id },
+        homeTeam: { id: dto.homeTeamId },
+        awayTeam: { id: dto.awayTeamId },
+        scheduledAt: dto.scheduledAt,
+        round: dto.round ?? null,
+        bracketPosition: dto.bracketPosition ?? null,
+      }),
+    );
+
+    return this.findOne(saved.id);
+  }
+
+  // Partidos de una fase, por fecha.
+  async findByPhase(phaseId: number): Promise<MatchResponseDto[]> {
+    await this.phasesService.findOne(phaseId); // 404 si la fase no existe
+    const matches = await this.orderedByDate(
+      this.summaryQuery().where('phase.id = :phaseId', { phaseId }),
+    ).getMany();
+    return this.toResponses(matches);
+  }
+
+  // Todos los partidos de un torneo, de todas sus fases, por fecha.
+  async findByTournament(tournamentId: number): Promise<MatchResponseDto[]> {
+    await this.tournamentsService.findOne(tournamentId); // 404 si el torneo no existe
+    const matches = await this.orderedByDate(
+      this.summaryQuery().where('tournament.id = :tournamentId', {
+        tournamentId,
+      }),
+    ).getMany();
+    return this.toResponses(matches);
+  }
+
+  async findOne(id: number): Promise<MatchResponseDto> {
+    const [response] = await this.toResponses([await this.findMatch(id)]);
+    return response;
+  }
+
+  // Solo mientras esté PROGRAMADO. La fase no cambia.
+  async update(id: number, dto: UpdateMatchDto): Promise<MatchResponseDto> {
+    const match = await this.findMatch(id);
+    if (match.status !== MatchStatus.PROGRAMADO) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El partido ${describe(match)} está ${MATCH_STATUS_LABEL[match.status]}: solo se puede editar mientras está programado`,
+      );
+    }
+    const phase = await this.phasesService.findOne(match.phase.id);
+    const tournament = await this.tournamentsService.findOne(
+      phase.tournament.id,
+    );
+    await this.validate(dto, phase, tournament, id);
+
+    await this.matchRepository.update(id, {
+      homeTeam: { id: dto.homeTeamId },
+      awayTeam: { id: dto.awayTeamId },
+      scheduledAt: dto.scheduledAt,
+      round: dto.round ?? null,
+      bracketPosition: dto.bracketPosition ?? null,
+    });
+
+    return this.findOne(id);
+  }
+
+  // PROGRAMADO → EN_JUEGO.
+  async start(id: number): Promise<MatchResponseDto> {
+    const match = await this.findMatch(id);
+    if (match.status !== MatchStatus.PROGRAMADO) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `Solo se puede iniciar un partido programado: ${describe(match)} está ${MATCH_STATUS_LABEL[match.status]}`,
+      );
+    }
+    await this.matchRepository.update(id, { status: MatchStatus.EN_JUEGO });
+    return this.findOne(id);
+  }
+
+  // PROGRAMADO o EN_JUEGO → CANCELADO.
+  async cancel(id: number): Promise<MatchResponseDto> {
+    const match = await this.findMatch(id);
+    if (
+      match.status !== MatchStatus.PROGRAMADO &&
+      match.status !== MatchStatus.EN_JUEGO
+    ) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El partido ${describe(match)} ya está ${MATCH_STATUS_LABEL[match.status]}: no se puede cancelar`,
+      );
+    }
+    await this.matchRepository.update(id, { status: MatchStatus.CANCELADO });
+    return this.findOne(id);
+  }
+
+  // Solo un partido programado o cancelado. Uno en juego se cancela primero, y uno finalizado se
+  // queda: es historial del torneo. Las anotaciones (HU-GC-07) y las apuestas (HU-GC-11) se suman a
+  // esta validación cuando existan.
+  async remove(id: number): Promise<void> {
+    const match = await this.findMatch(id);
+    if (match.status === MatchStatus.EN_JUEGO) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El partido ${describe(match)} está en juego: cancélalo antes de eliminarlo`,
+      );
+    }
+    if (match.status === MatchStatus.FINALIZADO) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El partido ${describe(match)} ya finalizó: los partidos finalizados no se eliminan, son parte del historial del torneo`,
+      );
+    }
+    await this.matchRepository.delete(id);
+  }
+
+  // ---------------------------------------------------------------------------------------------
+
+  // Las reglas de crear y editar. excludeId es el partido que se está editando (no choca consigo).
+  private async validate(
+    dto: MatchFieldsDto,
+    phase: PhaseResponseDto,
+    tournament: TournamentResponseDto,
+    excludeId?: number,
+  ): Promise<void> {
+    if (dto.homeTeamId === dto.awayTeamId) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        'Un equipo no puede jugar contra sí mismo: el local y el visitante deben ser distintos',
+      );
+    }
+    const home = await this.ensureTeamCanPlay(dto.homeTeamId, tournament);
+    const away = await this.ensureTeamCanPlay(dto.awayTeamId, tournament);
+
+    const day = dto.scheduledAt.slice(0, 10);
+    if (day < tournament.startDate || day > tournament.endDate) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `La fecha del partido debe estar dentro del torneo "${tournament.name}", del ${tournament.startDate} al ${tournament.endDate}`,
+      );
+    }
+
+    if (phase.type === PhaseType.GRUPOS) {
+      await this.validateGroupMatch(dto, phase, home, away);
+    } else {
+      await this.validateFinalMatch(dto, phase, home, away, excludeId);
+    }
+  }
+
+  // "Habilitado para participar": registrado (si no, 404), activo e inscrito en el torneo.
+  private async ensureTeamCanPlay(
+    teamId: number,
+    tournament: TournamentResponseDto,
+  ): Promise<TeamResponseDto> {
+    const team = await this.teamsService.findOne(teamId);
+    if (!team.active) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El equipo "${team.name}" está desactivado: no puede jugar partidos`,
+      );
+    }
+    if (
+      !(await this.tournamentTeamsService.isEnrolled(tournament.id, team.id))
+    ) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El equipo "${team.name}" no está inscrito en "${tournament.name}": inscríbelo primero`,
+      );
+    }
+    return team;
+  }
+
+  // Fase de grupos: los dos equipos deben estar en el mismo grupo de la fase. Sin posición en la
+  // llave; la jornada es opcional.
+  private async validateGroupMatch(
+    dto: MatchFieldsDto,
+    phase: PhaseResponseDto,
+    home: TeamResponseDto,
+    away: TeamResponseDto,
+  ): Promise<void> {
+    if (dto.bracketPosition !== undefined && dto.bracketPosition !== null) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        'La posición en la llave solo se usa en las fases finales',
+      );
+    }
+
+    const groups = await this.groupsService.findByPhase(phase.id);
+    const groupOf = (team: TeamResponseDto) => {
+      const group = groups.find((g) => g.teams.some((t) => t.id === team.id));
+      if (!group) {
+        throw new ApplicationException(
+          ErrorCase.INVALID_OPERATION,
+          `El equipo "${team.name}" no está en ningún grupo de "${phase.name}": asígnalo a un grupo primero`,
+        );
+      }
+      return group;
+    };
+    const homeGroup = groupOf(home);
+    const awayGroup = groupOf(away);
+    if (homeGroup.id !== awayGroup.id) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `"${home.name}" (${homeGroup.name}) y "${away.name}" (${awayGroup.name}) están en grupos distintos: en "${phase.name}" solo se enfrentan equipos del mismo grupo`,
+      );
+    }
+  }
+
+  // Fase final: posición en la llave obligatoria y libre, de 1 a la mitad de los equipos, y cada
+  // equipo juega una sola vez en la fase. Sin jornada.
+  private async validateFinalMatch(
+    dto: MatchFieldsDto,
+    phase: PhaseResponseDto,
+    home: TeamResponseDto,
+    away: TeamResponseDto,
+    excludeId?: number,
+  ): Promise<void> {
+    if (dto.round !== undefined && dto.round !== null) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        'La jornada solo se usa en las fases de grupos',
+      );
+    }
+    const position = dto.bracketPosition;
+    if (position === undefined || position === null) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `La posición en la llave es obligatoria en una fase final como "${phase.name}"`,
+      );
+    }
+    const slots = Number(phase.teamsCount) / 2;
+    if (position > slots) {
+      const range = slots === 1 ? 'solo puede ser 1' : `va de 1 a ${slots}`;
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `"${phase.name}" es de ${phase.teamsCount} equipos: la posición en la llave ${range}`,
+      );
+    }
+
+    const others = (
+      await this.matchRepository.find({
+        where: { phase: { id: phase.id } },
+        relations: { homeTeam: true, awayTeam: true },
+      })
+    ).filter((match) => match.id !== excludeId);
+
+    const sameSlot = others.find((match) => match.bracketPosition === position);
+    if (sameSlot) {
+      throw new ApplicationException(
+        ErrorCase.ALREADY_EXISTS,
+        `La posición ${position} de la llave de "${phase.name}" ya la tiene el partido ${describe(sameSlot)}`,
+      );
+    }
+    for (const team of [home, away]) {
+      const taken = others.find(
+        (match) =>
+          match.homeTeam.id === team.id || match.awayTeam.id === team.id,
+      );
+      if (taken) {
+        throw new ApplicationException(
+          ErrorCase.ALREADY_EXISTS,
+          `"${team.name}" ya tiene partido en "${phase.name}" (${describe(taken)}): en una fase final cada equipo juega una sola vez`,
+        );
+      }
+    }
+  }
+
+  // Le pone a cada partido de fase de grupos el grupo de sus equipos.
+  private async toResponses(matches: Match[]): Promise<MatchResponseDto[]> {
+    const groupPhaseIds = new Set(
+      matches
+        .filter((match) => isGroupPhase(match.phase))
+        .map((match) => match.phase.id),
+    );
+    const groupOf = new Map<string, MatchGroupDto>();
+    for (const phaseId of groupPhaseIds) {
+      for (const group of await this.groupsService.findByPhase(phaseId)) {
+        for (const team of group.teams) {
+          groupOf.set(`${phaseId}:${team.id}`, {
+            id: group.id,
+            name: group.name,
+          });
+        }
+      }
+    }
+    return matches.map((match) =>
+      toMatchResponse(
+        match,
+        groupOf.get(`${match.phase.id}:${match.homeTeam.id}`) ?? null,
+      ),
+    );
+  }
+
+  private async findMatch(id: number): Promise<Match> {
+    const match = await this.summaryQuery()
+      .where('game.id = :id', { id })
+      .getOne();
+    if (!match) {
+      throw new ApplicationException(
+        ErrorCase.NOT_FOUND,
+        `No existe el partido con id ${id}`,
+      );
+    }
+    return match;
+  }
+
+  // Lo que necesita la respuesta: la fase con su torneo y los dos equipos. El alias es "game"
+  // porque MATCH es palabra de MySQL.
+  private summaryQuery() {
+    return this.matchRepository
+      .createQueryBuilder('game')
+      .innerJoinAndSelect('game.phase', 'phase')
+      .innerJoinAndSelect('phase.tournament', 'tournament')
+      .innerJoinAndSelect('game.homeTeam', 'homeTeam')
+      .innerJoinAndSelect('game.awayTeam', 'awayTeam');
+  }
+
+  private orderedByDate(query: ReturnType<MatchesService['summaryQuery']>) {
+    return query
+      .orderBy('game.scheduledAt', 'ASC')
+      .addOrderBy('game.bracketPosition', 'ASC')
+      .addOrderBy('game.id', 'ASC');
+  }
+}
+
+// "Local vs Visitante", para los mensajes.
+function describe(match: Match): string {
+  return `"${match.homeTeam.name} vs ${match.awayTeam.name}"`;
+}

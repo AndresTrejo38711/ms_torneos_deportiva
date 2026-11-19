@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupsModule } from '../groups/groups.module';
+import { MatchUsageModule } from '../matches/match-usage.module';
 import { TeamsModule } from '../teams/teams.module';
 import { TournamentTeamsModule } from '../tournament-teams/tournament-teams.module';
 import { GroupTeam } from './entities/group-team.entity';
@@ -15,6 +16,7 @@ import { GroupTeamsService } from './group-teams.service';
     GroupsModule,
     TeamsModule,
     TournamentTeamsModule,
+    MatchUsageModule,
   ],
   controllers: [GroupTeamsController],
   providers: [GroupTeamsService],

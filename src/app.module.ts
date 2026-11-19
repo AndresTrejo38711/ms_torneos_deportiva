@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { GroupTeamsModule } from './group-teams/group-teams.module';
 import { GroupsModule } from './groups/groups.module';
+import { MatchesModule } from './matches/matches.module';
 import { PhasesModule } from './phases/phases.module';
 import { PlayerProfilesModule } from './player-profiles/player-profiles.module';
 import { PlayerSkillsModule } from './player-skills/player-skills.module';
@@ -60,6 +61,7 @@ import { TournamentsModule } from './tournaments/tournaments.module';
     PhasesModule, // HU-GC-03 y HU-GC-05
     GroupsModule, // HU-GC-04
     GroupTeamsModule, // HU-GC-04 (equipos de cada grupo)
+    MatchesModule, // HU-GC-06
   ],
 })
 export class AppModule {}

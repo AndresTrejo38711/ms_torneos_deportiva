@@ -424,6 +424,101 @@
       "key": "phaseCuartosId",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "sportPartidosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentPartidosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentInactivaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseInactivaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseMGId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseMSemiId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamAntilopesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamBerracosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamCoyotesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamDuendesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamEscorpionesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamFenixId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "groupMAId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "groupMBId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchABId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchCDId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchBAId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchSemi1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchSemi2Id",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -9391,7 +9486,7 @@
     },
     {
       "name": "HU-GC-02 · Inscripciones",
-      "description": "Inscripciones de equipos en torneos: `/api/deportiva/tournament-teams`. `POST` recibe uno o varios equipos (`teamIds`) y es todo o nada: si uno no cumple, no se inscribe ninguno. Inscribir y retirar solo se puede mientras el torneo esté activo, no haya empezado y no haya pasado su cierre de inscripciones.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe estar previamente registrado en el sistema. → peticiones 29, 46\n2. El equipo debe estar previamente registrado en el sistema. → peticiones 28, 47\n3. El equipo debe estar asociado con el deporte correspondiente al torneo. → peticiones 24\n4. El sistema debe permitir inscribir uno o varios equipos en un torneo. → peticiones 18, 19, 25, 26\n5. Un mismo equipo puede estar inscrito en diferentes torneos. → peticiones 19, 22\n6. Un torneo puede contar con varios equipos inscritos. → peticiones 18, 20, 21\n7. No se debe permitir registrar dos veces al mismo equipo en el mismo torneo. → peticiones 23\n8. El sistema debe permitir consultar los equipos inscritos en un torneo. → peticiones 20\n9. El sistema debe permitir consultar los torneos en los que se encuentra inscrito un equipo. → peticiones 22\n10. Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan. → peticiones 39, 40, 45\n11. Retirar una inscripción no debe eliminar el equipo ni el torneo del sistema. → peticiones 41, 42\n12. La información de la inscripción debe quedar asociada al equipo y al torneo correspondientes. → peticiones 18, 20, 22\n13. Si el torneo ya inició o el periodo de inscripciones se encuentra cerrado, el sistema debe impedir nuevas inscripciones o retiros cuando corresponda. → peticiones 33, 34, 45\n14. El sistema debe informar al usuario cuando una inscripción se haya realizado o retirado correctamente. → peticiones 18, 39",
+      "description": "Inscripciones de equipos en torneos: `/api/deportiva/tournament-teams`. `POST` recibe uno o varios equipos (`teamIds`) y es todo o nada: si uno no cumple, no se inscribe ninguno. Inscribir y retirar solo se puede mientras el torneo esté activo, no haya empezado y no haya pasado su cierre de inscripciones.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe estar previamente registrado en el sistema. → peticiones 29, 46\n2. El equipo debe estar previamente registrado en el sistema. → peticiones 28, 47\n3. El equipo debe estar asociado con el deporte correspondiente al torneo. → peticiones 24\n4. El sistema debe permitir inscribir uno o varios equipos en un torneo. → peticiones 18, 19, 25, 26\n5. Un mismo equipo puede estar inscrito en diferentes torneos. → peticiones 19, 22\n6. Un torneo puede contar con varios equipos inscritos. → peticiones 18, 20, 21\n7. No se debe permitir registrar dos veces al mismo equipo en el mismo torneo. → peticiones 23\n8. El sistema debe permitir consultar los equipos inscritos en un torneo. → peticiones 20\n9. El sistema debe permitir consultar los torneos en los que se encuentra inscrito un equipo. → peticiones 22\n10. Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan. → peticiones 39, 40, 45; carpeta HU-GC-06: 69\n11. Retirar una inscripción no debe eliminar el equipo ni el torneo del sistema. → peticiones 41, 42\n12. La información de la inscripción debe quedar asociada al equipo y al torneo correspondientes. → peticiones 18, 20, 22\n13. Si el torneo ya inició o el periodo de inscripciones se encuentra cerrado, el sistema debe impedir nuevas inscripciones o retiros cuando corresponda. → peticiones 33, 34, 45\n14. El sistema debe informar al usuario cuando una inscripción se haya realizado o retirado correctamente. → peticiones 18, 39",
       "item": [
         {
           "name": "01 Preparar: crear el deporte Voleibol (201)",
@@ -11431,7 +11526,7 @@
     },
     {
       "name": "HU-GC-03 · Fases",
-      "description": "Fases de un torneo: `/api/deportiva/phases`. Toda fase es de grupos (`type: GRUPOS`) o final (`type: FINAL`); las dos usan las mismas rutas y se guardan en la misma tabla (herencia). El orden lo pone el sistema: cada fase nueva queda de última, y se cambia con `PUT /phases/tournaments/{id}/order`. Las fases finales tienen su propia carpeta (HU-GC-05).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe existir previamente en el sistema. → peticiones 11, 17\n2. El sistema debe permitir registrar una o varias fases para un torneo. → peticiones 05, 06, 07\n3. Cada fase debe estar asociada con un único torneo. → peticiones 05, 15\n4. Se debe permitir consultar las fases correspondientes a un torneo. → peticiones 14, 15\n5. Se debe poder actualizar la información de una fase. → peticiones 18, 19\n6. Se debe permitir eliminar una fase cuando no tenga información asociada que lo impida. → peticiones 26, 27; carpeta HU-GC-04: 48\n7. El sistema debe permitir definir el orden en el que se desarrollarán las fases. → peticiones 06, 07, 14, 21, 22, 23, 27\n8. Cada fase debe corresponder al tipo de etapa definido para la competencia, como una fase de grupos o una fase final. → peticiones 05, 06, 09, 14, 20\n9. No se debe eliminar el torneo al modificar o eliminar una de sus fases. → peticiones 26, 28",
+      "description": "Fases de un torneo: `/api/deportiva/phases`. Toda fase es de grupos (`type: GRUPOS`) o final (`type: FINAL`); las dos usan las mismas rutas y se guardan en la misma tabla (herencia). El orden lo pone el sistema: cada fase nueva queda de última, y se cambia con `PUT /phases/tournaments/{id}/order`. Las fases finales tienen su propia carpeta (HU-GC-05).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe existir previamente en el sistema. → peticiones 11, 17\n2. El sistema debe permitir registrar una o varias fases para un torneo. → peticiones 05, 06, 07\n3. Cada fase debe estar asociada con un único torneo. → peticiones 05, 15\n4. Se debe permitir consultar las fases correspondientes a un torneo. → peticiones 14, 15\n5. Se debe poder actualizar la información de una fase. → peticiones 18, 19\n6. Se debe permitir eliminar una fase cuando no tenga información asociada que lo impida. → peticiones 26, 27; carpeta HU-GC-04: 48; carpeta HU-GC-06: 64\n7. El sistema debe permitir definir el orden en el que se desarrollarán las fases. → peticiones 06, 07, 14, 21, 22, 23, 27\n8. Cada fase debe corresponder al tipo de etapa definido para la competencia, como una fase de grupos o una fase final. → peticiones 05, 06, 09, 14, 20\n9. No se debe eliminar el torneo al modificar o eliminar una de sus fases. → peticiones 26, 28",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -12542,7 +12637,7 @@
     },
     {
       "name": "HU-GC-04 · Grupos",
-      "description": "Grupos de una fase de grupos: `/api/deportiva/groups`, y sus equipos: `/api/deportiva/group-teams`. `POST /group-teams` recibe uno o varios equipos y es todo o nada. Solo entran equipos inscritos en el torneo, y cada equipo va en un solo grupo por fase. Para consultar los equipos de un grupo: `GET /groups/{id}` o `GET /groups/phases/{phaseId}` (cada grupo trae sus equipos).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Debe existir previamente un torneo y una fase correspondiente. → peticiones 20, 23, 24, 32\n2. El sistema debe permitir registrar los grupos necesarios para la fase. → peticiones 20, 21\n3. Se debe poder consultar la información de los grupos registrados. → peticiones 38, 39, 40, 41\n4. Se debe permitir modificar la información de un grupo. → peticiones 42, 43\n5. Se debe permitir eliminar un grupo cuando las reglas de la competencia lo permitan. → peticiones 49, 52, 53\n6. El sistema debe permitir asignar varios equipos a un grupo. → peticiones 27, 28\n7. Un grupo debe poder contener varios equipos. → peticiones 27, 28\n8. No se debe permitir registrar dos veces el mismo equipo dentro del mismo grupo. → peticiones 29\n9. Un equipo no debe quedar asignado simultáneamente a diferentes grupos de la misma fase. → peticiones 30, 31\n10. Se deben poder consultar los equipos que conforman cada grupo. → peticiones 38, 39\n11. La eliminación de un grupo no debe eliminar los equipos registrados en la plataforma. → peticiones 49, 50, 51, 54",
+      "description": "Grupos de una fase de grupos: `/api/deportiva/groups`, y sus equipos: `/api/deportiva/group-teams`. `POST /group-teams` recibe uno o varios equipos y es todo o nada. Solo entran equipos inscritos en el torneo, y cada equipo va en un solo grupo por fase. Para consultar los equipos de un grupo: `GET /groups/{id}` o `GET /groups/phases/{phaseId}` (cada grupo trae sus equipos).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Debe existir previamente un torneo y una fase correspondiente. → peticiones 20, 23, 24, 32\n2. El sistema debe permitir registrar los grupos necesarios para la fase. → peticiones 20, 21\n3. Se debe poder consultar la información de los grupos registrados. → peticiones 38, 39, 40, 41\n4. Se debe permitir modificar la información de un grupo. → peticiones 42, 43\n5. Se debe permitir eliminar un grupo cuando las reglas de la competencia lo permitan. → peticiones 49, 52, 53; carpeta HU-GC-06: 67\n6. El sistema debe permitir asignar varios equipos a un grupo. → peticiones 27, 28\n7. Un grupo debe poder contener varios equipos. → peticiones 27, 28\n8. No se debe permitir registrar dos veces el mismo equipo dentro del mismo grupo. → peticiones 29\n9. Un equipo no debe quedar asignado simultáneamente a diferentes grupos de la misma fase. → peticiones 30, 31\n10. Se deben poder consultar los equipos que conforman cada grupo. → peticiones 38, 39\n11. La eliminación de un grupo no debe eliminar los equipos registrados en la plataforma. → peticiones 49, 50, 51, 54",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -14924,7 +15019,7 @@
     },
     {
       "name": "HU-GC-05 · Fases finales",
-      "description": "Fases finales: las mismas rutas de `/api/deportiva/phases` con `type: FINAL`. Una fase final dice cuántos equipos la juegan (`teamsCount`: 2, 4, 8, 16, 32 o 64) y no tiene grupos.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe existir previamente. → peticiones 04, 07\n2. El sistema debe permitir registrar una fase final dentro de la estructura del torneo. → peticiones 04, 05, 06\n3. Se debe poder consultar la información correspondiente a la fase final. → peticiones 08, 09\n4. Se debe permitir actualizar su información mientras las reglas de la competencia lo permitan. → peticiones 10, 12\n5. Se debe permitir eliminar una fase final cuando no tenga partidos u otra información asociada que lo impida. → peticiones 15, 16\n6. Los partidos correspondientes a esta etapa deben poder identificarse como parte de la fase final. → pendiente: necesita partidos, se prueba con la HU-GC-06 (bloque 3)\n7. La modificación de la fase final no debe afectar la información de las demás fases del torneo. → peticiones 11, 16",
+      "description": "Fases finales: las mismas rutas de `/api/deportiva/phases` con `type: FINAL`. Una fase final dice cuántos equipos la juegan (`teamsCount`: 2, 4, 8, 16, 32 o 64) y no tiene grupos.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe existir previamente. → peticiones 04, 07\n2. El sistema debe permitir registrar una fase final dentro de la estructura del torneo. → peticiones 04, 05, 06\n3. Se debe poder consultar la información correspondiente a la fase final. → peticiones 08, 09\n4. Se debe permitir actualizar su información mientras las reglas de la competencia lo permitan. → peticiones 10, 12; carpeta HU-GC-06: 65, 66\n5. Se debe permitir eliminar una fase final cuando no tenga partidos u otra información asociada que lo impida. → peticiones 15, 16; carpeta HU-GC-06: 64\n6. Los partidos correspondientes a esta etapa deben poder identificarse como parte de la fase final. → carpeta HU-GC-06: 41, 50\n7. La modificación de la fase final no debe afectar la información de las demás fases del torneo. → peticiones 11, 16",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -15540,6 +15635,3086 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/sports/{{sportFinalesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GC-06 · Partidos",
+      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 52\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 50, 51\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 53, 55, 57\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 59, 62\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → pendiente: el escenario llega con el Anexo 4 (Gestión de escenarios)\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 54, 63\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → pendiente: los aficionados que participaron salen de las apuestas, se prueba con la HU-GC-11 (bloque 7)",
+      "item": [
+        {
+          "name": "01 Preparar: crear el deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol Partidos {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportPartidosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: crear el torneo Copa Partidos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Partidos {{suffix}}\",\n  \"sportId\": {{sportPartidosId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentPartidosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear el torneo Copa Inactiva (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Inactiva {{suffix}}\",\n  \"sportId\": {{sportPartidosId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentInactivaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear una fase en Copa Inactiva (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentInactivaId}},\n  \"type\": \"GRUPOS\",\n  \"name\": \"Fase de grupos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseInactivaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: desactivar Copa Inactiva (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentInactivaId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: crear la Fase de grupos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentPartidosId}},\n  \"type\": \"GRUPOS\",\n  \"name\": \"Fase de grupos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseMGId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: crear la Semifinal, de 4 equipos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentPartidosId}},\n  \"type\": \"FINAL\",\n  \"name\": \"Semifinal\",\n  \"teamsCount\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseMSemiId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: crear el equipo Antílopes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Antílopes GC {{suffix}}\",\n  \"city\": \"Bogotá\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamAntilopesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Preparar: crear el equipo Berracos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Berracos GC {{suffix}}\",\n  \"city\": \"Bogotá\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamBerracosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Preparar: crear el equipo Coyotes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Coyotes GC {{suffix}}\",\n  \"city\": \"Bogotá\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamCoyotesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Preparar: crear el equipo Duendes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Duendes GC {{suffix}}\",\n  \"city\": \"Bogotá\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamDuendesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Preparar: crear el equipo Escorpiones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Escorpiones GC {{suffix}}\",\n  \"city\": \"Bogotá\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamEscorpionesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Preparar: crear el equipo Fénix (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fénix GC {{suffix}}\",\n  \"city\": \"Bogotá\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamFenixId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Preparar: asociar Antílopes al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamAntilopesId}},\n  \"sportId\": {{sportPartidosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Preparar: asociar Berracos al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamBerracosId}},\n  \"sportId\": {{sportPartidosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Preparar: asociar Coyotes al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamCoyotesId}},\n  \"sportId\": {{sportPartidosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Preparar: asociar Duendes al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamDuendesId}},\n  \"sportId\": {{sportPartidosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Preparar: asociar Escorpiones al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamEscorpionesId}},\n  \"sportId\": {{sportPartidosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Preparar: asociar Fénix al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamFenixId}},\n  \"sportId\": {{sportPartidosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Preparar: inscribir a todos menos Escorpiones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentPartidosId}},\n  \"teamIds\": [\n    {{teamAntilopesId}},\n    {{teamBerracosId}},\n    {{teamCoyotesId}},\n    {{teamDuendesId}},\n    {{teamFenixId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Preparar: crear el Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"name\": \"Grupo A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"groupMAId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Preparar: crear el Grupo B (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"name\": \"Grupo B\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"groupMBId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Preparar: Antílopes y Berracos al Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/group-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": {{groupMAId}},\n  \"teamIds\": [\n    {{teamAntilopesId}},\n    {{teamBerracosId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Preparar: Coyotes y Duendes al Grupo B (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/group-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": {{groupMBId}},\n  \"teamIds\": [\n    {{teamCoyotesId}},\n    {{teamDuendesId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Preparar: desactivar Fénix (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamFenixId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Programar Antílopes vs Berracos, jornada 1 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"2030-02-10T18:00\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #1: El torneo y la fase correspondiente deben existir previamente.\n\nCriterio HU-GC-06 #2: El sistema debe permitir registrar un nuevo partido con la información requerida.\n\nCriterio HU-GC-06 #3: Cada partido debe estar asociado con una fase de la competencia.\n\nCriterio HU-GC-06 #4: El sistema debe permitir definir los equipos que participarán en el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchABId\", pm.response.json().id);",
+                  "pm.test(\"Partido programado de la fase de grupos, en el Grupo A\", function () {",
+                  "    const m = pm.response.json();",
+                  "    pm.expect(m.status).to.eql(\"PROGRAMADO\");",
+                  "    pm.expect(m.tournament.id).to.eql(Number(pm.collectionVariables.get(\"tournamentPartidosId\")));",
+                  "    pm.expect(m.phase.id).to.eql(Number(pm.collectionVariables.get(\"phaseMGId\")));",
+                  "    pm.expect(m.phase.type).to.eql(\"GRUPOS\");",
+                  "    pm.expect(m.group.id).to.eql(Number(pm.collectionVariables.get(\"groupMAId\")));",
+                  "    pm.expect(m.group.name).to.eql(\"Grupo A\");",
+                  "    pm.expect(m.homeTeam.id).to.eql(Number(pm.collectionVariables.get(\"teamAntilopesId\")));",
+                  "    pm.expect(m.awayTeam.id).to.eql(Number(pm.collectionVariables.get(\"teamBerracosId\")));",
+                  "    pm.expect(m.scheduledAt).to.eql(\"2030-02-10T18:00\");",
+                  "    pm.expect(m.round).to.eql(1);",
+                  "    pm.expect(m.bracketPosition).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Programar Coyotes vs Duendes, jornada 1 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamCoyotesId}},\n  \"awayTeamId\": {{teamDuendesId}},\n  \"scheduledAt\": \"2030-02-11T16:30\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #2: El sistema debe permitir registrar un nuevo partido con la información requerida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchCDId\", pm.response.json().id);",
+                  "pm.test(\"En el Grupo B\", function () {",
+                  "    pm.expect(pm.response.json().group.name).to.eql(\"Grupo B\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Programar la vuelta: Berracos vs Antílopes, jornada 2 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamBerracosId}},\n  \"awayTeamId\": {{teamAntilopesId}},\n  \"scheduledAt\": \"2030-02-17T18:00\",\n  \"round\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #2: El sistema debe permitir registrar un nuevo partido con la información requerida.\n\nEn una fase de grupos dos equipos se pueden enfrentar más de una vez (ida y vuelta)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchBAId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Campos obligatorios vacíos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #2: El sistema debe permitir registrar un nuevo partido con la información requerida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.phaseId).to.eql(\"El id de la fase es obligatorio\");",
+                  "    pm.expect(body.homeTeamId).to.eql(\"El id del equipo local es obligatorio\");",
+                  "    pm.expect(body.awayTeamId).to.eql(\"El id del equipo visitante es obligatorio\");",
+                  "    pm.expect(body.scheduledAt).to.eql(\"La fecha y hora del partido es obligatoria\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Fecha y hora con otro formato (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"10/02/2030 18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #2: El sistema debe permitir registrar un nuevo partido con la información requerida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.scheduledAt).to.eql(\"La fecha y hora debe tener el formato AAAA-MM-DDTHH:mm, por ejemplo 2030-02-10T18:00\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Jornada 0 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"2030-02-10T18:00\",\n  \"round\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.round).to.eql(\"La jornada debe ser un número entero entre 1 y 99\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Un equipo contra sí mismo (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamAntilopesId}},\n  \"scheduledAt\": \"2030-02-10T18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #5: No se debe permitir que un equipo compita contra sí mismo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"contra sí mismo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Partido en una fase que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{noExiste}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"2030-02-10T18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #1: El torneo y la fase correspondiente deben existir previamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Equipo que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{noExiste}},\n  \"scheduledAt\": \"2030-02-10T18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #4: El sistema debe permitir definir los equipos que participarán en el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Escorpiones no está inscrito en el torneo (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamEscorpionesId}},\n  \"scheduledAt\": \"2030-02-10T18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #6: Los equipos seleccionados deben encontrarse habilitados para participar en la competencia."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Escorpiones\");",
+                  "    pm.expect(message).to.include(\"no está inscrito\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Fénix está desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamFenixId}},\n  \"awayTeamId\": {{teamAntilopesId}},\n  \"scheduledAt\": \"2030-02-10T18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #6: Los equipos seleccionados deben encontrarse habilitados para participar en la competencia."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Fénix\");",
+                  "    pm.expect(message).to.include(\"desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Antílopes y Coyotes están en grupos distintos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamCoyotesId}},\n  \"scheduledAt\": \"2030-02-10T18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #6: Los equipos seleccionados deben encontrarse habilitados para participar en la competencia."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"grupos distintos\");",
+                  "    pm.expect(message).to.include(\"Grupo A\");",
+                  "    pm.expect(message).to.include(\"Grupo B\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Fecha fuera de las fechas del torneo (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"2031-01-15T10:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"dentro del torneo\");",
+                  "    pm.expect(message).to.include(\"2030-02-01\");",
+                  "    pm.expect(message).to.include(\"2030-06-30\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Posición en la llave en una fase de grupos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMGId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"2030-02-10T18:00\",\n  \"bracketPosition\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"solo se usa en las fases finales\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Partido en un torneo desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseInactivaId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"2030-02-10T18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Semifinal, llave 1: Antílopes vs Coyotes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMSemiId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamCoyotesId}},\n  \"scheduledAt\": \"2030-05-10T15:00\",\n  \"bracketPosition\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #2: El sistema debe permitir registrar un nuevo partido con la información requerida.\n\nCriterio HU-GC-06 #3: Cada partido debe estar asociado con una fase de la competencia.\n\nCriterio HU-GC-05 #6: Los partidos correspondientes a esta etapa deben poder identificarse como parte de la fase final."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchSemi1Id\", pm.response.json().id);",
+                  "pm.test(\"Partido de la fase final, en la posición 1 de la llave y sin grupo\", function () {",
+                  "    const m = pm.response.json();",
+                  "    pm.expect(m.phase.type).to.eql(\"FINAL\");",
+                  "    pm.expect(m.phase.name).to.eql(\"Semifinal\");",
+                  "    pm.expect(m.bracketPosition).to.eql(1);",
+                  "    pm.expect(m.group).to.eql(null);",
+                  "    pm.expect(m.round).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Partido de fase final sin posición en la llave (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMSemiId}},\n  \"homeTeamId\": {{teamBerracosId}},\n  \"awayTeamId\": {{teamDuendesId}},\n  \"scheduledAt\": \"2030-05-11T15:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"obligatoria\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Posición fuera de la llave: la Semifinal tiene 2 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMSemiId}},\n  \"homeTeamId\": {{teamBerracosId}},\n  \"awayTeamId\": {{teamDuendesId}},\n  \"scheduledAt\": \"2030-05-11T15:00\",\n  \"bracketPosition\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"va de 1 a 2\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Posición de la llave ya ocupada (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMSemiId}},\n  \"homeTeamId\": {{teamBerracosId}},\n  \"awayTeamId\": {{teamDuendesId}},\n  \"scheduledAt\": \"2030-05-11T15:00\",\n  \"bracketPosition\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya la tiene\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 Antílopes ya juega en la Semifinal (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMSemiId}},\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamDuendesId}},\n  \"scheduledAt\": \"2030-05-11T15:00\",\n  \"bracketPosition\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Antílopes\");",
+                  "    pm.expect(message).to.include(\"una sola vez\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 Jornada en una fase final (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMSemiId}},\n  \"homeTeamId\": {{teamBerracosId}},\n  \"awayTeamId\": {{teamDuendesId}},\n  \"scheduledAt\": \"2030-05-11T15:00\",\n  \"bracketPosition\": 2,\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"solo se usa en las fases de grupos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 Semifinal, llave 2: Berracos vs Duendes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseMSemiId}},\n  \"homeTeamId\": {{teamBerracosId}},\n  \"awayTeamId\": {{teamDuendesId}},\n  \"scheduledAt\": \"2030-05-11T15:00\",\n  \"bracketPosition\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #2: El sistema debe permitir registrar un nuevo partido con la información requerida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchSemi2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 Partidos de la fase de grupos, por fecha (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/phases/{{phaseMGId}}",
+            "description": "Criterio HU-GC-06 #7: El sistema debe permitir consultar los partidos registrados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Los tres partidos de grupos\", function () {",
+                  "    const ids = pm.response.json().map((m) => m.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"matchABId\")), Number(pm.collectionVariables.get(\"matchCDId\")), Number(pm.collectionVariables.get(\"matchBAId\"))]);",
+                  "});",
+                  "pm.test(\"Cada uno con su grupo\", function () {",
+                  "    pm.expect(pm.response.json().map((m) => m.group.name)).to.eql([\"Grupo A\", \"Grupo B\", \"Grupo A\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Partidos del torneo, de todas sus fases (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/tournaments/{{tournamentPartidosId}}",
+            "description": "Criterio HU-GC-06 #7: El sistema debe permitir consultar los partidos registrados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Grupos y semifinales, por fecha\", function () {",
+                  "    const ids = pm.response.json().map((m) => m.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"matchABId\")), Number(pm.collectionVariables.get(\"matchCDId\")), Number(pm.collectionVariables.get(\"matchBAId\")), Number(pm.collectionVariables.get(\"matchSemi1Id\")), Number(pm.collectionVariables.get(\"matchSemi2Id\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "50 Detalle de la llave 1: es un partido de la fase final (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSemi1Id}}",
+            "description": "Criterio HU-GC-06 #8: Se debe poder consultar la información detallada de cada partido.\n\nCriterio HU-GC-05 #6: Los partidos correspondientes a esta etapa deben poder identificarse como parte de la fase final."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Se identifica como parte de la fase final\", function () {",
+                  "    const m = pm.response.json();",
+                  "    pm.expect(m.phase.type).to.eql(\"FINAL\");",
+                  "    pm.expect(m.phase.id).to.eql(Number(pm.collectionVariables.get(\"phaseMSemiId\")));",
+                  "    pm.expect(m.homeTeam.id).to.eql(Number(pm.collectionVariables.get(\"teamAntilopesId\")));",
+                  "    pm.expect(m.awayTeam.id).to.eql(Number(pm.collectionVariables.get(\"teamCoyotesId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Detalle de un partido que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{noExiste}}",
+            "description": "Criterio HU-GC-06 #8: Se debe poder consultar la información detallada de cada partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "52 Partidos de una fase que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/phases/{{noExiste}}",
+            "description": "Criterio HU-GC-06 #1: El torneo y la fase correspondiente deben existir previamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "53 Reprogramar Antílopes vs Berracos: otra fecha y hora (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchABId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"2030-02-12T20:30\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #9: Se debe permitir actualizar la información de un partido cuando su estado lo permita."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Fecha nueva\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.scheduledAt).to.eql(\"2030-02-12T20:30\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "54 Detalle: el cambio quedó guardado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchABId}}",
+            "description": "Criterio HU-GC-06 #12: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Fecha guardada, sigue programado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.scheduledAt).to.eql(\"2030-02-12T20:30\");",
+                  "    pm.expect(body.status).to.eql(\"PROGRAMADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "55 Editar con equipos de grupos distintos (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchABId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamDuendesId}},\n  \"scheduledAt\": \"2030-02-12T20:30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #9: Se debe permitir actualizar la información de un partido cuando su estado lo permita."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"grupos distintos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "56 Iniciar Antílopes vs Berracos (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchABId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"En juego\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_JUEGO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "57 Editar un partido en juego (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchABId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeTeamId\": {{teamAntilopesId}},\n  \"awayTeamId\": {{teamBerracosId}},\n  \"scheduledAt\": \"2030-02-13T20:30\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-06 #9: Se debe permitir actualizar la información de un partido cuando su estado lo permita."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"solo se puede editar mientras está programado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "58 Iniciarlo otra vez (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchABId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Solo se puede iniciar un partido programado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "59 Eliminar un partido en juego (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchABId}}",
+            "description": "Criterio HU-GC-06 #10: Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"cancélalo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "60 Cancelar Antílopes vs Berracos (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchABId}}/cancel"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cancelado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"CANCELADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "61 Cancelarlo otra vez (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchABId}}/cancel"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no se puede cancelar\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "62 Eliminar el partido cancelado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchABId}}",
+            "description": "Criterio HU-GC-06 #10: Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "63 El partido ya no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchABId}}",
+            "description": "Criterio HU-GC-06 #12: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64 Eliminar la Semifinal, que tiene partidos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/phases/{{phaseMSemiId}}",
+            "description": "Criterio HU-GC-03 #6: Se debe permitir eliminar una fase cuando no tenga información asociada que lo impida.\n\nCriterio HU-GC-05 #5: Se debe permitir eliminar una fase final cuando no tenga partidos u otra información asociada que lo impida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"tiene partidos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "65 Cambiar el número de equipos de la Semifinal, que tiene partidos (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases/{{phaseMSemiId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"FINAL\",\n  \"name\": \"Semifinal\",\n  \"teamsCount\": 8\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-05 #4: Se debe permitir actualizar su información mientras las reglas de la competencia lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"número de equipos\");",
+                  "    pm.expect(message).to.include(\"ya tiene partidos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "66 Cambiarle el nombre sí se puede (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases/{{phaseMSemiId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"FINAL\",\n  \"name\": \"Semifinales\",\n  \"teamsCount\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-05 #4: Se debe permitir actualizar su información mientras las reglas de la competencia lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Nombre nuevo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.name).to.eql(\"Semifinales\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "67 Eliminar el Grupo B, cuyos equipos ya tienen partidos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/groups/{{groupMBId}}",
+            "description": "Criterio HU-GC-04 #5: Se debe permitir eliminar un grupo cuando las reglas de la competencia lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya tienen partidos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "68 Sacar a Coyotes del Grupo B, tiene partidos en la fase (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/group-teams/{{groupMBId}}/{{teamCoyotesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya tiene partidos\");",
+                  "    pm.expect(message).to.include(\"no puede salir del grupo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "69 Retirar la inscripción de Duendes, que tiene partidos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentPartidosId}}/{{teamDuendesId}}",
+            "description": "Criterio HU-GC-02 #10: Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya tiene partidos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "70 Limpieza: eliminar Coyotes vs Duendes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchCDId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "71 Limpieza: eliminar Berracos vs Antílopes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBAId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "72 Limpieza: eliminar la llave 1 (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSemi1Id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "73 Limpieza: eliminar la llave 2 (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSemi2Id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "74 Limpieza: eliminar el Grupo A (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/groups/{{groupMAId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "75 Limpieza: eliminar el Grupo B (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/groups/{{groupMBId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "76 Limpieza: eliminar la Semifinal (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/phases/{{phaseMSemiId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "77 Limpieza: eliminar la Fase de grupos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/phases/{{phaseMGId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "78 Limpieza: eliminar la fase de Copa Inactiva (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/phases/{{phaseInactivaId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "79 Limpieza: retirar la inscripción de Antílopes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentPartidosId}}/{{teamAntilopesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "80 Limpieza: retirar la inscripción de Berracos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentPartidosId}}/{{teamBerracosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "81 Limpieza: retirar la inscripción de Coyotes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentPartidosId}}/{{teamCoyotesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "82 Limpieza: retirar la inscripción de Duendes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentPartidosId}}/{{teamDuendesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "83 Limpieza: retirar la inscripción de Fénix (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-teams/{{tournamentPartidosId}}/{{teamFenixId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "84 Limpieza: eliminar Copa Partidos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentPartidosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "85 Limpieza: eliminar Copa Inactiva (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentInactivaId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "86 Limpieza: retirar Antílopes del deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamAntilopesId}}/{{sportPartidosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "87 Limpieza: retirar Berracos del deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamBerracosId}}/{{sportPartidosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "88 Limpieza: retirar Coyotes del deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamCoyotesId}}/{{sportPartidosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "89 Limpieza: retirar Duendes del deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamDuendesId}}/{{sportPartidosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "90 Limpieza: retirar Escorpiones del deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamEscorpionesId}}/{{sportPartidosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "91 Limpieza: retirar Fénix del deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamFenixId}}/{{sportPartidosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "92 Limpieza: eliminar Antílopes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamAntilopesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "93 Limpieza: eliminar Berracos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamBerracosId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "94 Limpieza: eliminar Coyotes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamCoyotesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "95 Limpieza: eliminar Duendes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamDuendesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "96 Limpieza: eliminar Escorpiones (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamEscorpionesId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "97 Limpieza: eliminar Fénix (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamFenixId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "98 Limpieza: eliminar el deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportPartidosId}}"
           },
           "event": [
             {

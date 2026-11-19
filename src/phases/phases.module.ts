@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MatchUsageModule } from '../matches/match-usage.module';
 import { TournamentsModule } from '../tournaments/tournaments.module';
 import { FinalPhase } from './entities/final-phase.entity';
 import { GroupPhase } from './entities/group-phase.entity';
@@ -13,6 +14,7 @@ import { PhasesService } from './phases.service';
   imports: [
     TypeOrmModule.forFeature([Phase, GroupPhase, FinalPhase]),
     TournamentsModule,
+    MatchUsageModule,
   ],
   controllers: [PhasesController],
   providers: [PhasesService],
