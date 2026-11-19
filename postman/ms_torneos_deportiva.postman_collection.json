@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "ms_torneos_deportiva · Anexos 2 y 3 (Gestión Deportiva y de Competencias)",
-    "description": "Pruebas de los módulos de gestión deportiva (HU-GD) y de competencias (HU-GC), una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
+    "description": "Pruebas de los módulos de gestión deportiva (HU-GD) y de competencias (HU-GC), una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security, salvo en la carpeta HU-GC-10: los métodos de pago son de cada aficionado y deportiva necesita saber quién hace la petición.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -757,6 +757,81 @@
     },
     {
       "key": "matchDS2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "fanPassword",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "securityAdminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "fanRoleId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "fanAnaUserId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "fanBetoUserId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "fanAnaToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "fanBetoToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pmCreditoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pmPseId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pmNequiId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pmDaviplataId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "anaVisaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "anaPseId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "anaNequiId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "betoDaviId",
       "value": "",
       "type": "string"
     }
@@ -24581,6 +24656,2084 @@
                 "exec": [
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GC-10 · Métodos de pago del aficionado",
+      "description": "Métodos de pago del aficionado que hace la petición: `/api/deportiva/fan-payment-methods` (el aficionado sale del token, nunca del cuerpo; el método de otro aficionado responde 404). El tipo se elige del catálogo `GET /api/deportiva/payment-methods` (se siembra al arrancar) y decide los datos obligatorios: tarjeta (titular, franquicia, últimos 4 dígitos y vencimiento), cuenta bancaria (banco, tipo de cuenta y últimos 4) o billetera (celular). Nunca se guarda el número completo ni el CVV.\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**: inicia sesión como administrador (con `adminEmail` y `adminPassword`), crea dos usuarios con el rol Aficionado (Ana y Beto), entra con cada uno y usa su token. Al final borra sus métodos y los dos usuarios; en deportiva queda su fila de aficionado.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El aficionado debe estar previamente registrado en el sistema. → peticiones 42\n2. El sistema debe permitir registrar uno o varios métodos de pago para un aficionado. → peticiones 10, 11, 12, 21, 22\n3. Cada método de pago debe quedar asociado con el aficionado correspondiente. → peticiones 10, 23, 24\n4. El sistema debe permitir consultar los métodos de pago registrados por el aficionado. → peticiones 23, 24, 25\n5. Se debe permitir actualizar la información de un método de pago cuando corresponda. → peticiones 30, 32, 33, 36\n6. Se debe permitir eliminar o desactivar un método de pago cuando no existan restricciones que lo impidan. → peticiones 34, 37, 39\n7. El sistema debe validar los datos obligatorios según el tipo de método de pago registrado. → peticiones 09, 11, 13, 14, 15, 16, 17, 18, 19, 20, 32\n8. No se debe permitir utilizar un método de pago que no pertenezca al aficionado. → peticiones 24, 26, 27, 28, 29\n9. La eliminación de un método de pago no debe eliminar las operaciones realizadas previamente con dicho método. → pendiente: las operaciones son las apuestas, se prueba con la HU-GC-11 (bloque 7)\n10. Los cambios realizados deben quedar almacenados correctamente. → peticiones 31, 40, 41",
+      "item": [
+        {
+          "name": "01 Preparar: el administrador inicia sesión en ms_torneos_security (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));",
+                  "// Contraseña de los dos aficionados de prueba (cumple la política de ms_torneos_security).",
+                  "pm.collectionVariables.set(\"fanPassword\", `Af#${pm.collectionVariables.get(\"suffix\")}x`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"securityAdminToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: buscar el rol Aficionado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{securityUrl}}/roles",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const fanRole = pm.response.json().find((role) => role.name === \"Aficionado\");",
+                  "pm.collectionVariables.set(\"fanRoleId\", fanRole ? fanRole.id : \"\");",
+                  "pm.test(\"El seeder creó el rol Aficionado\", function () {",
+                  "    pm.expect(Boolean(fanRole)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear la usuaria Ana (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ana Aficionada\",\n  \"email\": \"ana.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear el usuario Beto (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Beto Aficionado\",\n  \"email\": \"beto.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanBetoUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: darle a Ana el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanAnaUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: darle a Beto el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanBetoUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: Ana inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: Beto inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"beto.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanBetoToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Catálogo de métodos de pago (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/payment-methods",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const catalog = pm.response.json();",
+                  "const idOf = (code) => (catalog.find((m) => m.code === code) || {}).id;",
+                  "pm.collectionVariables.set(\"pmCreditoId\", idOf(\"TARJETA_CREDITO\"));",
+                  "pm.collectionVariables.set(\"pmPseId\", idOf(\"PSE\"));",
+                  "pm.collectionVariables.set(\"pmNequiId\", idOf(\"NEQUI\"));",
+                  "pm.collectionVariables.set(\"pmDaviplataId\", idOf(\"DAVIPLATA\"));",
+                  "pm.test(\"Los cinco métodos sembrados, cada uno con su tipo\", function () {",
+                  "    pm.expect(catalog.map((m) => m.code)).to.eql([\"TARJETA_CREDITO\", \"TARJETA_DEBITO\", \"PSE\", \"NEQUI\", \"DAVIPLATA\"]);",
+                  "    pm.expect(catalog.map((m) => m.kind)).to.eql([\"TARJETA\", \"TARJETA\", \"CUENTA_BANCARIA\", \"BILLETERA\", \"BILLETERA\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Ana registra su tarjeta de crédito (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}},\n  \"alias\": \"Mi Visa\",\n  \"holderName\": \"Ana Aficionada\",\n  \"brand\": \"VISA\",\n  \"lastFour\": \"4242\",\n  \"expiryMonth\": 8,\n  \"expiryYear\": 2031,\n  \"cardNumber\": \"4242424242424242\",\n  \"cvv\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #2: El sistema debe permitir registrar uno o varios métodos de pago para un aficionado.\n\nCriterio HU-GC-10 #3: Cada método de pago debe quedar asociado con el aficionado correspondiente.\n\nEl cuerpo trae `cardNumber` y `cvv` a propósito: se descartan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"anaVisaId\", pm.response.json().id);",
+                  "pm.test(\"Tarjeta de crédito con sus datos seguros\", function () {",
+                  "    const m = pm.response.json();",
+                  "    pm.expect(m.paymentMethod.code).to.eql(\"TARJETA_CREDITO\");",
+                  "    pm.expect(m.paymentMethod.kind).to.eql(\"TARJETA\");",
+                  "    pm.expect([m.alias, m.holderName, m.brand, m.lastFour]).to.eql([\"Mi Visa\", \"Ana Aficionada\", \"VISA\", \"4242\"]);",
+                  "    pm.expect([m.expiryMonth, m.expiryYear, m.expired, m.active]).to.eql([8, 2031, false, true]);",
+                  "});",
+                  "pm.test(\"No guarda ni devuelve el número completo ni el CVV\", function () {",
+                  "    const keys = Object.keys(pm.response.json());",
+                  "    pm.expect(keys).to.not.include(\"cardNumber\");",
+                  "    pm.expect(keys).to.not.include(\"cvv\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Ana registra su cuenta PSE (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmPseId}},\n  \"bankName\": \"Bancolombia\",\n  \"accountType\": \"AHORROS\",\n  \"lastFour\": \"1234\",\n  \"phone\": \"3001112233\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #2: El sistema debe permitir registrar uno o varios métodos de pago para un aficionado.\n\nCriterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"anaPseId\", pm.response.json().id);",
+                  "pm.test(\"Solo los datos de una cuenta bancaria (el celular que llegó se ignora)\", function () {",
+                  "    const m = pm.response.json();",
+                  "    pm.expect([m.bankName, m.accountType, m.lastFour]).to.eql([\"Bancolombia\", \"AHORROS\", \"1234\"]);",
+                  "    pm.expect([m.holderName, m.brand, m.expiryMonth, m.phone]).to.eql([null, null, null, null]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Ana registra su Nequi (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmNequiId}},\n  \"phone\": \"3001234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #2: El sistema debe permitir registrar uno o varios métodos de pago para un aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"anaNequiId\", pm.response.json().id);",
+                  "pm.test(\"Billetera con su celular\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.phone).to.eql(\"3001234567\");",
+                  "    pm.expect(body.lastFour).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Tarjeta sin sus datos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.holderName).to.eql(\"El titular es obligatorio para una tarjeta\");",
+                  "    pm.expect(body.brand).to.eql(\"La franquicia es obligatoria para una tarjeta\");",
+                  "    pm.expect(body.lastFour).to.eql(\"Los últimos 4 dígitos son obligatorios para una tarjeta\");",
+                  "    pm.expect(body.expiryMonth).to.eql(\"El mes de vencimiento es obligatorio para una tarjeta\");",
+                  "    pm.expect(body.expiryYear).to.eql(\"El año de vencimiento es obligatorio para una tarjeta\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Cuenta PSE sin sus datos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmPseId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.bankName).to.eql(\"El banco es obligatorio para una cuenta bancaria\");",
+                  "    pm.expect(body.accountType).to.eql(\"El tipo de cuenta es obligatorio para una cuenta bancaria\");",
+                  "    pm.expect(body.lastFour).to.eql(\"Los últimos 4 dígitos son obligatorios para una cuenta bancaria\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Nequi sin celular (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmNequiId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.phone).to.eql(\"El celular es obligatorio para una billetera digital\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Sin elegir el método del catálogo (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.paymentMethodId).to.eql(\"El método de pago del catálogo es obligatorio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Datos con formato inválido (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}},\n  \"alias\": \"Mi Visa\",\n  \"holderName\": \"Ana Aficionada\",\n  \"brand\": \"VISAX\",\n  \"lastFour\": \"4242424242424242\",\n  \"expiryMonth\": 13,\n  \"expiryYear\": 31\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.brand).to.eql(\"La franquicia debe ser VISA, MASTERCARD, AMEX o DINERS\");",
+                  "    pm.expect(body.lastFour).to.eql(\"Los últimos 4 dígitos deben ser exactamente 4 números (nunca el número completo)\");",
+                  "    pm.expect(body.expiryMonth).to.eql(\"El mes de vencimiento debe ser un número entre 1 y 12\");",
+                  "    pm.expect(body.expiryYear).to.eql(\"El año de vencimiento debe tener 4 dígitos, por ejemplo 2030\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Celular que no empieza por 3 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmNequiId}},\n  \"phone\": \"6011234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.phone).to.eql(\"El celular debe tener 10 dígitos y empezar por 3\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Tarjeta vencida (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}},\n  \"alias\": \"Vieja\",\n  \"holderName\": \"Ana Aficionada\",\n  \"brand\": \"MASTERCARD\",\n  \"lastFour\": \"5555\",\n  \"expiryMonth\": 1,\n  \"expiryYear\": 2020\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"venció en 01/2020\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Método que no existe en el catálogo (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{noExiste}},\n  \"phone\": \"3001234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 La misma tarjeta otra vez, con otro alias (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}},\n  \"alias\": \"Otra\",\n  \"holderName\": \"Ana Aficionada\",\n  \"brand\": \"VISA\",\n  \"lastFour\": \"4242\",\n  \"expiryMonth\": 8,\n  \"expiryYear\": 2031\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #2: El sistema debe permitir registrar uno o varios métodos de pago para un aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Ya registraste\");",
+                  "    pm.expect(message).to.include(\"Mi Visa\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Beto registra su Daviplata (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmDaviplataId}},\n  \"phone\": \"3109876543\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #2: El sistema debe permitir registrar uno o varios métodos de pago para un aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"betoDaviId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Ana consulta sus métodos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #3: Cada método de pago debe quedar asociado con el aficionado correspondiente.\n\nCriterio HU-GC-10 #4: El sistema debe permitir consultar los métodos de pago registrados por el aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sus tres métodos, en el orden en que los registró\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"anaVisaId\")), Number(pm.collectionVariables.get(\"anaPseId\")), Number(pm.collectionVariables.get(\"anaNequiId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Beto solo ve los suyos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #3: Cada método de pago debe quedar asociado con el aficionado correspondiente.\n\nCriterio HU-GC-10 #4: El sistema debe permitir consultar los métodos de pago registrados por el aficionado.\n\nCriterio HU-GC-10 #8: No se debe permitir utilizar un método de pago que no pertenezca al aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Solo su Daviplata\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"betoDaviId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Detalle de la Visa de Ana (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #4: El sistema debe permitir consultar los métodos de pago registrados por el aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Su Visa\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.alias).to.eql(\"Mi Visa\");",
+                  "    pm.expect(body.lastFour).to.eql(\"4242\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Beto intenta ver la Visa de Ana (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #8: No se debe permitir utilizar un método de pago que no pertenezca al aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No tienes un método de pago\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Beto intenta editarla (404)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alias\": \"Mía\",\n  \"holderName\": \"Ana Aficionada\",\n  \"brand\": \"VISA\",\n  \"lastFour\": \"4242\",\n  \"expiryMonth\": 8,\n  \"expiryYear\": 2031\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #8: No se debe permitir utilizar un método de pago que no pertenezca al aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Beto intenta desactivarla (404)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}/disable",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #8: No se debe permitir utilizar un método de pago que no pertenezca al aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Beto intenta eliminarla (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #8: No se debe permitir utilizar un método de pago que no pertenezca al aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Ana renueva su Visa: nuevo vencimiento y alias (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alias\": \"Visa nueva\",\n  \"holderName\": \"Ana Aficionada\",\n  \"brand\": \"VISA\",\n  \"lastFour\": \"4242\",\n  \"expiryMonth\": 12,\n  \"expiryYear\": 2033\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #5: Se debe permitir actualizar la información de un método de pago cuando corresponda."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Datos nuevos\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.alias).to.eql(\"Visa nueva\");",
+                  "    pm.expect(body.expiryMonth).to.eql(12);",
+                  "    pm.expect(body.expiryYear).to.eql(2033);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Detalle: el cambio quedó guardado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #10: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Guardado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.alias).to.eql(\"Visa nueva\");",
+                  "    pm.expect(body.expiryYear).to.eql(2033);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Editar la cuenta PSE sin el banco (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaPseId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountType\": \"CORRIENTE\",\n  \"lastFour\": \"1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #5: Se debe permitir actualizar la información de un método de pago cuando corresponda.\n\nCriterio HU-GC-10 #7: El sistema debe validar los datos obligatorios según el tipo de método de pago registrado.\n\nAl editar se validan los datos del tipo que ya tiene (el tipo no cambia)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.bankName).to.eql(\"El banco es obligatorio para una cuenta bancaria\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Editar la Visa con un vencimiento pasado (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alias\": \"Mi Visa\",\n  \"holderName\": \"Ana Aficionada\",\n  \"brand\": \"VISA\",\n  \"lastFour\": \"4242\",\n  \"expiryMonth\": 3,\n  \"expiryYear\": 2021\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #5: Se debe permitir actualizar la información de un método de pago cuando corresponda."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"venció en 03/2021\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Ana desactiva su Nequi (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaNequiId}}/disable",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #6: Se debe permitir eliminar o desactivar un método de pago cuando no existan restricciones que lo impidan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Desactivado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Desactivarlo otra vez (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaNequiId}}/disable",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya está desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Editar un método desactivado (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaNequiId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"3001234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #5: Se debe permitir actualizar la información de un método de pago cuando corresponda."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"actívalo antes de editarlo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Ana activa su Nequi (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaNequiId}}/enable",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #6: Se debe permitir eliminar o desactivar un método de pago cuando no existan restricciones que lo impidan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Activo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Activarlo otra vez (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaNequiId}}/enable",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya está activo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Ana elimina su cuenta PSE (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaPseId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #6: Se debe permitir eliminar o desactivar un método de pago cuando no existan restricciones que lo impidan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 La cuenta PSE ya no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaPseId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #10: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Ana tiene ahora dos métodos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #10: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"La Visa y el Nequi\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"anaVisaId\")), Number(pm.collectionVariables.get(\"anaNequiId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Sin iniciar sesión (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Criterio HU-GC-10 #1: El aficionado debe estar previamente registrado en el sistema.\n\nSolo un usuario registrado (con el rol Aficionado) tiene métodos de pago."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"errorCase = UNAUTHORIZED\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"UNAUTHORIZED\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Limpieza: Ana elimina su Visa (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaVisaId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Limpieza: Ana elimina su Nequi (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{anaNequiId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 Limpieza: Beto elimina su Daviplata (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{betoDaviId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 Limpieza: quitarle a Ana el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanAnaUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 Limpieza: quitarle a Beto el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanBetoUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 Limpieza: eliminar a Ana (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanAnaUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Limpieza: eliminar a Beto (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanBetoUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
                   "});"
                 ]
               }

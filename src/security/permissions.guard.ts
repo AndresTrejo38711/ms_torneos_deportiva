@@ -5,9 +5,9 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { Request } from 'express';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
+import { RequestWithUser } from './authenticated-user';
 import { SecurityClient } from './security.client';
 
 // Los únicos métodos que un permiso puede tener en ms_torneos_security.
@@ -40,7 +40,7 @@ export class PermissionsGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest<RequestWithUser>();
 
     const authorization = request.headers.authorization;
     if (!authorization) {
@@ -59,14 +59,16 @@ export class PermissionsGuard implements CanActivate {
     // permisos (ej.: /api/deportiva/sports/{id}).
     const [url] = request.originalUrl.split('?');
 
-    const allowed = await this.securityClient.isAllowed(
+    const user = await this.securityClient.authorize(
       authorization,
       url,
       request.method,
     );
-    if (!allowed) {
+    if (!user) {
       throw forbidden();
     }
+    // Para las rutas que trabajan sobre "lo mío" (ver CurrentUser).
+    request.user = user;
     return true;
   }
 }

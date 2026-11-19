@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { FanPaymentMethodsModule } from './fan-payment-methods/fan-payment-methods.module';
+import { FansModule } from './fans/fans.module';
 import { GroupTeamsModule } from './group-teams/group-teams.module';
 import { GroupsModule } from './groups/groups.module';
 import { MatchesModule } from './matches/matches.module';
 import { PhasesModule } from './phases/phases.module';
 import { PlayerProfilesModule } from './player-profiles/player-profiles.module';
 import { PlayerSkillsModule } from './player-skills/player-skills.module';
+import { PaymentMethodsModule } from './payment-methods/payment-methods.module';
 import { PlayersModule } from './players/players.module';
 import { ScoresModule } from './scores/scores.module';
 import { SecurityModule } from './security/security.module';
@@ -66,6 +69,9 @@ import { TournamentsModule } from './tournaments/tournaments.module';
     MatchesModule, // HU-GC-06 y HU-GC-07 (resultado)
     ScoresModule, // HU-GC-07 (anotaciones)
     TournamentDevelopmentModule, // HU-GC-08
+    FansModule, // HU-GC-10 y HU-GC-11 (aficionados)
+    PaymentMethodsModule, // HU-GC-10 (catálogo)
+    FanPaymentMethodsModule, // HU-GC-10
   ],
 })
 export class AppModule {}

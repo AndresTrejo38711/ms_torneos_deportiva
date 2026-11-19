@@ -2,12 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
+import { AuthenticatedUser } from './authenticated-user';
 
 // Si ms_torneos_security no responde en este tiempo, la petición se rechaza (no se queda colgada).
 const TIMEOUT_MS = 3000;
 
 // Cliente de ms_torneos_security (guía 10 del profesor): reenvía el JWT que llegó del front y
-// pregunta si ese usuario puede invocar la URL y el método. La respuesta es { allowed }.
+// pregunta si ese usuario puede invocar la URL y el método. La respuesta es { allowed, userId, email }:
+// si se permite, también dice quién es el usuario.
 @Injectable()
 export class SecurityClient {
   private readonly logger = new Logger(SecurityClient.name);
@@ -18,11 +20,12 @@ export class SecurityClient {
     this.validationUrl = `${config.getOrThrow<string>('SECURITY_URL')}/api/internal/security/permissions-validation`;
   }
 
-  async isAllowed(
+  // El usuario si tiene permiso; null si no lo tiene.
+  async authorize(
     authorization: string,
     url: string,
     method: string,
-  ): Promise<boolean> {
+  ): Promise<AuthenticatedUser | null> {
     let response: globalThis.Response;
     let body: unknown;
     try {
@@ -61,16 +64,29 @@ export class SecurityClient {
       throw unavailable();
     }
 
-    const allowed =
-      typeof body === 'object' &&
-      body !== null &&
-      'allowed' in body &&
-      body.allowed === true;
-    if (!allowed) {
+    const user = allowedUser(body);
+    if (!user) {
       this.logger.warn(`Permiso denegado: ${method} ${url}`);
     }
-    return allowed;
+    return user;
   }
+}
+
+// El usuario de una respuesta { allowed: true, userId, email }. Cualquier otra cosa cuenta como
+// denegado: se falla cerrado.
+function allowedUser(body: unknown): AuthenticatedUser | null {
+  if (typeof body !== 'object' || body === null) {
+    return null;
+  }
+  const { allowed, userId, email } = body as Record<string, unknown>;
+  if (
+    allowed !== true ||
+    typeof userId !== 'number' ||
+    typeof email !== 'string'
+  ) {
+    return null;
+  }
+  return { id: userId, email };
 }
 
 function unavailable(): ApplicationException {
