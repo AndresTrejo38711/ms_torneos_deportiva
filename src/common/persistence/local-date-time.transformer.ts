@@ -12,11 +12,7 @@ export const LOCAL_DATE_TIME: ValueTransformer = {
   // MySQL entrega un Date con la hora local del servidor: se vuelve a escribir como texto.
   from: (value: unknown) => {
     if (value instanceof Date) {
-      const pad = (n: number) => String(n).padStart(2, '0');
-      return (
-        `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}` +
-        `T${pad(value.getHours())}:${pad(value.getMinutes())}`
-      );
+      return toLocalDateTime(value);
     }
     if (typeof value === 'string') {
       return value.slice(0, 16).replace(' ', 'T');
@@ -24,3 +20,18 @@ export const LOCAL_DATE_TIME: ValueTransformer = {
     return value;
   },
 };
+
+// Un Date como "AAAA-MM-DDTHH:mm" en la hora local del servidor. Con ese formato las fechas se
+// comparan como texto: "2030-02-10T18:00" < "2030-02-11T09:00".
+export function toLocalDateTime(value: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return (
+    `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}` +
+    `T${pad(value.getHours())}:${pad(value.getMinutes())}`
+  );
+}
+
+// Ahora mismo, en el mismo formato.
+export function nowLocalDateTime(): string {
+  return toLocalDateTime(new Date());
+}

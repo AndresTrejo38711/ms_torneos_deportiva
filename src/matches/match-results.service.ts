@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThan, Repository } from 'typeorm';
+import { winningSelection } from '../bets/bet-rules';
+import { BetSettlementService } from '../bets/bet-settlement.service';
+import { BetUsageService } from '../bets/bet-usage.service';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
+import { resultEmails } from '../notifications/match-emails';
+import { NotificationClient } from '../notifications/notification.client';
 import { PhaseType } from '../phases/entities/phase-type.enum';
 import { ScoreTotalsService } from '../scores/score-totals.service';
 import { MatchResponseDto } from './dto/match-response.dto';
@@ -16,6 +21,7 @@ type Penalties = { home: number | null; away: number | null };
 
 // HU-GC-07 · El resultado oficial de un partido. Está aparte de MatchesService (que programa y
 // cambia el estado de los partidos) porque es otra HU con sus propias reglas (S de SOLID).
+// Al registrarlo se liquidan las apuestas del partido (HU-GC-11) y se avisa a quienes apostaron.
 @Injectable()
 export class MatchResultsService {
   constructor(
@@ -23,6 +29,9 @@ export class MatchResultsService {
     private readonly matchRepository: Repository<Match>,
     private readonly matchesService: MatchesService,
     private readonly scoreTotals: ScoreTotalsService,
+    private readonly betUsage: BetUsageService,
+    private readonly betSettlement: BetSettlementService,
+    private readonly notifications: NotificationClient,
   ) {}
 
   // Registrar (partido EN_JUEGO → FINALIZADO) o corregir (partido ya FINALIZADO).
@@ -48,22 +57,47 @@ export class MatchResultsService {
     const penalties = this.validatePenalties(match, dto);
     await this.ensureScoresFit(match, dto);
 
-    await this.matchRepository.update(id, {
+    // El resultado y la liquidación van en la misma transacción: quedan los dos o ninguno. Al
+    // corregir no queda ninguna apuesta pendiente (ensureCorrectable lo garantiza), así que no se
+    // liquida nada dos veces.
+    const result = {
       homeScore: dto.homeScore,
       awayScore: dto.awayScore,
       homePenalties: penalties.home,
       awayPenalties: penalties.away,
-      status: MatchStatus.FINALIZADO,
-    });
-    return this.matchesService.findOne(id);
+    };
+    const settled = await this.matchRepository.manager.transaction(
+      async (manager) => {
+        await manager.update(Match, id, {
+          ...result,
+          status: MatchStatus.FINALIZADO,
+        });
+        return this.betSettlement.settle(id, winningSelection(result), manager);
+      },
+    );
+
+    const response = await this.matchesService.findOne(id);
+    this.notifications.deliver(
+      resultEmails(response, settled),
+      'resultado del partido',
+    );
+    return response;
   }
 
   // ---------------------------------------------------------------------------------------------
 
-  // "Cuando las reglas de la competencia lo permitan": un resultado se corrige mientras ninguna fase
-  // posterior del torneo tenga partidos. Si la siguiente ya se armó, cambiarlo podría cambiar quién
-  // clasificó.
+  // "Cuando las reglas de la competencia lo permitan": un resultado se corrige mientras sus apuestas
+  // no se hayan liquidado (una apuesta no se liquida dos veces, HU-GC-11) y ninguna fase posterior
+  // del torneo tenga partidos (si la siguiente ya se armó, cambiarlo podría cambiar quién clasificó).
   private async ensureCorrectable(match: MatchResponseDto): Promise<void> {
+    const settled = await this.betUsage.countSettledForMatch(match.id);
+    if (settled > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El resultado de ${matchLabel(match)} ya no se puede corregir: sus apuestas ya se liquidaron (${settled}) y una apuesta no se liquida dos veces`,
+      );
+    }
+
     const later = await this.matchRepository.findOne({
       where: {
         phase: {

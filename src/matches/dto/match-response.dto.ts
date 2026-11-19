@@ -24,6 +24,14 @@ export class LiveScoreDto {
   away: number;
 }
 
+// HU-GC-11. Las cuotas del partido y si recibe apuestas. drawOdds es null en una fase final.
+export class MatchBettingDto {
+  homeOdds: number;
+  drawOdds: number | null;
+  awayOdds: number;
+  open: boolean;
+}
+
 // Lo que responde la API: nunca la entidad directamente.
 export class MatchResponseDto {
   id: number;
@@ -41,4 +49,6 @@ export class MatchResponseDto {
   // null = resultado pendiente (la HU-GC-08 lo usa para separar jugados y pendientes).
   result: MatchResultDto | null;
   liveScore: LiveScoreDto;
+  // null mientras el administrador no fije las cuotas.
+  betting: MatchBettingDto | null;
 }

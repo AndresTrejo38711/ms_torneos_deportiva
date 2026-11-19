@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { BetsModule } from './bets/bets.module';
 import { FanPaymentMethodsModule } from './fan-payment-methods/fan-payment-methods.module';
 import { FansModule } from './fans/fans.module';
 import { GroupTeamsModule } from './group-teams/group-teams.module';
@@ -72,6 +73,7 @@ import { TournamentsModule } from './tournaments/tournaments.module';
     FansModule, // HU-GC-10 y HU-GC-11 (aficionados)
     PaymentMethodsModule, // HU-GC-10 (catálogo)
     FanPaymentMethodsModule, // HU-GC-10
+    BetsModule, // HU-GC-11
   ],
 })
 export class AppModule {}

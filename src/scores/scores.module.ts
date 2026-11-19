@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BetSettlementModule } from '../bets/bet-settlement.module';
 import { MatchesModule } from '../matches/matches.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 import { PlayersModule } from '../players/players.module';
 import { TeamPlayersModule } from '../team-players/team-players.module';
 import { Score } from './entities/score.entity';
@@ -18,6 +20,8 @@ import { ScoresService } from './scores.service';
     PlayersModule,
     TeamPlayersModule,
     ScoreTotalsModule,
+    BetSettlementModule,
+    NotificationsModule,
   ],
   controllers: [ScoresController],
   providers: [ScoresService],

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { BetUsageService } from '../bets/bet-usage.service';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { Fan } from '../fans/entities/fan.entity';
@@ -30,6 +31,7 @@ export class FanPaymentMethodsService {
     private readonly methodRepository: Repository<FanPaymentMethod>,
     private readonly fansService: FansService,
     private readonly paymentMethodsService: PaymentMethodsService,
+    private readonly betUsage: BetUsageService,
   ) {}
 
   async create(
@@ -136,12 +138,33 @@ export class FanPaymentMethodsService {
     return toFanPaymentMethodResponse(await this.findOwn(fan, id));
   }
 
-  // Las apuestas hechas con el método (HU-GC-11) se suman a esta validación cuando existan: con ellas
-  // solo se podrá desactivar, para no perder esas operaciones.
+  // Con apuestas hechas (HU-GC-11) solo se puede desactivar: eliminarlo borraría la relación con esas
+  // operaciones (criterio 9).
   async remove(user: AuthenticatedUser, id: number): Promise<void> {
     const fan = await this.fansService.resolve(user);
-    await this.findOwn(fan, id);
+    const method = await this.findOwn(fan, id);
+    const bets = await this.betUsage.countForPaymentMethod(id);
+    if (bets > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `${describe(method)} tiene apuestas (${bets}): no se puede eliminar, desactívalo en su lugar para conservarlas`,
+      );
+    }
     await this.methodRepository.delete(id);
+  }
+
+  // HU-GC-11: el método con que el aficionado quiere pagar. Debe ser suyo (si no, 404 como si no
+  // existiera), estar activo y, si es tarjeta, no estar vencida.
+  async findUsable(fan: Fan, id: number): Promise<FanPaymentMethod> {
+    const method = await this.findOwn(fan, id);
+    if (!method.active) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `${describe(method)} está desactivado: actívalo o elige otro método de pago`,
+      );
+    }
+    ensureNotExpired(method, 'elige otro método de pago');
+    return method;
   }
 
   // ---------------------------------------------------------------------------------------------

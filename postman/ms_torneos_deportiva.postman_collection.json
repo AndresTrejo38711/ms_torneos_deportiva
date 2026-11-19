@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "ms_torneos_deportiva · Anexos 2 y 3 (Gestión Deportiva y de Competencias)",
-    "description": "Pruebas de los módulos de gestión deportiva (HU-GD) y de competencias (HU-GC), una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security, salvo en la carpeta HU-GC-10: los métodos de pago son de cada aficionado y deportiva necesita saber quién hace la petición.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
+    "description": "Pruebas de los módulos de gestión deportiva (HU-GD) y de competencias (HU-GC), una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security, salvo en las carpetas HU-GC-10 y HU-GC-11: los métodos de pago y las apuestas son de cada aficionado y deportiva necesita saber quién hace la petición.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -832,6 +832,106 @@
     },
     {
       "key": "betoDaviId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apAnaVisaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apAnaNequiId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apBetoDaviId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sportApuestasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentApuestasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseApGId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseApFId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamLeonesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamMorsasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "groupApAId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerLucasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchApG1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchApG2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apBetAnaG1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apBetBetoG1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apBetAnaG1bId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apBetAnaG2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "scoreLucasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchApFinalId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apBetBetoFinalId",
       "value": "",
       "type": "string"
     }
@@ -15969,7 +16069,7 @@
     },
     {
       "name": "HU-GC-06 · Partidos",
-      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 52\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 50, 51\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 53, 55, 57\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 59, 62; carpeta HU-GC-07: 58, 73, 75\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → pendiente: el escenario llega con el Anexo 4 (Gestión de escenarios)\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 54, 63\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → pendiente: los aficionados que participaron salen de las apuestas, se prueba con la HU-GC-11 (bloque 7)",
+      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 52\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 50, 51\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 53, 55, 57\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 59, 62; carpeta HU-GC-07: 58, 73, 75; carpeta HU-GC-11: 72\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → pendiente: el escenario llega con el Anexo 4 (Gestión de escenarios)\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 54, 63\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"partido nuevo\\\"\" (en la carpeta HU-GC-11, al programar la Final); los compradores de boletos se suman con el Anexo 4",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -19049,7 +19149,7 @@
     },
     {
       "name": "HU-GC-07 · Resultados y anotaciones",
-      "description": "Resultado oficial de un partido: `PUT /api/deportiva/matches/{id}/result` con `homeScore` y `awayScore` (y `homePenalties`/`awayPenalties` solo en una fase final que termina empatada). La primera vez el partido debe estar `EN_JUEGO` y queda `FINALIZADO`; después se corrige con la misma ruta mientras ninguna fase posterior del torneo tenga partidos. Se consulta con `GET /matches/{id}` (`result`, null mientras está pendiente).\n\nAnotaciones: `/api/deportiva/scores` (equipo, jugador, minuto y `points`, por defecto 1). El jugador debe tener contrato con ese equipo el día del partido, y en un partido finalizado lo que suman las anotaciones de un equipo no puede pasar su marcador oficial. `liveScore` del partido es lo que suman.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los partidos finalizados son historial y no se eliminan, así que el torneo, los equipos y los jugadores quedan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El partido debe estar previamente registrado en el sistema. → peticiones 33, 41, 76\n2. El sistema debe permitir registrar el resultado correspondiente a los equipos participantes. → peticiones 43, 46, 47, 63, 66\n3. Solo se deben poder registrar resultados para los equipos que participan en el partido. → peticiones 47\n4. El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan. → peticiones 24, 48, 52, 53, 61, 72\n5. El resultado debe quedar asociado con el partido correspondiente. → peticiones 23, 47, 48\n6. El sistema debe permitir registrar una o varias anotaciones asociadas con el partido. → peticiones 25, 27, 28, 29, 31, 49, 50, 68\n7. Cada anotación debe estar asociada con el jugador que la realizó. → peticiones 27, 37\n8. El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido. → peticiones 29, 34, 35, 36\n9. El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas. → peticiones 30, 38, 39, 40, 42, 51, 54, 55, 74\n10. Eliminar una anotación no debe eliminar al jugador ni al partido asociado. → peticiones 56, 57\n11. Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente. → peticiones 27, 38, 39, 57, 70\n12. Cuando se registre una anotación, el sistema debe enviar una notificación a los aficionados que hayan adquirido un boleto para el partido o realizado una apuesta sobre este. → pendiente: los aficionados salen de las apuestas (HU-GC-11, bloque 7) y de los boletos (Anexo 4)\n13. Al finalizar y registrar el resultado del partido, el sistema debe enviar una notificación con el resumen del encuentro a los aficionados que hayan adquirido un boleto o realizado una apuesta sobre el partido. → pendiente: los aficionados salen de las apuestas (HU-GC-11, bloque 7) y de los boletos (Anexo 4)",
+      "description": "Resultado oficial de un partido: `PUT /api/deportiva/matches/{id}/result` con `homeScore` y `awayScore` (y `homePenalties`/`awayPenalties` solo en una fase final que termina empatada). La primera vez el partido debe estar `EN_JUEGO` y queda `FINALIZADO`; después se corrige con la misma ruta mientras ninguna fase posterior del torneo tenga partidos. Se consulta con `GET /matches/{id}` (`result`, null mientras está pendiente).\n\nAnotaciones: `/api/deportiva/scores` (equipo, jugador, minuto y `points`, por defecto 1). El jugador debe tener contrato con ese equipo el día del partido, y en un partido finalizado lo que suman las anotaciones de un equipo no puede pasar su marcador oficial. `liveScore` del partido es lo que suman.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los partidos finalizados son historial y no se eliminan, así que el torneo, los equipos y los jugadores quedan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El partido debe estar previamente registrado en el sistema. → peticiones 33, 41, 76\n2. El sistema debe permitir registrar el resultado correspondiente a los equipos participantes. → peticiones 43, 46, 47, 63, 66\n3. Solo se deben poder registrar resultados para los equipos que participan en el partido. → peticiones 47\n4. El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan. → peticiones 24, 48, 52, 53, 61, 72; carpeta HU-GC-11: 69\n5. El resultado debe quedar asociado con el partido correspondiente. → peticiones 23, 47, 48\n6. El sistema debe permitir registrar una o varias anotaciones asociadas con el partido. → peticiones 25, 27, 28, 29, 31, 49, 50, 68\n7. Cada anotación debe estar asociada con el jugador que la realizó. → peticiones 27, 37\n8. El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido. → peticiones 29, 34, 35, 36\n9. El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas. → peticiones 30, 38, 39, 40, 42, 51, 54, 55, 74\n10. Eliminar una anotación no debe eliminar al jugador ni al partido asociado. → peticiones 56, 57\n11. Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente. → peticiones 27, 38, 39, 57, 70\n12. Cuando se registre una anotación, el sistema debe enviar una notificación a los aficionados que hayan adquirido un boleto para el partido o realizado una apuesta sobre este. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"anotación\\\"\" (en la carpeta HU-GC-11, la anotación de Lucas); los compradores de boletos se suman con el Anexo 4\n13. Al finalizar y registrar el resultado del partido, el sistema debe enviar una notificación con el resumen del encuentro a los aficionados que hayan adquirido un boleto o realizado una apuesta sobre el partido. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"resultado del partido\\\"\" (en la carpeta HU-GC-11, el resultado de G1); los compradores de boletos se suman con el Anexo 4",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -24666,7 +24766,7 @@
     },
     {
       "name": "HU-GC-10 · Métodos de pago del aficionado",
-      "description": "Métodos de pago del aficionado que hace la petición: `/api/deportiva/fan-payment-methods` (el aficionado sale del token, nunca del cuerpo; el método de otro aficionado responde 404). El tipo se elige del catálogo `GET /api/deportiva/payment-methods` (se siembra al arrancar) y decide los datos obligatorios: tarjeta (titular, franquicia, últimos 4 dígitos y vencimiento), cuenta bancaria (banco, tipo de cuenta y últimos 4) o billetera (celular). Nunca se guarda el número completo ni el CVV.\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**: inicia sesión como administrador (con `adminEmail` y `adminPassword`), crea dos usuarios con el rol Aficionado (Ana y Beto), entra con cada uno y usa su token. Al final borra sus métodos y los dos usuarios; en deportiva queda su fila de aficionado.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El aficionado debe estar previamente registrado en el sistema. → peticiones 42\n2. El sistema debe permitir registrar uno o varios métodos de pago para un aficionado. → peticiones 10, 11, 12, 21, 22\n3. Cada método de pago debe quedar asociado con el aficionado correspondiente. → peticiones 10, 23, 24\n4. El sistema debe permitir consultar los métodos de pago registrados por el aficionado. → peticiones 23, 24, 25\n5. Se debe permitir actualizar la información de un método de pago cuando corresponda. → peticiones 30, 32, 33, 36\n6. Se debe permitir eliminar o desactivar un método de pago cuando no existan restricciones que lo impidan. → peticiones 34, 37, 39\n7. El sistema debe validar los datos obligatorios según el tipo de método de pago registrado. → peticiones 09, 11, 13, 14, 15, 16, 17, 18, 19, 20, 32\n8. No se debe permitir utilizar un método de pago que no pertenezca al aficionado. → peticiones 24, 26, 27, 28, 29\n9. La eliminación de un método de pago no debe eliminar las operaciones realizadas previamente con dicho método. → pendiente: las operaciones son las apuestas, se prueba con la HU-GC-11 (bloque 7)\n10. Los cambios realizados deben quedar almacenados correctamente. → peticiones 31, 40, 41",
+      "description": "Métodos de pago del aficionado que hace la petición: `/api/deportiva/fan-payment-methods` (el aficionado sale del token, nunca del cuerpo; el método de otro aficionado responde 404). El tipo se elige del catálogo `GET /api/deportiva/payment-methods` (se siembra al arrancar) y decide los datos obligatorios: tarjeta (titular, franquicia, últimos 4 dígitos y vencimiento), cuenta bancaria (banco, tipo de cuenta y últimos 4) o billetera (celular). Nunca se guarda el número completo ni el CVV.\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**: inicia sesión como administrador (con `adminEmail` y `adminPassword`), crea dos usuarios con el rol Aficionado (Ana y Beto), entra con cada uno y usa su token. Al final borra sus métodos y los dos usuarios; en deportiva queda su fila de aficionado.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El aficionado debe estar previamente registrado en el sistema. → peticiones 42\n2. El sistema debe permitir registrar uno o varios métodos de pago para un aficionado. → peticiones 10, 11, 12, 21, 22\n3. Cada método de pago debe quedar asociado con el aficionado correspondiente. → peticiones 10, 23, 24\n4. El sistema debe permitir consultar los métodos de pago registrados por el aficionado. → peticiones 23, 24, 25\n5. Se debe permitir actualizar la información de un método de pago cuando corresponda. → peticiones 30, 32, 33, 36\n6. Se debe permitir eliminar o desactivar un método de pago cuando no existan restricciones que lo impidan. → peticiones 34, 37, 39; carpeta HU-GC-11: 81\n7. El sistema debe validar los datos obligatorios según el tipo de método de pago registrado. → peticiones 09, 11, 13, 14, 15, 16, 17, 18, 19, 20, 32\n8. No se debe permitir utilizar un método de pago que no pertenezca al aficionado. → peticiones 24, 26, 27, 28, 29\n9. La eliminación de un método de pago no debe eliminar las operaciones realizadas previamente con dicho método. → carpeta HU-GC-11: 81, 82, 83\n10. Los cambios realizados deben quedar almacenados correctamente. → peticiones 31, 40, 41",
       "item": [
         {
           "name": "01 Preparar: el administrador inicia sesión en ms_torneos_security (200)",
@@ -26711,6 +26811,3674 @@
         },
         {
           "name": "49 Limpieza: eliminar a Beto (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanBetoUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GC-11 · Apuestas",
+      "description": "Apuestas de los aficionados: `/api/deportiva/bets` (las suyas: el aficionado sale del token) y `GET /api/deportiva/betting/matches` (los partidos que reciben apuestas). El administrador fija las cuotas con `PUT /api/deportiva/matches/{id}/betting` (el empate solo en fase de grupos) y consulta las apuestas de un partido con `GET /api/deportiva/bets/matches/{matchId}`.\n\nLa cuota se copia al apostar y no cambia. Antes de que empiece el partido se puede cambiar el valor y el método de pago, o cancelar (se devuelve lo apostado). Al registrar el resultado se liquidan solas: ganada (valor × cuota), perdida (0); si el partido se cancela, anuladas (se devuelve lo apostado). Una vez liquidadas, el resultado ya no se corrige. Cada paso se avisa por correo a través de ms_notificaciones.\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**, como la HU-GC-10: crea a Ana y Beto con el rol Aficionado; lo del administrador usa el token de la colección.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: las apuestas son historial, así que el torneo, los equipos y el jugador quedan desactivados, y en deportiva quedan los aficionados con sus apuestas.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El aficionado debe estar previamente registrado en el sistema. → peticiones 84\n2. El partido debe estar previamente registrado y habilitado para recibir apuestas. → peticiones 28, 29, 41, 56\n3. El sistema debe permitir consultar los partidos disponibles para apostar. → peticiones 32, 57\n4. El aficionado debe poder seleccionar el partido sobre el cual desea realizar la apuesta. → peticiones 33\n5. El sistema debe permitir registrar la selección realizada, el valor apostado y la cuota correspondiente. → peticiones 33, 34, 38\n6. La apuesta debe quedar asociada con el aficionado y el partido seleccionados. → peticiones 33\n7. El aficionado debe seleccionar uno de sus métodos de pago registrados para realizar la apuesta. → peticiones 33, 43\n8. No se debe permitir utilizar un método de pago perteneciente a otro aficionado. → peticiones 40, 53\n9. El sistema debe validar que el valor de la apuesta cumpla con las condiciones establecidas. → peticiones 35, 36, 37\n10. No se deben permitir nuevas apuestas cuando el partido haya iniciado o cuando las apuestas se encuentren cerradas. → peticiones 56, 60\n11. La cuota de la apuesta debe quedar almacenada al momento de realizarla y no debe modificarse posteriormente. → peticiones 46\n12. El aficionado debe poder consultar las apuestas realizadas y el estado de cada una. → peticiones 51, 52\n13. El administrador deportivo debe poder consultar las apuestas realizadas sobre un partido. → peticiones 58\n14. Una apuesta registrada no debe poder modificarse después de que el partido haya iniciado. → peticiones 44, 61\n15. La cancelación de una apuesta solo debe permitirse cuando las reglas establecidas lo permitan. → peticiones 48, 49, 62\n16. La apuesta solo debe poder liquidarse cuando el partido haya finalizado y tenga un resultado oficial registrado. → peticiones 64, 65\n17. Al finalizar el partido, el sistema debe comparar la selección realizada por el aficionado con el resultado oficial. → peticiones 66, 67, 80\n18. Si la selección coincide con el resultado correspondiente, la apuesta debe quedar en estado ganada. → peticiones 66, 80\n19. Si la selección no coincide con el resultado correspondiente, la apuesta debe quedar en estado perdida. → peticiones 67\n20. Si el partido es cancelado o se presenta una condición que invalide la apuesta, esta debe quedar en estado anulada, según las reglas establecidas. → peticiones 71\n21. Para una apuesta ganadora, el sistema debe calcular el valor a pagar mediante la fórmula: valor apostado × cuota. → peticiones 66\n22. Para una apuesta perdida, el valor a pagar debe ser cero. → peticiones 67\n23. Para una apuesta anulada, se debe devolver al aficionado el valor originalmente apostado. → peticiones 71\n24. La liquidación debe realizarse utilizando la cuota registrada al momento de realizar la apuesta. → peticiones 66\n25. Una misma apuesta no debe poder liquidarse más de una vez. → peticiones 68, 69\n26. Una vez liquidada, el sistema debe almacenar el estado final y el valor pagado o devuelto. → peticiones 66\n27. El aficionado debe poder consultar el resultado y la liquidación de sus apuestas. → peticiones 66, 67, 83\n28. El sistema debe notificar al aficionado cuando una apuesta sea registrada y cuando sea liquidada. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"apuesta registrada\\\"\" al apostar, y \"resultado del partido\" o \"apuestas anuladas\" al liquidar",
+      "item": [
+        {
+          "name": "01 Preparar: el administrador inicia sesión en ms_torneos_security (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));",
+                  "// Contraseña de los dos aficionados de prueba (cumple la política de ms_torneos_security).",
+                  "pm.collectionVariables.set(\"fanPassword\", `Af#${pm.collectionVariables.get(\"suffix\")}x`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"securityAdminToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: buscar el rol Aficionado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{securityUrl}}/roles",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const fanRole = pm.response.json().find((role) => role.name === \"Aficionado\");",
+                  "pm.collectionVariables.set(\"fanRoleId\", fanRole ? fanRole.id : \"\");",
+                  "pm.test(\"El seeder creó el rol Aficionado\", function () {",
+                  "    pm.expect(Boolean(fanRole)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear la usuaria Ana (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ana Apostadora\",\n  \"email\": \"ana.ap.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear el usuario Beto (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Beto Apostador\",\n  \"email\": \"beto.ap.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanBetoUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: darle a Ana el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanAnaUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: darle a Beto el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanBetoUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: Ana inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.ap.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: Beto inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"beto.ap.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanBetoToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Preparar: catálogo de métodos de pago (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/payment-methods",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const catalog = pm.response.json();",
+                  "const idOf = (code) => (catalog.find((m) => m.code === code) || {}).id;",
+                  "pm.collectionVariables.set(\"pmCreditoId\", idOf(\"TARJETA_CREDITO\"));",
+                  "pm.collectionVariables.set(\"pmNequiId\", idOf(\"NEQUI\"));",
+                  "pm.collectionVariables.set(\"pmDaviplataId\", idOf(\"DAVIPLATA\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Preparar: Ana registra su Visa (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}},\n  \"alias\": \"Visa apuestas\",\n  \"holderName\": \"Ana Apostadora\",\n  \"brand\": \"VISA\",\n  \"lastFour\": \"1111\",\n  \"expiryMonth\": 6,\n  \"expiryYear\": 2032\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"apAnaVisaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Preparar: Ana registra su Nequi (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmNequiId}},\n  \"phone\": \"3005550000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"apAnaNequiId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Preparar: Beto registra su Daviplata (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmDaviplataId}},\n  \"phone\": \"3115550000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"apBetoDaviId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Preparar: crear el deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol Apuestas {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportApuestasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Preparar: crear el torneo Copa Apuestas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Apuestas {{suffix}}\",\n  \"sportId\": {{sportApuestasId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentApuestasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Preparar: crear la Fase de grupos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentApuestasId}},\n  \"type\": \"GRUPOS\",\n  \"name\": \"Fase de grupos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseApGId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Preparar: crear la Final, de 2 equipos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentApuestasId}},\n  \"type\": \"FINAL\",\n  \"name\": \"Final\",\n  \"teamsCount\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseApFId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Preparar: crear el equipo Leones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Leones GC {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamLeonesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Preparar: crear el equipo Morsas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Morsas GC {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamMorsasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Preparar: asociar Leones al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamLeonesId}},\n  \"sportId\": {{sportApuestasId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Preparar: asociar Morsas al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamMorsasId}},\n  \"sportId\": {{sportApuestasId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Preparar: inscribir a Leones y Morsas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentApuestasId}},\n  \"teamIds\": [\n    {{teamLeonesId}},\n    {{teamMorsasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Preparar: crear el Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseApGId}},\n  \"name\": \"Grupo A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"groupApAId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Preparar: Leones y Morsas al Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/group-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": {{groupApAId}},\n  \"teamIds\": [\n    {{teamLeonesId}},\n    {{teamMorsasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Preparar: crear al jugador Lucas Mejía (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"95{{suffix}}\",\n  \"firstName\": \"Lucas\",\n  \"lastName\": \"Mejía\",\n  \"birthDate\": \"2000-01-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerLucasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Preparar: contrato de Lucas con Leones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamLeonesId}},\n  \"playerId\": {{playerLucasId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Preparar: programar G1, Leones vs Morsas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseApGId}},\n  \"homeTeamId\": {{teamLeonesId}},\n  \"awayTeamId\": {{teamMorsasId}},\n  \"scheduledAt\": \"2030-03-01T18:00\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchApG1Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Preparar: programar G2, Morsas vs Leones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseApGId}},\n  \"homeTeamId\": {{teamMorsasId}},\n  \"awayTeamId\": {{teamLeonesId}},\n  \"scheduledAt\": \"2030-03-08T18:00\",\n  \"round\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchApG2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Fijar las cuotas de G1 y abrir sus apuestas (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApG1Id}}/betting",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeOdds\": 1.8,\n  \"awayOdds\": 4.5,\n  \"open\": true,\n  \"drawOdds\": 3.2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-11 #2: El partido debe estar previamente registrado y habilitado para recibir apuestas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cuotas y apuestas abiertas\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.betting).to.eql({\"homeOdds\": 1.8, \"drawOdds\": 3.2, \"awayOdds\": 4.5, \"open\": true});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Cuotas de G2 sin la del empate (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApG2Id}}/betting",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeOdds\": 2.1,\n  \"awayOdds\": 3.4,\n  \"open\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-11 #2: El partido debe estar previamente registrado y habilitado para recibir apuestas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"la cuota del empate es obligatoria\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Cuotas fuera de rango o con 3 decimales (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApG2Id}}/betting",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeOdds\": 1.234,\n  \"awayOdds\": 101,\n  \"open\": true,\n  \"drawOdds\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.homeOdds).to.eql(\"La cuota del local debe ser un número entre 1.01 y 100, con máximo 2 decimales\");",
+                  "    pm.expect(body.awayOdds).to.eql(\"La cuota del visitante debe ser un número entre 1.01 y 100, con máximo 2 decimales\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Fijar las cuotas de G2 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApG2Id}}/betting",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeOdds\": 2.1,\n  \"awayOdds\": 3.4,\n  \"open\": true,\n  \"drawOdds\": 3.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Abiertas\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.betting).to.eql({\"homeOdds\": 2.1, \"drawOdds\": 3, \"awayOdds\": 3.4, \"open\": true});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Partidos disponibles para apostar (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/betting/matches",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #3: El sistema debe permitir consultar los partidos disponibles para apostar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"G1 y G2 reciben apuestas\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"matchApG1Id\")));",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"matchApG2Id\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Ana apuesta 10.000 a que gana Leones en G1 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 10000,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #4: El aficionado debe poder seleccionar el partido sobre el cual desea realizar la apuesta.\n\nCriterio HU-GC-11 #5: El sistema debe permitir registrar la selección realizada, el valor apostado y la cuota correspondiente.\n\nCriterio HU-GC-11 #6: La apuesta debe quedar asociada con el aficionado y el partido seleccionados.\n\nCriterio HU-GC-11 #7: El aficionado debe seleccionar uno de sus métodos de pago registrados para realizar la apuesta."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"apBetAnaG1Id\", pm.response.json().id);",
+                  "pm.test(\"Selección, valor y cuota del momento; asociada a Ana y a G1\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.match.id).to.eql(Number(pm.collectionVariables.get(\"matchApG1Id\")));",
+                  "    pm.expect(b.fan.email).to.include(\"ana.ap.\");",
+                  "    pm.expect(b.paymentMethod.id).to.eql(Number(pm.collectionVariables.get(\"apAnaVisaId\")));",
+                  "    pm.expect([b.selection, b.amount, b.odds, b.potentialPayout]).to.eql([\"LOCAL\", 10000, 1.8, 18000]);",
+                  "    pm.expect([b.status, b.payout, b.settledAt]).to.eql([\"PENDIENTE\", null, null]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Beto apuesta 20.000 al empate en G1 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"EMPATE\",\n  \"amount\": 20000,\n  \"fanPaymentMethodId\": {{apBetoDaviId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #5: El sistema debe permitir registrar la selección realizada, el valor apostado y la cuota correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"apBetBetoG1Id\", pm.response.json().id);",
+                  "pm.test(\"Con la cuota del empate\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.selection).to.eql(\"EMPATE\");",
+                  "    pm.expect(body.odds).to.eql(3.2);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Valor menor que 1.000 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 500,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #9: El sistema debe validar que el valor de la apuesta cumpla con las condiciones establecidas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.amount).to.eql(\"El valor debe ser un número entero de pesos entre 1.000 y 5.000.000\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Valor con centavos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 1500.5,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #9: El sistema debe validar que el valor de la apuesta cumpla con las condiciones establecidas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.amount).to.eql(\"El valor debe ser un número entero de pesos entre 1.000 y 5.000.000\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Valor mayor que 5.000.000 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 5000001,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #9: El sistema debe validar que el valor de la apuesta cumpla con las condiciones establecidas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.amount).to.eql(\"El valor debe ser un número entero de pesos entre 1.000 y 5.000.000\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Apuesta sin datos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #5: El sistema debe permitir registrar la selección realizada, el valor apostado y la cuota correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.matchId).to.eql(\"El partido es obligatorio\");",
+                  "    pm.expect(body.selection).to.eql(\"La selección es obligatoria\");",
+                  "    pm.expect(body.amount).to.eql(\"El valor de la apuesta es obligatorio\");",
+                  "    pm.expect(body.fanPaymentMethodId).to.eql(\"El método de pago es obligatorio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Selección que no existe (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"GANA\",\n  \"amount\": 10000,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.selection).to.eql(\"La selección debe ser LOCAL, EMPATE o VISITANTE\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Ana intenta pagar con el Daviplata de Beto (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 10000,\n  \"fanPaymentMethodId\": {{apBetoDaviId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #8: No se debe permitir utilizar un método de pago perteneciente a otro aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No tienes un método de pago\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Apuesta en un partido que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{noExiste}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 10000,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #2: El partido debe estar previamente registrado y habilitado para recibir apuestas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Ana desactiva su Nequi (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{apAnaNequiId}}/disable",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Desactivado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Apostar con el Nequi desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 10000,\n  \"fanPaymentMethodId\": {{apAnaNequiId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #7: El aficionado debe seleccionar uno de sus métodos de pago registrados para realizar la apuesta."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"está desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Ana sube su apuesta a 15.000 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1Id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 15000,\n  \"fanPaymentMethodId\": {{apAnaVisaId}},\n  \"selection\": \"VISITANTE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #14: Una apuesta registrada no debe poder modificarse después de que el partido haya iniciado.\n\nEl cuerpo trae `selection` a propósito: se ignora. La selección no cambia porque su cuota quedó fija."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Valor nuevo, misma selección y misma cuota\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.amount).to.eql(15000);",
+                  "    pm.expect(body.selection).to.eql(\"LOCAL\");",
+                  "    pm.expect(body.odds).to.eql(1.8);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 El administrador baja la cuota del local de G1 a 1,6 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApG1Id}}/betting",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeOdds\": 1.6,\n  \"awayOdds\": 4.5,\n  \"open\": true,\n  \"drawOdds\": 3.2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cuota nueva\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.betting).to.eql({\"homeOdds\": 1.6, \"drawOdds\": 3.2, \"awayOdds\": 4.5, \"open\": true});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 La apuesta de Ana conserva su cuota de 1,8 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1Id}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #11: La cuota de la apuesta debe quedar almacenada al momento de realizarla y no debe modificarse posteriormente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cuota del momento de apostar\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.odds).to.eql(1.8);",
+                  "    pm.expect(body.potentialPayout).to.eql(27000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 Ana apuesta 7.000 a que gana Morsas en G1 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"VISITANTE\",\n  \"amount\": 7000,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"apBetAnaG1bId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 Ana cancela esa apuesta: se le devuelven 7.000 (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1bId}}/cancel",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #15: La cancelación de una apuesta solo debe permitirse cuando las reglas establecidas lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cancelada, con lo devuelto\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"CANCELADA\");",
+                  "    pm.expect(body.payout).to.eql(7000);",
+                  "});",
+                  "pm.test(\"Con la fecha en que se cerró\", function () {",
+                  "    pm.expect(pm.response.json().settledAt).to.not.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Cancelarla otra vez (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1bId}}/cancel",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #15: La cancelación de una apuesta solo debe permitirse cuando las reglas establecidas lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya está cancelada\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "50 Ana apuesta 5.000 a que gana Leones en G2 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG2Id}},\n  \"selection\": \"VISITANTE\",\n  \"amount\": 5000,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "En G2 Leones es el visitante."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"apBetAnaG2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Beto consulta sus apuestas: solo la suya (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #12: El aficionado debe poder consultar las apuestas realizadas y el estado de cada una."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Su apuesta de G1\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"apBetBetoG1Id\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "52 Ana consulta las suyas, la más reciente primero (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #12: El aficionado debe poder consultar las apuestas realizadas y el estado de cada una."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"G2, la cancelada y la de G1\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"apBetAnaG2Id\")), Number(pm.collectionVariables.get(\"apBetAnaG1bId\")), Number(pm.collectionVariables.get(\"apBetAnaG1Id\"))]);",
+                  "});",
+                  "pm.test(\"Cada una con su estado\", function () {",
+                  "    pm.expect(pm.response.json().map((b) => b.status)).to.eql([\"PENDIENTE\", \"CANCELADA\", \"PENDIENTE\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "53 Beto intenta ver la apuesta de Ana (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1Id}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #8: No se debe permitir utilizar un método de pago perteneciente a otro aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No tienes una apuesta\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "54 Beto intenta cancelarla (404)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1Id}}/cancel",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "55 El administrador cierra las apuestas de G2 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApG2Id}}/betting",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeOdds\": 2.1,\n  \"awayOdds\": 3.4,\n  \"open\": false,\n  \"drawOdds\": 3.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cerradas\", function () {",
+                  "    pm.expect(pm.response.json().betting.open).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "56 Beto apuesta en G2 con las apuestas cerradas (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG2Id}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 10000,\n  \"fanPaymentMethodId\": {{apBetoDaviId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #10: No se deben permitir nuevas apuestas cuando el partido haya iniciado o cuando las apuestas se encuentren cerradas.\n\nCriterio HU-GC-11 #2: El partido debe estar previamente registrado y habilitado para recibir apuestas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"están cerradas\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "57 G2 ya no está entre los disponibles (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/betting/matches",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #3: El sistema debe permitir consultar los partidos disponibles para apostar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sigue G1, ya no G2\", function () {",
+                  "    const ids = pm.response.json().map((m) => m.id);",
+                  "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"matchApG1Id\")));",
+                  "    pm.expect(ids).to.not.include(Number(pm.collectionVariables.get(\"matchApG2Id\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "58 El administrador consulta las apuestas de G1 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/matches/{{matchApG1Id}}",
+            "description": "Criterio HU-GC-11 #13: El administrador deportivo debe poder consultar las apuestas realizadas sobre un partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Las tres, en el orden en que se hicieron\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"apBetAnaG1Id\")), Number(pm.collectionVariables.get(\"apBetBetoG1Id\")), Number(pm.collectionVariables.get(\"apBetAnaG1bId\"))]);",
+                  "});",
+                  "pm.test(\"Con el aficionado de cada una\", function () {",
+                  "    const emails = pm.response.json().map((b) => b.fan.email);",
+                  "    pm.expect(emails[0]).to.include(\"ana.ap.\");",
+                  "    pm.expect(emails[1]).to.include(\"beto.ap.\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "59 Iniciar G1 (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchApG1Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"En juego\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_JUEGO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "60 Apostar en G1 ya iniciado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"selection\": \"LOCAL\",\n  \"amount\": 10000,\n  \"fanPaymentMethodId\": {{apBetoDaviId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #10: No se deben permitir nuevas apuestas cuando el partido haya iniciado o cuando las apuestas se encuentren cerradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"en juego\");",
+                  "    pm.expect(message).to.include(\"ya no recibe apuestas\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "61 Modificar la apuesta de Ana con G1 en juego (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1Id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 20000,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #14: Una apuesta registrada no debe poder modificarse después de que el partido haya iniciado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya empezó\");",
+                  "    pm.expect(message).to.include(\"modificar\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "62 Cancelarla con G1 en juego (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1Id}}/cancel",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #15: La cancelación de una apuesta solo debe permitirse cuando las reglas establecidas lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya empezó\");",
+                  "    pm.expect(message).to.include(\"cancelar\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "63 Gol de Lucas para Leones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApG1Id}},\n  \"teamId\": {{teamLeonesId}},\n  \"playerId\": {{playerLucasId}},\n  \"minute\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Se avisa por correo a Ana y Beto, que apostaron en G1 (HU-GC-07, criterio 12)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"scoreLucasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64 Mientras se juega, la apuesta sigue pendiente (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1Id}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #16: La apuesta solo debe poder liquidarse cuando el partido haya finalizado y tenga un resultado oficial registrado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sin liquidar\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"PENDIENTE\");",
+                  "    pm.expect(body.payout).to.eql(null);",
+                  "    pm.expect(body.settledAt).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "65 Resultado de G1: Leones 2-1 Morsas (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApG1Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 2,\n  \"awayScore\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-11 #16: La apuesta solo debe poder liquidarse cuando el partido haya finalizado y tenga un resultado oficial registrado.\n\nAl registrarlo se liquidan las apuestas y se avisa a Ana y Beto con el resumen."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Finalizado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"FINALIZADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "66 Ana acertó: 15.000 × 1,8 = 27.000 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1Id}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #17: Al finalizar el partido, el sistema debe comparar la selección realizada por el aficionado con el resultado oficial.\n\nCriterio HU-GC-11 #18: Si la selección coincide con el resultado correspondiente, la apuesta debe quedar en estado ganada.\n\nCriterio HU-GC-11 #21: Para una apuesta ganadora, el sistema debe calcular el valor a pagar mediante la fórmula: valor apostado × cuota.\n\nCriterio HU-GC-11 #24: La liquidación debe realizarse utilizando la cuota registrada al momento de realizar la apuesta.\n\nCriterio HU-GC-11 #26: Una vez liquidada, el sistema debe almacenar el estado final y el valor pagado o devuelto.\n\nCriterio HU-GC-11 #27: El aficionado debe poder consultar el resultado y la liquidación de sus apuestas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Ganada, con la cuota del momento de apostar (no la de 1,6)\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"GANADA\");",
+                  "    pm.expect(body.payout).to.eql(27000);",
+                  "});",
+                  "pm.test(\"Con la fecha de liquidación\", function () {",
+                  "    pm.expect(pm.response.json().settledAt).to.not.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "67 Beto no acertó: no se le paga (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetBetoG1Id}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #17: Al finalizar el partido, el sistema debe comparar la selección realizada por el aficionado con el resultado oficial.\n\nCriterio HU-GC-11 #19: Si la selección no coincide con el resultado correspondiente, la apuesta debe quedar en estado perdida.\n\nCriterio HU-GC-11 #22: Para una apuesta perdida, el valor a pagar debe ser cero.\n\nCriterio HU-GC-11 #27: El aficionado debe poder consultar el resultado y la liquidación de sus apuestas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Perdida\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"PERDIDA\");",
+                  "    pm.expect(body.payout).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "68 La apuesta cancelada no se liquida (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG1bId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #25: Una misma apuesta no debe poder liquidarse más de una vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sigue cancelada\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"CANCELADA\");",
+                  "    pm.expect(body.payout).to.eql(7000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "69 Corregir el resultado de G1 (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApG1Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 3,\n  \"awayScore\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-11 #25: Una misma apuesta no debe poder liquidarse más de una vez.\n\nCriterio HU-GC-07 #4: El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya se liquidaron\");",
+                  "    pm.expect(message).to.include(\"no se liquida dos veces\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "70 Cancelar G2 (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchApG2Id}}/cancel"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cancelado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"CANCELADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "71 La apuesta de Ana en G2 quedó anulada: se le devuelven 5.000 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetAnaG2Id}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #20: Si el partido es cancelado o se presenta una condición que invalide la apuesta, esta debe quedar en estado anulada, según las reglas establecidas.\n\nCriterio HU-GC-11 #23: Para una apuesta anulada, se debe devolver al aficionado el valor originalmente apostado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Anulada\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"ANULADA\");",
+                  "    pm.expect(body.payout).to.eql(5000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "72 Eliminar G2, que tiene apuestas (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchApG2Id}}",
+            "description": "Criterio HU-GC-06 #10: Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"tiene apuestas\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "73 Programar la Final: Leones vs Morsas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseApFId}},\n  \"homeTeamId\": {{teamLeonesId}},\n  \"awayTeamId\": {{teamMorsasId}},\n  \"scheduledAt\": \"2030-05-10T15:00\",\n  \"bracketPosition\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Se avisa por correo a Ana y Beto, que apostaron en partidos anteriores de estos equipos (HU-GC-06, criterio 13)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchApFinalId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "74 Cuotas de la Final con empate (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApFinalId}}/betting",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeOdds\": 1.9,\n  \"awayOdds\": 2.5,\n  \"open\": true,\n  \"drawOdds\": 3.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no hay empate\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "75 Cuotas de la Final, sin empate (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApFinalId}}/betting",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeOdds\": 1.9,\n  \"awayOdds\": 2.5,\n  \"open\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sin cuota de empate\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.betting).to.eql({\"homeOdds\": 1.9, \"drawOdds\": null, \"awayOdds\": 2.5, \"open\": true});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "76 Apostar al empate en la Final (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApFinalId}},\n  \"selection\": \"EMPATE\",\n  \"amount\": 10000,\n  \"fanPaymentMethodId\": {{apAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no hay empate\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "77 Beto apuesta 30.000 a que gana Morsas la Final (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/bets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchApFinalId}},\n  \"selection\": \"VISITANTE\",\n  \"amount\": 30000,\n  \"fanPaymentMethodId\": {{apBetoDaviId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"apBetBetoFinalId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "78 Iniciar la Final (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchApFinalId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "79 Final: 1-1 y Morsas gana 5-3 en penales (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchApFinalId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 1,\n  \"homePenalties\": 3,\n  \"awayPenalties\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "80 Beto acertó por penales: 30.000 × 2,5 = 75.000 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets/{{apBetBetoFinalId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-11 #17: Al finalizar el partido, el sistema debe comparar la selección realizada por el aficionado con el resultado oficial.\n\nCriterio HU-GC-11 #18: Si la selección coincide con el resultado correspondiente, la apuesta debe quedar en estado ganada.\n\nEn una fase final cuenta el ganador, también por penales."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Ganada\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"GANADA\");",
+                  "    pm.expect(body.payout).to.eql(75000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "81 Ana intenta eliminar su Visa, que tiene apuestas (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{apAnaVisaId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #6: Se debe permitir eliminar o desactivar un método de pago cuando no existan restricciones que lo impidan.\n\nCriterio HU-GC-10 #9: La eliminación de un método de pago no debe eliminar las operaciones realizadas previamente con dicho método."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"tiene apuestas\");",
+                  "    pm.expect(message).to.include(\"desactívalo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "82 Ana desactiva su Visa (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{apAnaVisaId}}/disable",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #9: La eliminación de un método de pago no debe eliminar las operaciones realizadas previamente con dicho método."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Desactivada\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "83 Sus apuestas con la Visa se conservan (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-10 #9: La eliminación de un método de pago no debe eliminar las operaciones realizadas previamente con dicho método.\n\nCriterio HU-GC-11 #27: El aficionado debe poder consultar el resultado y la liquidación de sus apuestas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Las tres\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"apBetAnaG2Id\")), Number(pm.collectionVariables.get(\"apBetAnaG1bId\")), Number(pm.collectionVariables.get(\"apBetAnaG1Id\"))]);",
+                  "});",
+                  "pm.test(\"Con su método de pago y su liquidación\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.map((x) => x.paymentMethod.id)).to.eql([Number(pm.collectionVariables.get(\"apAnaVisaId\")), Number(pm.collectionVariables.get(\"apAnaVisaId\")), Number(pm.collectionVariables.get(\"apAnaVisaId\"))]);",
+                  "    pm.expect(b.map((x) => [x.status, x.payout])).to.eql([[\"ANULADA\", 5000], [\"CANCELADA\", 7000], [\"GANADA\", 27000]]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "84 Sin iniciar sesión (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bets",
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Criterio HU-GC-11 #1: El aficionado debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"errorCase = UNAUTHORIZED\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"UNAUTHORIZED\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "85 Limpieza: eliminar el gol de Lucas (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scoreLucasId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "86 Limpieza: Ana elimina su Nequi, sin apuestas (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{apAnaNequiId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "87 Limpieza: desactivar Copa Apuestas (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentApuestasId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "88 Limpieza: desactivar a Lucas (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerLucasId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "89 Limpieza: desactivar Leones (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamLeonesId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "90 Limpieza: desactivar Morsas (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamMorsasId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "91 Limpieza: quitarle a Ana el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanAnaUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "92 Limpieza: quitarle a Beto el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanBetoUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "93 Limpieza: eliminar a Ana (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanAnaUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "94 Limpieza: eliminar a Beto (204)",
           "request": {
             "method": "DELETE",
             "header": [],

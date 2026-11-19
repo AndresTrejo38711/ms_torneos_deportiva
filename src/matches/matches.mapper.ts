@@ -3,6 +3,7 @@ import { toTeamSummary } from '../teams/teams.mapper';
 import { toTournamentSummary } from '../tournaments/tournaments.mapper';
 import {
   LiveScoreDto,
+  MatchBettingDto,
   MatchGroupDto,
   MatchResponseDto,
   MatchResultDto,
@@ -30,6 +31,19 @@ export function toMatchResponse(
     status: match.status,
     result: toMatchResult(match),
     liveScore,
+    betting: toMatchBetting(match),
+  };
+}
+
+function toMatchBetting(match: Match): MatchBettingDto | null {
+  if (match.homeOdds === null || match.awayOdds === null) {
+    return null;
+  }
+  return {
+    homeOdds: match.homeOdds,
+    drawOdds: match.drawOdds,
+    awayOdds: match.awayOdds,
+    open: match.bettingOpen,
   };
 }
 

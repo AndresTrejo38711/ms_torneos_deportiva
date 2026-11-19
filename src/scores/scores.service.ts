@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
+import { BetUsageService } from '../bets/bet-usage.service';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { MatchResponseDto } from '../matches/dto/match-response.dto';
 import { MatchStatus } from '../matches/entities/match-status.enum';
 import { matchLabel } from '../matches/match-label';
 import { MatchesService } from '../matches/matches.service';
+import { scoreEmails } from '../notifications/match-emails';
+import { NotificationClient } from '../notifications/notification.client';
 import { PlayersService } from '../players/players.service';
 import { TeamPlayersService } from '../team-players/team-players.service';
 import { CreateScoreDto } from './dto/create-score.dto';
@@ -21,7 +24,8 @@ import { toScoreResponse } from './scores.mapper';
 @Injectable()
 export class ScoresService {
   // Los services de partidos, jugadores y contratos llegan porque ScoresModule importa sus módulos:
-  // con ellos se valida el partido, el jugador y su contrato, con los mensajes de sus HU.
+  // con ellos se valida el partido, el jugador y su contrato, con los mensajes de sus HU. Con
+  // BetUsageService y NotificationClient se avisa de cada anotación a quienes apostaron.
   constructor(
     @InjectRepository(Score)
     private readonly scoreRepository: Repository<Score>,
@@ -29,8 +33,12 @@ export class ScoresService {
     private readonly playersService: PlayersService,
     private readonly teamPlayersService: TeamPlayersService,
     private readonly scoreTotals: ScoreTotalsService,
+    private readonly betUsage: BetUsageService,
+    private readonly notifications: NotificationClient,
   ) {}
 
+  // Se avisa a quienes apostaron en el partido (HU-GC-07, criterio 12; los boletos llegan con el
+  // Anexo 4).
   async create(dto: CreateScoreDto): Promise<ScoreResponseDto> {
     const match = await this.matchesService.findOne(dto.matchId);
     await this.validate(dto, match);
@@ -44,7 +52,15 @@ export class ScoresService {
         points: dto.points ?? DEFAULT_SCORE_POINTS,
       }),
     );
-    return this.findOne(saved.id);
+    const score = await this.findOne(saved.id);
+
+    const updated = await this.matchesService.findOne(match.id); // con el marcador nuevo
+    const recipients = await this.betUsage.fanEmailsForMatch(match.id);
+    this.notifications.deliver(
+      scoreEmails(updated, score, recipients),
+      'anotación',
+    );
+    return score;
   }
 
   // Anotaciones de un partido, en el orden en que pasaron.

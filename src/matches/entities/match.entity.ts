@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { DECIMAL_NUMBER } from '../../common/persistence/decimal.transformer';
 import { LOCAL_DATE_TIME } from '../../common/persistence/local-date-time.transformer';
 import { Phase } from '../../phases/entities/phase.entity';
 import { Team } from '../../teams/entities/team.entity';
@@ -81,4 +82,41 @@ export class Match {
 
   @Column({ name: 'away_penalties', type: 'int', nullable: true })
   awayPenalties: number | null;
+
+  // HU-GC-11. Cuotas que fija el administrador (null hasta que las fija). Una apuesta guarda la cuota
+  // del momento en que se hizo, así que cambiarlas aquí no cambia las apuestas ya hechas.
+  @Column({
+    name: 'home_odds',
+    type: 'decimal',
+    precision: 6,
+    scale: 2,
+    nullable: true,
+    transformer: DECIMAL_NUMBER,
+  })
+  homeOdds: number | null;
+
+  // Solo en fase de grupos: en una fase final no hay empate.
+  @Column({
+    name: 'draw_odds',
+    type: 'decimal',
+    precision: 6,
+    scale: 2,
+    nullable: true,
+    transformer: DECIMAL_NUMBER,
+  })
+  drawOdds: number | null;
+
+  @Column({
+    name: 'away_odds',
+    type: 'decimal',
+    precision: 6,
+    scale: 2,
+    nullable: true,
+    transformer: DECIMAL_NUMBER,
+  })
+  awayOdds: number | null;
+
+  // Si recibe apuestas nuevas. Además debe estar programado y no haber llegado su hora.
+  @Column({ name: 'betting_open', default: false })
+  bettingOpen: boolean;
 }

@@ -1,9 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { BetSettlementService } from '../bets/bet-settlement.service';
+import { BetUsageService } from '../bets/bet-usage.service';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
+import { nowLocalDateTime } from '../common/persistence/local-date-time.transformer';
 import { GroupsService } from '../groups/groups.service';
+import {
+  matchCreatedEmails,
+  voidedEmails,
+} from '../notifications/match-emails';
+import { NotificationClient } from '../notifications/notification.client';
 import { PhaseResponseDto } from '../phases/dto/phase-response.dto';
 import { PhaseType } from '../phases/entities/phase-type.enum';
 import { isGroupPhase } from '../phases/phase-kind';
@@ -28,7 +36,8 @@ import { toMatchResponse } from './matches.mapper';
 export class MatchesService {
   // Los services de fases, torneos, grupos, equipos e inscripciones llegan porque MatchesModule
   // importa sus módulos: con ellos se valida todo lo que el partido necesita, con los mismos
-  // mensajes de sus HU. ScoreTotalsService da lo que suman las anotaciones (HU-GC-07).
+  // mensajes de sus HU. ScoreTotalsService da lo que suman las anotaciones (HU-GC-07), y los de
+  // apuestas y notificaciones (HU-GC-11) llegan de módulos que no dependen de nadie.
   constructor(
     @InjectRepository(Match)
     private readonly matchRepository: Repository<Match>,
@@ -38,9 +47,13 @@ export class MatchesService {
     private readonly teamsService: TeamsService,
     private readonly tournamentTeamsService: TournamentTeamsService,
     private readonly scoreTotals: ScoreTotalsService,
+    private readonly betUsage: BetUsageService,
+    private readonly betSettlement: BetSettlementService,
+    private readonly notifications: NotificationClient,
   ) {}
 
-  // El partido nuevo queda PROGRAMADO.
+  // El partido nuevo queda PROGRAMADO. Se avisa a quienes apostaron en partidos anteriores de esos
+  // equipos (HU-GC-06, criterio 13).
   async create(dto: CreateMatchDto): Promise<MatchResponseDto> {
     const phase = await this.phasesService.findOne(dto.phaseId);
     const tournament = await this.tournamentsService.findOne(
@@ -66,7 +79,16 @@ export class MatchesService {
       }),
     );
 
-    return this.findOne(saved.id);
+    const response = await this.findOne(saved.id);
+    const recipients = await this.betUsage.fanEmailsForTeams(
+      [dto.homeTeamId, dto.awayTeamId],
+      saved.id,
+    );
+    this.notifications.deliver(
+      matchCreatedEmails(response, recipients),
+      'partido nuevo',
+    );
+    return response;
   }
 
   // Partidos de una fase, por fecha.
@@ -94,6 +116,18 @@ export class MatchesService {
     return response;
   }
 
+  // HU-GC-11: los que reciben apuestas: programados, con las apuestas abiertas y sin haber llegado su
+  // hora. Por fecha.
+  async findOpenForBetting(): Promise<MatchResponseDto[]> {
+    const matches = await this.orderedByDate(
+      this.summaryQuery()
+        .where('game.status = :status', { status: MatchStatus.PROGRAMADO })
+        .andWhere('game.bettingOpen = :open', { open: true }),
+    ).getMany();
+    const now = nowLocalDateTime();
+    return this.toResponses(matches.filter((match) => match.scheduledAt > now));
+  }
+
   // Solo mientras esté PROGRAMADO. La fase no cambia.
   async update(id: number, dto: UpdateMatchDto): Promise<MatchResponseDto> {
     const match = await this.findMatch(id);
@@ -108,6 +142,20 @@ export class MatchesService {
       phase.tournament.id,
     );
     await this.validate(dto, phase, tournament, id);
+
+    // Las apuestas se hicieron por estos equipos (HU-GC-11): la fecha sí puede cambiar.
+    const teamsChanged =
+      dto.homeTeamId !== match.homeTeam.id ||
+      dto.awayTeamId !== match.awayTeam.id;
+    if (teamsChanged) {
+      const bets = await this.betUsage.countForMatch(id);
+      if (bets > 0) {
+        throw new ApplicationException(
+          ErrorCase.INVALID_OPERATION,
+          `El partido ${matchLabel(match)} ya tiene apuestas (${bets}): sus equipos no se pueden cambiar`,
+        );
+      }
+    }
 
     await this.matchRepository.update(id, {
       homeTeam: { id: dto.homeTeamId },
@@ -133,7 +181,8 @@ export class MatchesService {
     return this.findOne(id);
   }
 
-  // PROGRAMADO o EN_JUEGO → CANCELADO.
+  // PROGRAMADO o EN_JUEGO → CANCELADO. Sus apuestas pendientes quedan anuladas (se devuelve lo
+  // apostado) en la misma transacción, y se avisa a cada aficionado (HU-GC-11).
   async cancel(id: number): Promise<MatchResponseDto> {
     const match = await this.findMatch(id);
     if (
@@ -145,13 +194,23 @@ export class MatchesService {
         `El partido ${matchLabel(match)} ya está ${MATCH_STATUS_LABEL[match.status]}: no se puede cancelar`,
       );
     }
-    await this.matchRepository.update(id, { status: MatchStatus.CANCELADO });
-    return this.findOne(id);
+    const voided = await this.matchRepository.manager.transaction(
+      async (manager) => {
+        await manager.update(Match, id, { status: MatchStatus.CANCELADO });
+        return this.betSettlement.voidAll(id, manager);
+      },
+    );
+    const response = await this.findOne(id);
+    this.notifications.deliver(
+      voidedEmails(response, voided),
+      'apuestas anuladas',
+    );
+    return response;
   }
 
   // Solo un partido programado o cancelado. Uno en juego se cancela primero, y uno finalizado se
   // queda: es historial del torneo. Uno cancelado que alcanzó a jugarse puede tener anotaciones
-  // (HU-GC-07): se eliminan primero. Las apuestas (HU-GC-11) se suman cuando existan.
+  // (HU-GC-07): se eliminan primero. Uno con apuestas (HU-GC-11) se queda: son historial.
   async remove(id: number): Promise<void> {
     const match = await this.findMatch(id);
     if (match.status === MatchStatus.EN_JUEGO) {
@@ -171,6 +230,13 @@ export class MatchesService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `No se puede eliminar el partido ${matchLabel(match)} porque tiene anotaciones (${scores}). Elimínalas primero`,
+      );
+    }
+    const bets = await this.betUsage.countForMatch(id);
+    if (bets > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar el partido ${matchLabel(match)} porque tiene apuestas (${bets}): son historial de los aficionados`,
       );
     }
     await this.matchRepository.delete(id);
