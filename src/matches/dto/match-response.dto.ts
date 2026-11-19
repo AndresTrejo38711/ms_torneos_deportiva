@@ -9,6 +9,21 @@ export class MatchGroupDto {
   name: string;
 }
 
+// HU-GC-07. Resultado oficial. Los penales llegan en null salvo en una fase final que terminó
+// empatada.
+export class MatchResultDto {
+  homeScore: number;
+  awayScore: number;
+  homePenalties: number | null;
+  awayPenalties: number | null;
+}
+
+// HU-GC-07. Lo que suman las anotaciones de cada equipo: el marcador mientras se juega.
+export class LiveScoreDto {
+  home: number;
+  away: number;
+}
+
 // Lo que responde la API: nunca la entidad directamente.
 export class MatchResponseDto {
   id: number;
@@ -23,4 +38,7 @@ export class MatchResponseDto {
   round: number | null;
   bracketPosition: number | null;
   status: MatchStatus;
+  // null = resultado pendiente (la HU-GC-08 lo usa para separar jugados y pendientes).
+  result: MatchResultDto | null;
+  liveScore: LiveScoreDto;
 }

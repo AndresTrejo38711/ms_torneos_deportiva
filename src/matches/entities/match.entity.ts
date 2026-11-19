@@ -66,4 +66,19 @@ export class Match {
 
   @Column({ type: 'enum', enum: MatchStatus, default: MatchStatus.PROGRAMADO })
   status: MatchStatus;
+
+  // HU-GC-07. Resultado oficial: lo registra el administrador y con él el partido queda FINALIZADO.
+  // En el diagrama no hay clase Resultado: es parte del partido. Null mientras está pendiente.
+  @Column({ name: 'home_score', type: 'int', nullable: true })
+  homeScore: number | null;
+
+  @Column({ name: 'away_score', type: 'int', nullable: true })
+  awayScore: number | null;
+
+  // Solo en fase final con el marcador empatado: ahí no hay empate, se define por penales.
+  @Column({ name: 'home_penalties', type: 'int', nullable: true })
+  homePenalties: number | null;
+
+  @Column({ name: 'away_penalties', type: 'int', nullable: true })
+  awayPenalties: number | null;
 }

@@ -102,6 +102,22 @@ export class TeamPlayersService {
     return contracts.map(toTeamPlayerResponse);
   }
 
+  // HU-GC-07: ¿el jugador tenía contrato con el equipo ese día? Un contrato retirado cuenta hasta
+  // su fecha de retiro (uno cancelado antes de empezar no cubre ningún día).
+  async hadContractOn(
+    teamId: number,
+    playerId: number,
+    day: string,
+  ): Promise<boolean> {
+    const contracts = await this.teamPlayerRepository.find({
+      where: { team: { id: teamId }, player: { id: playerId } },
+    });
+    return contracts.some(
+      (contract) =>
+        contract.startDate <= day && effectiveEndDate(contract) >= day,
+    );
+  }
+
   // Retirar al jugador del equipo: el contrato se cierra hoy, pero la fila se conserva como
   // historial y el jugador queda libre para otros contratos. Si el contrato era futuro, retirarlo
   // equivale a cancelarlo.

@@ -519,6 +519,106 @@
       "key": "matchSemi2Id",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "sportResultadosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentResultadosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseRGId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseRFId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamHalconesId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamIguanasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamJaguaresId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "groupRAId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerPabloId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerRamiroId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerSimonId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerTeodoroId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchRGId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchRG2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "scorePablo1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "scorePablo2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "scoreRamiroId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "scorePablo3Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchRFId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "scoreVueltaId",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -15654,7 +15754,7 @@
     },
     {
       "name": "HU-GC-06 · Partidos",
-      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 52\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 50, 51\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 53, 55, 57\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 59, 62\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → pendiente: el escenario llega con el Anexo 4 (Gestión de escenarios)\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 54, 63\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → pendiente: los aficionados que participaron salen de las apuestas, se prueba con la HU-GC-11 (bloque 7)",
+      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 52\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 50, 51\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 53, 55, 57\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 59, 62; carpeta HU-GC-07: 58, 73, 75\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → pendiente: el escenario llega con el Anexo 4 (Gestión de escenarios)\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 54, 63\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → pendiente: los aficionados que participaron salen de las apuestas, se prueba con la HU-GC-11 (bloque 7)",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -18724,6 +18824,2961 @@
                 "exec": [
                   "pm.test(\"Status 204\", function () {",
                   "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GC-07 · Resultados y anotaciones",
+      "description": "Resultado oficial de un partido: `PUT /api/deportiva/matches/{id}/result` con `homeScore` y `awayScore` (y `homePenalties`/`awayPenalties` solo en una fase final que termina empatada). La primera vez el partido debe estar `EN_JUEGO` y queda `FINALIZADO`; después se corrige con la misma ruta mientras ninguna fase posterior del torneo tenga partidos. Se consulta con `GET /matches/{id}` (`result`, null mientras está pendiente).\n\nAnotaciones: `/api/deportiva/scores` (equipo, jugador, minuto y `points`, por defecto 1). El jugador debe tener contrato con ese equipo el día del partido, y en un partido finalizado lo que suman las anotaciones de un equipo no puede pasar su marcador oficial. `liveScore` del partido es lo que suman.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los partidos finalizados son historial y no se eliminan, así que el torneo, los equipos y los jugadores quedan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El partido debe estar previamente registrado en el sistema. → peticiones 33, 41, 76\n2. El sistema debe permitir registrar el resultado correspondiente a los equipos participantes. → peticiones 43, 46, 47, 63, 66\n3. Solo se deben poder registrar resultados para los equipos que participan en el partido. → peticiones 47\n4. El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan. → peticiones 24, 48, 52, 53, 61, 72\n5. El resultado debe quedar asociado con el partido correspondiente. → peticiones 23, 47, 48\n6. El sistema debe permitir registrar una o varias anotaciones asociadas con el partido. → peticiones 25, 27, 28, 29, 31, 49, 50, 68\n7. Cada anotación debe estar asociada con el jugador que la realizó. → peticiones 27, 37\n8. El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido. → peticiones 29, 34, 35, 36\n9. El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas. → peticiones 30, 38, 39, 40, 42, 51, 54, 55, 74\n10. Eliminar una anotación no debe eliminar al jugador ni al partido asociado. → peticiones 56, 57\n11. Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente. → peticiones 27, 38, 39, 57, 70\n12. Cuando se registre una anotación, el sistema debe enviar una notificación a los aficionados que hayan adquirido un boleto para el partido o realizado una apuesta sobre este. → pendiente: los aficionados salen de las apuestas (HU-GC-11, bloque 7) y de los boletos (Anexo 4)\n13. Al finalizar y registrar el resultado del partido, el sistema debe enviar una notificación con el resumen del encuentro a los aficionados que hayan adquirido un boleto o realizado una apuesta sobre el partido. → pendiente: los aficionados salen de las apuestas (HU-GC-11, bloque 7) y de los boletos (Anexo 4)",
+      "item": [
+        {
+          "name": "01 Preparar: crear el deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol Resultados {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportResultadosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: crear el torneo Copa Resultados (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Resultados {{suffix}}\",\n  \"sportId\": {{sportResultadosId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentResultadosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear la Fase de grupos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentResultadosId}},\n  \"type\": \"GRUPOS\",\n  \"name\": \"Fase de grupos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseRGId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear la Final, de 2 equipos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentResultadosId}},\n  \"type\": \"FINAL\",\n  \"name\": \"Final\",\n  \"teamsCount\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseRFId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: crear el equipo Halcones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Halcones GC {{suffix}}\",\n  \"city\": \"Medellín\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamHalconesId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: crear el equipo Iguanas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Iguanas GC {{suffix}}\",\n  \"city\": \"Medellín\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamIguanasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: crear el equipo Jaguares (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jaguares GC {{suffix}}\",\n  \"city\": \"Medellín\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamJaguaresId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: asociar Halcones al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamHalconesId}},\n  \"sportId\": {{sportResultadosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Preparar: asociar Iguanas al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamIguanasId}},\n  \"sportId\": {{sportResultadosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Preparar: inscribir a Halcones e Iguanas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentResultadosId}},\n  \"teamIds\": [\n    {{teamHalconesId}},\n    {{teamIguanasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Preparar: crear el Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseRGId}},\n  \"name\": \"Grupo A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"groupRAId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Preparar: Halcones e Iguanas al Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/group-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": {{groupRAId}},\n  \"teamIds\": [\n    {{teamHalconesId}},\n    {{teamIguanasId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Preparar: crear al jugador Pablo Rueda (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"80{{suffix}}\",\n  \"firstName\": \"Pablo\",\n  \"lastName\": \"Rueda\",\n  \"birthDate\": \"1998-04-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerPabloId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Preparar: crear al jugador Ramiro Soto (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"81{{suffix}}\",\n  \"firstName\": \"Ramiro\",\n  \"lastName\": \"Soto\",\n  \"birthDate\": \"1998-04-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerRamiroId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Preparar: crear al jugador Simón Torres (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"82{{suffix}}\",\n  \"firstName\": \"Simón\",\n  \"lastName\": \"Torres\",\n  \"birthDate\": \"1998-04-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerSimonId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Preparar: crear al jugador Teodoro Uribe (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"83{{suffix}}\",\n  \"firstName\": \"Teodoro\",\n  \"lastName\": \"Uribe\",\n  \"birthDate\": \"1998-04-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerTeodoroId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Preparar: contrato de Pablo desde el 2030-01-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Preparar: contrato de Ramiro desde el 2030-01-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamIguanasId}},\n  \"playerId\": {{playerRamiroId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Preparar: contrato de Simón desde el 2030-03-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerSimonId}},\n  \"startDate\": \"2030-03-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Preparar: contrato de Teodoro desde el 2030-01-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamJaguaresId}},\n  \"playerId\": {{playerTeodoroId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Preparar: programar Halcones vs Iguanas, jornada 1 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseRGId}},\n  \"homeTeamId\": {{teamHalconesId}},\n  \"awayTeamId\": {{teamIguanasId}},\n  \"scheduledAt\": \"2030-02-10T18:00\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchRGId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Preparar: programar la vuelta, Iguanas vs Halcones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseRGId}},\n  \"homeTeamId\": {{teamIguanasId}},\n  \"awayTeamId\": {{teamHalconesId}},\n  \"scheduledAt\": \"2030-02-17T18:00\",\n  \"round\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchRG2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Partido programado: todavía no tiene resultado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}",
+            "description": "Criterio HU-GC-07 #5: El resultado debe quedar asociado con el partido correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Resultado pendiente y nada anotado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"PROGRAMADO\");",
+                  "    pm.expect(body.result).to.eql(null);",
+                  "    pm.expect(body.liveScore).to.eql({\"home\": 0, \"away\": 0});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Registrar el resultado de un partido programado (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 2,\n  \"awayScore\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #4: El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"todavía no ha empezado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Anotación en un partido programado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"minute\": 12\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #6: El sistema debe permitir registrar una o varias anotaciones asociadas con el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"todavía no ha empezado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Iniciar Halcones vs Iguanas (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"En juego\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_JUEGO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Gol de Pablo para Halcones, minuto 12 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"minute\": 12\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #6: El sistema debe permitir registrar una o varias anotaciones asociadas con el partido.\n\nCriterio HU-GC-07 #7: Cada anotación debe estar asociada con el jugador que la realizó.\n\nCriterio HU-GC-07 #11: Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"scorePablo1Id\", pm.response.json().id);",
+                  "pm.test(\"La anotación queda con su partido, su equipo y su jugador; suma 1 por defecto\", function () {",
+                  "    const s = pm.response.json();",
+                  "    pm.expect(s.matchId).to.eql(Number(pm.collectionVariables.get(\"matchRGId\")));",
+                  "    pm.expect(s.team.id).to.eql(Number(pm.collectionVariables.get(\"teamHalconesId\")));",
+                  "    pm.expect(s.player.id).to.eql(Number(pm.collectionVariables.get(\"playerPabloId\")));",
+                  "    pm.expect(s.player.firstName).to.eql(\"Pablo\");",
+                  "    pm.expect(s.minute).to.eql(12);",
+                  "    pm.expect(s.points).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Otro gol de Pablo, minuto 50 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"minute\": 50,\n  \"points\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #6: El sistema debe permitir registrar una o varias anotaciones asociadas con el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"scorePablo2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Gol de Ramiro para Iguanas, minuto 70 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamIguanasId}},\n  \"playerId\": {{playerRamiroId}},\n  \"minute\": 70\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #6: El sistema debe permitir registrar una o varias anotaciones asociadas con el partido.\n\nCriterio HU-GC-07 #8: El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"scoreRamiroId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 El marcador en vivo suma las anotaciones (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}",
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"2 a 1, sin resultado oficial todavía\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_JUEGO\");",
+                  "    pm.expect(body.result).to.eql(null);",
+                  "    pm.expect(body.liveScore).to.eql({\"home\": 2, \"away\": 1});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Anotación sin datos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #6: El sistema debe permitir registrar una o varias anotaciones asociadas con el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.matchId).to.eql(\"El id del partido es obligatorio\");",
+                  "    pm.expect(body.teamId).to.eql(\"El id del equipo es obligatorio\");",
+                  "    pm.expect(body.playerId).to.eql(\"El id del jugador es obligatorio\");",
+                  "    pm.expect(body.minute).to.eql(\"El minuto es obligatorio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Minuto 0 y 11 puntos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"minute\": 0,\n  \"points\": 11\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.minute).to.eql(\"El minuto debe ser un número entero entre 1 y 200\");",
+                  "    pm.expect(body.points).to.eql(\"Los puntos deben ser un número entero entre 1 y 10\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Anotación en un partido que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{noExiste}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"minute\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #1: El partido debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Anotación de Jaguares, que no juega el partido (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamJaguaresId}},\n  \"playerId\": {{playerTeodoroId}},\n  \"minute\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #8: El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no juega el partido\");",
+                  "    pm.expect(message).to.include(\"local o del visitante\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Teodoro (de Jaguares) anotando para Halcones (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerTeodoroId}},\n  \"minute\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #8: El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Teodoro Uribe\");",
+                  "    pm.expect(message).to.include(\"no tenía contrato\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Simón: su contrato con Halcones empieza después del partido (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerSimonId}},\n  \"minute\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #8: El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido.\n\nCuenta el contrato del día del partido, no el de hoy."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Simón Torres\");",
+                  "    pm.expect(message).to.include(\"no tenía contrato\");",
+                  "    pm.expect(message).to.include(\"2030-02-10\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Anotación de un jugador que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{noExiste}},\n  \"minute\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #7: Cada anotación debe estar asociada con el jugador que la realizó."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Anotaciones del partido, por minuto (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/scores/matches/{{matchRGId}}",
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas.\n\nCriterio HU-GC-07 #11: Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Las tres, en orden\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"scorePablo1Id\")), Number(pm.collectionVariables.get(\"scorePablo2Id\")), Number(pm.collectionVariables.get(\"scoreRamiroId\"))]);",
+                  "});",
+                  "pm.test(\"Cada una con su jugador\", function () {",
+                  "    pm.expect(pm.response.json().map((s) => s.player.firstName)).to.eql([\"Pablo\", \"Pablo\", \"Ramiro\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Detalle de una anotación (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scorePablo2Id}}",
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas.\n\nCriterio HU-GC-07 #11: Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Partido, jugador y minuto\", function () {",
+                  "    const s = pm.response.json();",
+                  "    pm.expect(s.matchId).to.eql(Number(pm.collectionVariables.get(\"matchRGId\")));",
+                  "    pm.expect(s.player.id).to.eql(Number(pm.collectionVariables.get(\"playerPabloId\")));",
+                  "    pm.expect(s.minute).to.eql(50);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Corregir el minuto del segundo gol: 55 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores/{{scorePablo2Id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"minute\": 55\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Minuto nuevo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.minute).to.eql(55);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Anotaciones de un partido que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/scores/matches/{{noExiste}}",
+            "description": "Criterio HU-GC-07 #1: El partido debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Detalle de una anotación que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{noExiste}}",
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Resultado sin datos (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #2: El sistema debe permitir registrar el resultado correspondiente a los equipos participantes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.homeScore).to.eql(\"El marcador del local es obligatorio\");",
+                  "    pm.expect(body.awayScore).to.eql(\"El marcador del visitante es obligatorio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Marcadores fuera de rango (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": -1,\n  \"awayScore\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.homeScore).to.eql(\"El marcador del local debe ser un número entero entre 0 y 999\");",
+                  "    pm.expect(body.awayScore).to.eql(\"El marcador del visitante debe ser un número entero entre 0 y 999\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 Penales en la fase de grupos (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 2,\n  \"awayScore\": 2,\n  \"homePenalties\": 4,\n  \"awayPenalties\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "En la fase de grupos el empate es válido: vale 1 punto para cada equipo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"solo se usan en las fases finales\");",
+                  "    pm.expect(message).to.include(\"1 punto\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 Marcador menor que las anotaciones: 1-1 con 2 goles de Halcones (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #2: El sistema debe permitir registrar el resultado correspondiente a los equipos participantes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya suman 2\");",
+                  "    pm.expect(message).to.include(\"no puede ser 1\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 Registrar el resultado: 3-1 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 3,\n  \"awayScore\": 1,\n  \"teamId\": {{teamJaguaresId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #2: El sistema debe permitir registrar el resultado correspondiente a los equipos participantes.\n\nCriterio HU-GC-07 #3: Solo se deben poder registrar resultados para los equipos que participan en el partido.\n\nCriterio HU-GC-07 #5: El resultado debe quedar asociado con el partido correspondiente.\n\nEl cuerpo trae un `teamId` de Jaguares a propósito: se ignora. El resultado no lleva equipos, siempre es del local y del visitante del partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"El partido queda finalizado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"FINALIZADO\");",
+                  "});",
+                  "pm.test(\"Resultado oficial, sin penales\", function () {",
+                  "    pm.expect(pm.response.json().result).to.eql({\"homeScore\": 3, \"awayScore\": 1, \"homePenalties\": null, \"awayPenalties\": null});",
+                  "});",
+                  "pm.test(\"El resultado es del local y del visitante del partido\", function () {",
+                  "    const m = pm.response.json();",
+                  "    pm.expect(m.homeTeam.id).to.eql(Number(pm.collectionVariables.get(\"teamHalconesId\")));",
+                  "    pm.expect(m.awayTeam.id).to.eql(Number(pm.collectionVariables.get(\"teamIguanasId\")));",
+                  "});",
+                  "pm.test(\"Las anotaciones siguen sumando 2 a 1 (pueden ser menos que el marcador)\", function () {",
+                  "    pm.expect(pm.response.json().liveScore).to.eql({\"home\": 2, \"away\": 1});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 Consultar el resultado con el partido (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}",
+            "description": "Criterio HU-GC-07 #4: El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan.\n\nCriterio HU-GC-07 #5: El resultado debe quedar asociado con el partido correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Quedó guardado con el partido\", function () {",
+                  "    pm.expect(pm.response.json().result).to.eql({\"homeScore\": 3, \"awayScore\": 1, \"homePenalties\": null, \"awayPenalties\": null});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Gol de Ramiro que pasaría el marcador oficial de Iguanas (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamIguanasId}},\n  \"playerId\": {{playerRamiroId}},\n  \"minute\": 80\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #6: El sistema debe permitir registrar una o varias anotaciones asociadas con el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"sumarían 2\");",
+                  "    pm.expect(message).to.include(\"marcador oficial es 1\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "50 Gol de Pablo que faltaba, minuto 85 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRGId}},\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"minute\": 85\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #6: El sistema debe permitir registrar una o varias anotaciones asociadas con el partido.\n\nCon el partido finalizado se pueden agregar las anotaciones que falten, sin pasar el marcador oficial (Halcones: 3)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"scorePablo3Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Cambiar ese gol a 2 puntos: Halcones sumaría 4 (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores/{{scorePablo3Id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamHalconesId}},\n  \"playerId\": {{playerPabloId}},\n  \"minute\": 85,\n  \"points\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"sumarían 4\");",
+                  "    pm.expect(message).to.include(\"marcador oficial es 3\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "52 Corregir el resultado a 2-1, con 3 goles de Halcones anotados (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 2,\n  \"awayScore\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #4: El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya suman 3\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "53 Corregir el resultado: 4-2 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 4,\n  \"awayScore\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #4: El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan.\n\nSe puede corregir porque la fase siguiente (la Final) todavía no tiene partidos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Resultado corregido\", function () {",
+                  "    pm.expect(pm.response.json().result).to.eql({\"homeScore\": 4, \"awayScore\": 2, \"homePenalties\": null, \"awayPenalties\": null});",
+                  "});",
+                  "pm.test(\"Sigue finalizado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"FINALIZADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "54 Eliminar el gol del minuto 85 (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scorePablo3Id}}",
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "55 La anotación ya no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scorePablo3Id}}",
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "56 Pablo sigue existiendo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerPabloId}}",
+            "description": "Criterio HU-GC-07 #10: Eliminar una anotación no debe eliminar al jugador ni al partido asociado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Es Pablo\", function () {",
+                  "    pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"playerPabloId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "57 El partido sigue existiendo, con su resultado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}",
+            "description": "Criterio HU-GC-07 #10: Eliminar una anotación no debe eliminar al jugador ni al partido asociado.\n\nCriterio HU-GC-07 #11: Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Mismo resultado\", function () {",
+                  "    pm.expect(pm.response.json().result).to.eql({\"homeScore\": 4, \"awayScore\": 2, \"homePenalties\": null, \"awayPenalties\": null});",
+                  "});",
+                  "pm.test(\"Las anotaciones vuelven a sumar 2 a 1\", function () {",
+                  "    pm.expect(pm.response.json().liveScore).to.eql({\"home\": 2, \"away\": 1});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "58 Eliminar un partido finalizado (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}",
+            "description": "Criterio HU-GC-06 #10: Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya finalizó\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "59 Cancelar un partido finalizado (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/cancel"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no se puede cancelar\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "60 Programar la Final: Halcones vs Iguanas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseRFId}},\n  \"homeTeamId\": {{teamHalconesId}},\n  \"awayTeamId\": {{teamIguanasId}},\n  \"scheduledAt\": \"2030-05-10T15:00\",\n  \"bracketPosition\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchRFId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "61 Corregir el resultado de grupos cuando la Final ya tiene partidos (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRGId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 5,\n  \"awayScore\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #4: El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan.\n\nCambiar un resultado de la fase de grupos podría cambiar quién clasificó a la Final."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya no se puede corregir\");",
+                  "    pm.expect(message).to.include(\"Final\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "62 Iniciar la Final (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRFId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"En juego\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_JUEGO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "63 Final empatada sin penales (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRFId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #2: El sistema debe permitir registrar el resultado correspondiente a los equipos participantes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no hay empate\");",
+                  "    pm.expect(message).to.include(\"registra los penales\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64 Penales empatados (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRFId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 1,\n  \"homePenalties\": 3,\n  \"awayPenalties\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no pueden quedar empatados\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "65 Penales con un ganador en el tiempo de juego (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRFId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 2,\n  \"awayScore\": 1,\n  \"homePenalties\": 4,\n  \"awayPenalties\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Solo hay penales cuando el marcador queda empatado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "66 Resultado de la Final: 1-1 y 5-4 en penales (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRFId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 1,\n  \"homePenalties\": 5,\n  \"awayPenalties\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #2: El sistema debe permitir registrar el resultado correspondiente a los equipos participantes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Con los penales\", function () {",
+                  "    pm.expect(pm.response.json().result).to.eql({\"homeScore\": 1, \"awayScore\": 1, \"homePenalties\": 5, \"awayPenalties\": 4});",
+                  "});",
+                  "pm.test(\"Finalizada\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"FINALIZADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "67 Iniciar la vuelta, Iguanas vs Halcones (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRG2Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "68 Gol de Ramiro en la vuelta, minuto 5 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRG2Id}},\n  \"teamId\": {{teamIguanasId}},\n  \"playerId\": {{playerRamiroId}},\n  \"minute\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #6: El sistema debe permitir registrar una o varias anotaciones asociadas con el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"scoreVueltaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "69 Cancelar la vuelta, que tiene anotaciones (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRG2Id}}/cancel",
+            "description": "Un partido con anotaciones se puede cancelar: las anotaciones se conservan como registro."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cancelado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"CANCELADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "70 Las anotaciones del partido cancelado se conservan (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/scores/matches/{{matchRG2Id}}",
+            "description": "Criterio HU-GC-07 #11: Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sigue el gol de Ramiro\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"scoreVueltaId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "71 Anotación en un partido cancelado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/scores",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchRG2Id}},\n  \"teamId\": {{teamIguanasId}},\n  \"playerId\": {{playerRamiroId}},\n  \"minute\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"está cancelado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "72 Resultado de un partido cancelado (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchRG2Id}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #4: El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"está cancelado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "73 Eliminar el partido cancelado, que tiene anotaciones (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRG2Id}}",
+            "description": "Criterio HU-GC-06 #10: Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"tiene anotaciones (1)\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "74 Eliminar el gol de la vuelta (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scoreVueltaId}}",
+            "description": "Criterio HU-GC-07 #9: El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "75 Ahora sí: eliminar el partido cancelado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchRG2Id}}",
+            "description": "Criterio HU-GC-06 #10: Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "76 Resultado de un partido que no existe (404)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{noExiste}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 1,\n  \"awayScore\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-07 #1: El partido debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "77 Limpieza: eliminar el gol del minuto 12 (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scorePablo1Id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "78 Limpieza: eliminar el gol del minuto 55 (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scorePablo2Id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "79 Limpieza: eliminar el gol de Ramiro (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/scores/{{scoreRamiroId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "80 Limpieza: desactivar Copa Resultados (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentResultadosId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "81 Limpieza: desactivar a Pablo (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerPabloId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "82 Limpieza: desactivar a Ramiro (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerRamiroId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "83 Limpieza: desactivar a Simón (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSimonId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "84 Limpieza: desactivar a Teodoro (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerTeodoroId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "85 Limpieza: desactivar Halcones (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamHalconesId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "86 Limpieza: desactivar Iguanas (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamIguanasId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "87 Limpieza: desactivar Jaguares (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamJaguaresId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
                   "});"
                 ]
               }

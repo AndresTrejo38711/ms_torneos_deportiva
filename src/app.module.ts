@@ -8,6 +8,7 @@ import { PhasesModule } from './phases/phases.module';
 import { PlayerProfilesModule } from './player-profiles/player-profiles.module';
 import { PlayerSkillsModule } from './player-skills/player-skills.module';
 import { PlayersModule } from './players/players.module';
+import { ScoresModule } from './scores/scores.module';
 import { SecurityModule } from './security/security.module';
 import { SkillsModule } from './skills/skills.module';
 import { SportsModule } from './sports/sports.module';
@@ -61,7 +62,8 @@ import { TournamentsModule } from './tournaments/tournaments.module';
     PhasesModule, // HU-GC-03 y HU-GC-05
     GroupsModule, // HU-GC-04
     GroupTeamsModule, // HU-GC-04 (equipos de cada grupo)
-    MatchesModule, // HU-GC-06
+    MatchesModule, // HU-GC-06 y HU-GC-07 (resultado)
+    ScoresModule, // HU-GC-07 (anotaciones)
   ],
 })
 export class AppModule {}

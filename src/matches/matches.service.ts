@@ -13,12 +13,14 @@ import { TeamsService } from '../teams/teams.service';
 import { TournamentTeamsService } from '../tournament-teams/tournament-teams.service';
 import { TournamentResponseDto } from '../tournaments/dto/tournament-response.dto';
 import { TournamentsService } from '../tournaments/tournaments.service';
+import { ScoreTotalsService } from '../scores/score-totals.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { MatchFieldsDto } from './dto/match-fields.dto';
 import { MatchGroupDto, MatchResponseDto } from './dto/match-response.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { MATCH_STATUS_LABEL, MatchStatus } from './entities/match-status.enum';
 import { Match } from './entities/match.entity';
+import { matchLabel } from './match-label';
 import { toMatchResponse } from './matches.mapper';
 
 // HU-GC-06 · Gestionar partidos.
@@ -26,7 +28,7 @@ import { toMatchResponse } from './matches.mapper';
 export class MatchesService {
   // Los services de fases, torneos, grupos, equipos e inscripciones llegan porque MatchesModule
   // importa sus módulos: con ellos se valida todo lo que el partido necesita, con los mismos
-  // mensajes de sus HU.
+  // mensajes de sus HU. ScoreTotalsService da lo que suman las anotaciones (HU-GC-07).
   constructor(
     @InjectRepository(Match)
     private readonly matchRepository: Repository<Match>,
@@ -35,6 +37,7 @@ export class MatchesService {
     private readonly groupsService: GroupsService,
     private readonly teamsService: TeamsService,
     private readonly tournamentTeamsService: TournamentTeamsService,
+    private readonly scoreTotals: ScoreTotalsService,
   ) {}
 
   // El partido nuevo queda PROGRAMADO.
@@ -97,7 +100,7 @@ export class MatchesService {
     if (match.status !== MatchStatus.PROGRAMADO) {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
-        `El partido ${describe(match)} está ${MATCH_STATUS_LABEL[match.status]}: solo se puede editar mientras está programado`,
+        `El partido ${matchLabel(match)} está ${MATCH_STATUS_LABEL[match.status]}: solo se puede editar mientras está programado`,
       );
     }
     const phase = await this.phasesService.findOne(match.phase.id);
@@ -123,7 +126,7 @@ export class MatchesService {
     if (match.status !== MatchStatus.PROGRAMADO) {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
-        `Solo se puede iniciar un partido programado: ${describe(match)} está ${MATCH_STATUS_LABEL[match.status]}`,
+        `Solo se puede iniciar un partido programado: ${matchLabel(match)} está ${MATCH_STATUS_LABEL[match.status]}`,
       );
     }
     await this.matchRepository.update(id, { status: MatchStatus.EN_JUEGO });
@@ -139,7 +142,7 @@ export class MatchesService {
     ) {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
-        `El partido ${describe(match)} ya está ${MATCH_STATUS_LABEL[match.status]}: no se puede cancelar`,
+        `El partido ${matchLabel(match)} ya está ${MATCH_STATUS_LABEL[match.status]}: no se puede cancelar`,
       );
     }
     await this.matchRepository.update(id, { status: MatchStatus.CANCELADO });
@@ -147,20 +150,27 @@ export class MatchesService {
   }
 
   // Solo un partido programado o cancelado. Uno en juego se cancela primero, y uno finalizado se
-  // queda: es historial del torneo. Las anotaciones (HU-GC-07) y las apuestas (HU-GC-11) se suman a
-  // esta validación cuando existan.
+  // queda: es historial del torneo. Uno cancelado que alcanzó a jugarse puede tener anotaciones
+  // (HU-GC-07): se eliminan primero. Las apuestas (HU-GC-11) se suman cuando existan.
   async remove(id: number): Promise<void> {
     const match = await this.findMatch(id);
     if (match.status === MatchStatus.EN_JUEGO) {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
-        `El partido ${describe(match)} está en juego: cancélalo antes de eliminarlo`,
+        `El partido ${matchLabel(match)} está en juego: cancélalo antes de eliminarlo`,
       );
     }
     if (match.status === MatchStatus.FINALIZADO) {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
-        `El partido ${describe(match)} ya finalizó: los partidos finalizados no se eliminan, son parte del historial del torneo`,
+        `El partido ${matchLabel(match)} ya finalizó: los partidos finalizados no se eliminan, son parte del historial del torneo`,
+      );
+    }
+    const scores = await this.scoreTotals.countInMatch(id);
+    if (scores > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar el partido ${matchLabel(match)} porque tiene anotaciones (${scores}). Elimínalas primero`,
       );
     }
     await this.matchRepository.delete(id);
@@ -300,7 +310,7 @@ export class MatchesService {
     if (sameSlot) {
       throw new ApplicationException(
         ErrorCase.ALREADY_EXISTS,
-        `La posición ${position} de la llave de "${phase.name}" ya la tiene el partido ${describe(sameSlot)}`,
+        `La posición ${position} de la llave de "${phase.name}" ya la tiene el partido ${matchLabel(sameSlot)}`,
       );
     }
     for (const team of [home, away]) {
@@ -311,13 +321,14 @@ export class MatchesService {
       if (taken) {
         throw new ApplicationException(
           ErrorCase.ALREADY_EXISTS,
-          `"${team.name}" ya tiene partido en "${phase.name}" (${describe(taken)}): en una fase final cada equipo juega una sola vez`,
+          `"${team.name}" ya tiene partido en "${phase.name}" (${matchLabel(taken)}): en una fase final cada equipo juega una sola vez`,
         );
       }
     }
   }
 
-  // Le pone a cada partido de fase de grupos el grupo de sus equipos.
+  // Le pone a cada partido de fase de grupos el grupo de sus equipos, y a todos lo que suman sus
+  // anotaciones (el marcador en vivo).
   private async toResponses(matches: Match[]): Promise<MatchResponseDto[]> {
     const groupPhaseIds = new Set(
       matches
@@ -335,12 +346,20 @@ export class MatchesService {
         }
       }
     }
-    return matches.map((match) =>
-      toMatchResponse(
+    const totals = await this.scoreTotals.totalsByMatch(
+      matches.map((match) => match.id),
+    );
+    return matches.map((match) => {
+      const byTeam = totals.get(match.id);
+      return toMatchResponse(
         match,
         groupOf.get(`${match.phase.id}:${match.homeTeam.id}`) ?? null,
-      ),
-    );
+        {
+          home: byTeam?.get(match.homeTeam.id) ?? 0,
+          away: byTeam?.get(match.awayTeam.id) ?? 0,
+        },
+      );
+    });
   }
 
   private async findMatch(id: number): Promise<Match> {
@@ -373,9 +392,4 @@ export class MatchesService {
       .addOrderBy('game.bracketPosition', 'ASC')
       .addOrderBy('game.id', 'ASC');
   }
-}
-
-// "Local vs Visitante", para los mensajes.
-function describe(match: Match): string {
-  return `"${match.homeTeam.name} vs ${match.awayTeam.name}"`;
 }
