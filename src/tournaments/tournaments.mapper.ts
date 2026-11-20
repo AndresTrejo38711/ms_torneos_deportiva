@@ -9,7 +9,8 @@ import {
   tournamentStatus,
 } from './tournament-status';
 
-// Entidad → DTO de respuesta. El torneo debe venir con sport y tournamentTeams cargados.
+// Entidad → DTO de respuesta. El torneo debe venir con sport y tournamentTeams cargados, y con el
+// logo pedido aparte (select: false).
 export function toTournamentResponse(
   tournament: Tournament,
 ): TournamentResponseDto {
@@ -21,6 +22,7 @@ export function toTournamentResponse(
     startDate: tournament.startDate,
     endDate: tournament.endDate,
     registrationDeadline: tournament.registrationDeadline,
+    logo: tournament.logo ?? null,
     active: tournament.active,
     status: tournamentStatus(tournament),
     registrationOpen: registrationClosedReason(tournament) === null,

@@ -1,5 +1,5 @@
-// Imágenes pequeñas que se guardan como texto junto a su dueño: la foto del jugador y el escudo del
-// equipo. Llegan ya reducidas por el front (unos 20 KB) como "data:image/webp;base64,...". El límite
+// Imágenes pequeñas que se guardan como texto junto a su dueño: la foto del jugador, el escudo del
+// equipo y el logo del torneo. Llegan ya reducidas por el front (unos 20 KB) como "data:image/webp;base64,...". El límite
 // deja margen y cabe en los 100 KB que Nest acepta por petición. No se aceptan SVG: pueden llevar
 // código adentro.
 export const IMAGE_MAX_LENGTH = 90_000;

@@ -11,6 +11,7 @@ export class TournamentResponseDto {
   startDate: string;
   endDate: string;
   registrationDeadline: string | null;
+  logo: string | null; // "data:image/webp;base64,..." o null si no tiene
   active: boolean;
   // Calculados con las fechas de hoy (tournament-status.ts):
   status: TournamentStatus;
@@ -20,7 +21,8 @@ export class TournamentResponseDto {
   teamsCount: number;
 }
 
-// Lo mínimo para mostrar un torneo relacionado (por ejemplo, los torneos de un equipo).
+// Lo mínimo para mostrar un torneo relacionado (por ejemplo, los torneos de un equipo). No lleva el
+// logo: se repetiría en cada inscripción; el front lo toma de la lista de torneos.
 export class TournamentSummaryDto {
   id: number;
   name: string;

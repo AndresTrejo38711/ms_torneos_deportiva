@@ -33,6 +33,7 @@ export class TournamentsService {
       startDate: dto.startDate,
       endDate: dto.endDate,
       registrationDeadline: dto.registrationDeadline ?? null,
+      logo: dto.logo || null,
     });
     const saved = await this.tournamentRepository.save(tournament);
 
@@ -79,6 +80,7 @@ export class TournamentsService {
       startDate: dto.startDate,
       endDate: dto.endDate,
       registrationDeadline: dto.registrationDeadline ?? null,
+      logo: dto.logo || null,
     });
 
     return this.findOne(id);
@@ -153,10 +155,12 @@ export class TournamentsService {
     return tournament;
   }
 
-  // Lo que necesita la respuesta: el deporte y las inscripciones (para contar los equipos).
+  // Lo que necesita la respuesta: el deporte, las inscripciones (para contar los equipos) y el logo,
+  // que no viene por defecto (select: false).
   private summaryQuery() {
     return this.tournamentRepository
       .createQueryBuilder('tournament')
+      .addSelect('tournament.logo')
       .innerJoinAndSelect('tournament.sport', 'sport')
       .leftJoinAndSelect('tournament.tournamentTeams', 'tournamentTeam');
   }

@@ -54,6 +54,12 @@ export class Tournament {
   @Column({ name: 'registration_deadline', type: 'date', nullable: true })
   registrationDeadline: string | null;
 
+  // Opcional: el logo, como imagen pequeña en texto ("data:image/webp;base64,..."). No se trae por
+  // defecto (select: false): solo lo piden la lista y el detalle de torneos (y el desarrollo, que usa
+  // el detalle), no las respuestas que traen el torneo de paso (inscripciones, fases, partidos...).
+  @Column({ type: 'mediumtext', nullable: true, select: false })
+  logo: string | null;
+
   // Desactivar es la alternativa a eliminar cuando el torneo ya tiene información asociada.
   @Column({ default: true })
   active: boolean;

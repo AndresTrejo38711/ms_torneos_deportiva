@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -14,6 +15,10 @@ import {
   IsDateOnly,
   IsNotBeforeDate,
 } from '../../common/validation/date.validators';
+import {
+  IMAGE_DATA_URL,
+  IMAGE_MAX_LENGTH,
+} from '../../common/validation/image';
 import { Trim } from '../../common/validation/trim.decorator';
 import { TournamentCategory } from '../entities/tournament-category.enum';
 
@@ -69,4 +74,16 @@ export class CreateTournamentDto {
       'El cierre de inscripciones debe ser anterior a la fecha de inicio',
   })
   registrationDeadline?: string | null;
+
+  // Opcional. El logo como imagen pequeña en texto: "data:image/webp;base64,..."
+  // (common/validation/image.ts). El front lo reduce a 192 × 192 px sin recortarlo, como el escudo.
+  @IsOptional()
+  @IsString({ message: 'El logo debe ser una imagen JPG, PNG o WEBP' })
+  @MaxLength(IMAGE_MAX_LENGTH, {
+    message: 'El logo es demasiado grande: debe llegar reducido',
+  })
+  @Matches(IMAGE_DATA_URL, {
+    message: 'El logo debe ser una imagen JPG, PNG o WEBP',
+  })
+  logo?: string | null;
 }

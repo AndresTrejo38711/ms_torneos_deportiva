@@ -8619,7 +8619,7 @@
     },
     {
       "name": "HU-GC-01 · Torneos",
-      "description": "CRUD de torneos: `/api/deportiva/tournaments`. El estado (`POR_INICIAR`, `EN_CURSO`, `FINALIZADO`) y `registrationOpen` se calculan con las fechas de hoy. Se permiten fechas pasadas, para registrar torneos que ya se jugaron.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un torneo con la información requerida. → peticiones 05, 14\n2. Cada torneo debe estar asociado con un deporte previamente registrado. → peticiones 05, 11, 12\n3. Los campos obligatorios deben ser validados antes de guardar la información. → peticiones 06, 07, 08, 09, 10, 13\n4. El sistema debe permitir consultar los torneos registrados. → peticiones 15\n5. Se debe poder consultar la información detallada de un torneo. → peticiones 16, 17\n6. Se debe permitir actualizar la información de un torneo existente. → peticiones 19, 21, 25\n7. Se debe permitir eliminar o desactivar un torneo cuando las reglas del sistema lo permitan. → peticiones 26, 27, 32\n8. Antes de eliminar un torneo, se debe validar si posee fases, partidos u otra información asociada. → peticiones 26; carpeta HU-GC-03: 25\n9. Los cambios realizados deben quedar almacenados correctamente. → peticiones 16, 20, 28, 33",
+      "description": "CRUD de torneos: `/api/deportiva/tournaments`. El estado (`POR_INICIAR`, `EN_CURSO`, `FINALIZADO`) y `registrationOpen` se calculan con las fechas de hoy. Se permiten fechas pasadas, para registrar torneos que ya se jugaron.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El sistema debe permitir registrar un torneo con la información requerida. → peticiones 05, 16\n2. Cada torneo debe estar asociado con un deporte previamente registrado. → peticiones 05, 13, 14\n3. Los campos obligatorios deben ser validados antes de guardar la información. → peticiones 06, 07, 08, 09, 10, 11, 12, 15\n4. El sistema debe permitir consultar los torneos registrados. → peticiones 17\n5. Se debe poder consultar la información detallada de un torneo. → peticiones 18, 19\n6. Se debe permitir actualizar la información de un torneo existente. → peticiones 21, 23, 27, 33\n7. Se debe permitir eliminar o desactivar un torneo cuando las reglas del sistema lo permitan. → peticiones 28, 29, 35\n8. Antes de eliminar un torneo, se debe validar si posee fases, partidos u otra información asociada. → peticiones 28; carpeta HU-GC-03: 25\n9. Los cambios realizados deben quedar almacenados correctamente. → peticiones 18, 22, 30, 36",
       "item": [
         {
           "name": "01 Preparar: crear el deporte Fútbol (201)",
@@ -8773,14 +8773,14 @@
             "url": "{{baseUrl}}/tournaments",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"  Copa Élite {{suffix}}  \",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \" masculino \",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\",\n  \"registrationDeadline\": \"2030-01-20\"\n}",
+              "raw": "{\n  \"name\": \"  Copa Élite {{suffix}}  \",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \" masculino \",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\",\n  \"registrationDeadline\": \"2030-01-20\",\n  \"logo\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Criterio HU-GC-01 #1: El sistema debe permitir registrar un torneo con la información requerida.\n\nCriterio HU-GC-01 #2: Cada torneo debe estar asociado con un deporte previamente registrado."
+            "description": "Criterio HU-GC-01 #1: El sistema debe permitir registrar un torneo con la información requerida.\n\nCriterio HU-GC-01 #2: Cada torneo debe estar asociado con un deporte previamente registrado.\n\nEl logo es opcional y se envía como texto data:image/...;base64, ya reducido (como el escudo de un equipo)."
           },
           "event": [
             {
@@ -8804,6 +8804,9 @@
                   "    pm.expect(t.status).to.eql(\"POR_INICIAR\");",
                   "    pm.expect(t.registrationOpen).to.eql(true);",
                   "    pm.expect(t.teamsCount).to.eql(0);",
+                  "});",
+                  "pm.test(\"Devuelve el logo tal como se envió\", function () {",
+                  "    pm.expect(pm.response.json().logo).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -8976,7 +8979,96 @@
           ]
         },
         {
-          "name": "10 Fecha que no existe (400)",
+          "name": "10 Logo que no es una imagen (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Logo {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\",\n  \"logo\": \"https://ejemplo.com/logo.png\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #3: Los campos obligatorios deben ser validados antes de guardar la información.\n\nNo se aceptan enlaces ni SVG: solo JPG, PNG o WEBP como texto data:image/...;base64."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.logo).to.eql(\"El logo debe ser una imagen JPG, PNG o WEBP\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Logo demasiado grande (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Logo {{suffix}}\",\n  \"sportId\": {{sportGcFutbolId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\",\n  \"logo\": \"{{bigPhoto}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #3: Los campos obligatorios deben ser validados antes de guardar la información."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.variables.set(\"bigPhoto\", \"data:image/png;base64,\" + \"A\".repeat(90000));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.logo).to.eql(\"El logo es demasiado grande: debe llegar reducido\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Fecha que no existe (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -9016,7 +9108,7 @@
           ]
         },
         {
-          "name": "11 Deporte que no existe (404)",
+          "name": "13 Deporte que no existe (404)",
           "request": {
             "method": "POST",
             "header": [
@@ -9055,7 +9147,7 @@
           ]
         },
         {
-          "name": "12 Deporte desactivado (400)",
+          "name": "14 Deporte desactivado (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -9098,7 +9190,7 @@
           ]
         },
         {
-          "name": "13 Nombre repetido sin tilde y en mayúsculas (409)",
+          "name": "15 Nombre repetido sin tilde y en mayúsculas (409)",
           "request": {
             "method": "POST",
             "header": [
@@ -9137,7 +9229,7 @@
           ]
         },
         {
-          "name": "14 Crear un torneo que ya se jugó: Liga Andina 2025 (201)",
+          "name": "16 Crear un torneo que ya se jugó: Liga Andina 2025 (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -9173,6 +9265,7 @@
                   "    pm.expect(t.status).to.eql(\"FINALIZADO\");",
                   "    pm.expect(t.registrationOpen).to.eql(false);",
                   "    pm.expect(t.registrationDeadline).to.eql(null);",
+                  "    pm.expect(t.logo).to.eql(null);",
                   "});"
                 ]
               }
@@ -9180,7 +9273,7 @@
           ]
         },
         {
-          "name": "15 Listar torneos (200)",
+          "name": "17 Listar torneos (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -9200,6 +9293,11 @@
                   "    const ids = pm.response.json().map((item) => item.id);",
                   "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"tournamentEliteId\")));",
                   "    pm.expect(ids).to.include(Number(pm.collectionVariables.get(\"tournamentAndinaId\")));",
+                  "});",
+                  "pm.test(\"La lista trae el logo de cada torneo (o null)\", function () {",
+                  "    const byId = new Map(pm.response.json().map((t) => [t.id, t]));",
+                  "    pm.expect(byId.get(Number(pm.collectionVariables.get(\"tournamentEliteId\"))).logo).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
+                  "    pm.expect(byId.get(Number(pm.collectionVariables.get(\"tournamentAndinaId\"))).logo).to.eql(null);",
                   "});"
                 ]
               }
@@ -9207,7 +9305,7 @@
           ]
         },
         {
-          "name": "16 Detalle de Copa Élite (200)",
+          "name": "18 Detalle de Copa Élite (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -9229,6 +9327,7 @@
                   "    pm.expect(t.sport.id).to.eql(Number(pm.collectionVariables.get(\"sportGcFutbolId\")));",
                   "    pm.expect(t.sport.name).to.eql(\"Fútbol GC \" + pm.collectionVariables.get(\"suffix\"));",
                   "    pm.expect(t.registrationDeadline).to.eql(\"2030-01-20\");",
+                  "    pm.expect(t.logo).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -9236,7 +9335,7 @@
           ]
         },
         {
-          "name": "17 Detalle de un id que no existe (404)",
+          "name": "19 Detalle de un id que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -9261,7 +9360,7 @@
           ]
         },
         {
-          "name": "18 Id no numérico en la URL (400)",
+          "name": "20 Id no numérico en la URL (400)",
           "request": {
             "method": "GET",
             "header": [],
@@ -9285,7 +9384,7 @@
           ]
         },
         {
-          "name": "19 Actualizar Copa Élite: pasa a Baloncesto, mixto y sin cierre de inscripciones (200)",
+          "name": "21 Actualizar Copa Élite: pasa a Baloncesto, mixto y sin cierre de inscripciones (200)",
           "request": {
             "method": "PUT",
             "header": [
@@ -9297,7 +9396,7 @@
             "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Copa Élite {{suffix}}\",\n  \"sportId\": {{sportGcBasketId}},\n  \"category\": \"MIXTO\",\n  \"startDate\": \"2030-03-01\",\n  \"endDate\": \"2030-07-31\"\n}",
+              "raw": "{\n  \"name\": \"Copa Élite {{suffix}}\",\n  \"sportId\": {{sportGcBasketId}},\n  \"category\": \"MIXTO\",\n  \"startDate\": \"2030-03-01\",\n  \"endDate\": \"2030-07-31\",\n  \"logo\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -9321,6 +9420,7 @@
                   "    pm.expect(t.category).to.eql(\"MIXTO\");",
                   "    pm.expect(t.startDate).to.eql(\"2030-03-01\");",
                   "    pm.expect(t.registrationDeadline).to.eql(null);",
+                  "    pm.expect(t.logo).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -9328,7 +9428,7 @@
           ]
         },
         {
-          "name": "20 Detalle: los cambios quedaron guardados (200)",
+          "name": "22 Detalle: los cambios quedaron guardados (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -9355,7 +9455,7 @@
           ]
         },
         {
-          "name": "21 Renombrar Liga Andina con el nombre de Copa Élite (409)",
+          "name": "23 Renombrar Liga Andina con el nombre de Copa Élite (409)",
           "request": {
             "method": "PUT",
             "header": [
@@ -9394,7 +9494,7 @@
           ]
         },
         {
-          "name": "22 Preparar: crear el equipo Halcones (201)",
+          "name": "24 Preparar: crear el equipo Halcones (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -9430,7 +9530,7 @@
           ]
         },
         {
-          "name": "23 Preparar: asociar Halcones a Baloncesto (201)",
+          "name": "25 Preparar: asociar Halcones a Baloncesto (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -9465,7 +9565,7 @@
           ]
         },
         {
-          "name": "24 Preparar: inscribir Halcones en Copa Élite (201)",
+          "name": "26 Preparar: inscribir Halcones en Copa Élite (201)",
           "request": {
             "method": "POST",
             "header": [
@@ -9500,7 +9600,7 @@
           ]
         },
         {
-          "name": "25 Cambiar el deporte de un torneo con equipos inscritos (400)",
+          "name": "27 Cambiar el deporte de un torneo con equipos inscritos (400)",
           "request": {
             "method": "PUT",
             "header": [
@@ -9543,7 +9643,7 @@
           ]
         },
         {
-          "name": "26 Eliminar Copa Élite, que tiene equipos inscritos (400)",
+          "name": "28 Eliminar Copa Élite, que tiene equipos inscritos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9572,7 +9672,7 @@
           ]
         },
         {
-          "name": "27 Desactivar Copa Élite (200)",
+          "name": "29 Desactivar Copa Élite (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -9588,10 +9688,11 @@
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.test(\"Queda inactivo y sin inscripciones abiertas\", function () {",
+                  "pm.test(\"Queda inactivo, sin inscripciones abiertas y conserva su logo\", function () {",
                   "    const body = pm.response.json();",
                   "    pm.expect(body.active).to.eql(false);",
                   "    pm.expect(body.registrationOpen).to.eql(false);",
+                  "    pm.expect(body.logo).to.eql(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\");",
                   "});"
                 ]
               }
@@ -9599,7 +9700,7 @@
           ]
         },
         {
-          "name": "28 Detalle: Copa Élite quedó desactivado (200)",
+          "name": "30 Detalle: Copa Élite quedó desactivado (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -9625,7 +9726,7 @@
           ]
         },
         {
-          "name": "29 Desactivarlo otra vez (400)",
+          "name": "31 Desactivarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -9649,7 +9750,7 @@
           ]
         },
         {
-          "name": "30 Activar Copa Élite (200)",
+          "name": "32 Activar Copa Élite (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -9674,7 +9775,48 @@
           ]
         },
         {
-          "name": "31 Eliminar el deporte Fútbol, que tiene torneos (400)",
+          "name": "33 Actualizar Copa Élite sin logo: se borra (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments/{{tournamentEliteId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Élite {{suffix}}\",\n  \"sportId\": {{sportGcBasketId}},\n  \"category\": \"MIXTO\",\n  \"startDate\": \"2030-03-01\",\n  \"endDate\": \"2030-07-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-01 #6: Se debe permitir actualizar la información de un torneo existente.\n\nPUT reemplaza todo: el logo que no se envía se quita."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lo que no se envió se borra\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.logo).to.eql(null);",
+                  "    pm.expect(body.registrationDeadline).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Eliminar el deporte Fútbol, que tiene torneos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9704,7 +9846,7 @@
           ]
         },
         {
-          "name": "32 Eliminar Liga Andina, sin información asociada (204)",
+          "name": "35 Eliminar Liga Andina, sin información asociada (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9726,7 +9868,7 @@
           ]
         },
         {
-          "name": "33 Liga Andina ya no existe (404)",
+          "name": "36 Liga Andina ya no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -9751,7 +9893,7 @@
           ]
         },
         {
-          "name": "34 Limpieza: retirar la inscripción de Halcones (204)",
+          "name": "37 Limpieza: retirar la inscripción de Halcones (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9772,7 +9914,7 @@
           ]
         },
         {
-          "name": "35 Limpieza: eliminar Copa Élite (204)",
+          "name": "38 Limpieza: eliminar Copa Élite (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9793,7 +9935,7 @@
           ]
         },
         {
-          "name": "36 Limpieza: retirar la asociación de Halcones con Baloncesto (204)",
+          "name": "39 Limpieza: retirar la asociación de Halcones con Baloncesto (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9814,7 +9956,7 @@
           ]
         },
         {
-          "name": "37 Limpieza: eliminar Halcones (204)",
+          "name": "40 Limpieza: eliminar Halcones (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9835,7 +9977,7 @@
           ]
         },
         {
-          "name": "38 Limpieza: eliminar Fútbol (204)",
+          "name": "41 Limpieza: eliminar Fútbol (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9856,7 +9998,7 @@
           ]
         },
         {
-          "name": "39 Limpieza: eliminar Baloncesto (204)",
+          "name": "42 Limpieza: eliminar Baloncesto (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -9877,7 +10019,7 @@
           ]
         },
         {
-          "name": "40 Limpieza: eliminar Polo (204)",
+          "name": "43 Limpieza: eliminar Polo (204)",
           "request": {
             "method": "DELETE",
             "header": [],
