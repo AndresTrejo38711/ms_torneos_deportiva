@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { VenueResponseDto } from '../venues/dto/venue-response.dto';
+import { TicketUsageService } from '../tickets/ticket-usage.service';
 import { VenuesService } from '../venues/venues.service';
 import { CreateLocalityDto } from './dto/create-locality.dto';
 import { LocalityResponseDto } from './dto/locality-response.dto';
@@ -20,6 +21,7 @@ export class LocalitiesService {
     @InjectRepository(Locality)
     private readonly localityRepository: Repository<Locality>,
     private readonly venuesService: VenuesService,
+    private readonly ticketUsage: TicketUsageService,
   ) {}
 
   async create(dto: CreateLocalityDto): Promise<LocalityResponseDto> {
@@ -67,6 +69,15 @@ export class LocalitiesService {
       id,
     );
 
+    // HU-GE-04: la capacidad no baja de lo que ya se vendió en un partido que todavía no se jugó.
+    const sold = await this.ticketUsage.maxSoldInPendingMatches(id);
+    if (dto.capacity < sold) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `Ya se vendieron ${sold} boletos de "${locality.name}" para un partido que no se ha jugado: la capacidad no puede ser menor`,
+      );
+    }
+
     await this.localityRepository.update(id, {
       name: dto.name,
       capacity: dto.capacity,
@@ -102,10 +113,26 @@ export class LocalitiesService {
     return this.findOne(id);
   }
 
-  // Eliminar la localidad no toca su escenario. (Con la venta de entradas, HU-GE-04, se sumará la
-  // regla de no eliminar una localidad con boletos.)
+  // Eliminar la localidad no toca su escenario. Antes se revisa si tiene boletos o precios en algún
+  // partido (HU-GE-03, criterio 8): los boletos son historial, así que con ellos solo queda desactivarla.
   async remove(id: number): Promise<void> {
-    await this.findLocality(id); // 404 si no existe
+    const locality = await this.findLocality(id); // 404 si no existe
+
+    const tickets = await this.ticketUsage.countForLocality(id);
+    if (tickets > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${locality.name}" porque tiene boletos (${tickets}). Desactívala en su lugar`,
+      );
+    }
+    const prices = await this.ticketUsage.countPricesForLocality(id);
+    if (prices > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${locality.name}" porque tiene precio en la venta de entradas de ${prices} ${prices === 1 ? 'partido' : 'partidos'}. Quítala de esa venta primero o desactívala`,
+      );
+    }
+
     await this.localityRepository.delete(id);
   }
 

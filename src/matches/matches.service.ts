@@ -12,6 +12,7 @@ import {
   voidedEmails,
 } from '../notifications/match-emails';
 import { NotificationClient } from '../notifications/notification.client';
+import { voidedTicketEmails } from '../notifications/ticket-emails';
 import { PhaseResponseDto } from '../phases/dto/phase-response.dto';
 import { PhaseType } from '../phases/entities/phase-type.enum';
 import { isGroupPhase } from '../phases/phase-kind';
@@ -23,6 +24,7 @@ import { TournamentVenuesService } from '../tournament-venues/tournament-venues.
 import { TournamentResponseDto } from '../tournaments/dto/tournament-response.dto';
 import { TournamentsService } from '../tournaments/tournaments.service';
 import { ScoreTotalsService } from '../scores/score-totals.service';
+import { TicketUsageService } from '../tickets/ticket-usage.service';
 import { VenuesService } from '../venues/venues.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { MatchFieldsDto } from './dto/match-fields.dto';
@@ -40,7 +42,8 @@ export class MatchesService {
   // importa sus módulos: con ellos se valida todo lo que el partido necesita, con los mismos
   // mensajes de sus HU. ScoreTotalsService da lo que suman las anotaciones (HU-GC-07), y los de
   // apuestas y notificaciones (HU-GC-11) llegan de módulos que no dependen de nadie. Los de escenarios
-  // (Anexo 4) validan el escenario del partido.
+  // (Anexo 4) validan el escenario del partido, y TicketUsageService (que tampoco depende de nadie)
+  // dice qué boletos tiene (HU-GE-04).
   constructor(
     @InjectRepository(Match)
     private readonly matchRepository: Repository<Match>,
@@ -55,10 +58,11 @@ export class MatchesService {
     private readonly notifications: NotificationClient,
     private readonly venuesService: VenuesService,
     private readonly tournamentVenuesService: TournamentVenuesService,
+    private readonly ticketUsage: TicketUsageService,
   ) {}
 
-  // El partido nuevo queda PROGRAMADO. Se avisa a quienes apostaron en partidos anteriores de esos
-  // equipos (HU-GC-06, criterio 13).
+  // El partido nuevo queda PROGRAMADO. Se avisa a quienes apostaron o compraron boletos en partidos
+  // anteriores de esos equipos (HU-GC-06, criterio 13).
   async create(dto: CreateMatchDto): Promise<MatchResponseDto> {
     const phase = await this.phasesService.findOne(dto.phaseId);
     const tournament = await this.tournamentsService.findOne(
@@ -86,10 +90,13 @@ export class MatchesService {
     );
 
     const response = await this.findOne(saved.id);
-    const recipients = await this.betUsage.fanEmailsForTeams(
-      [dto.homeTeamId, dto.awayTeamId],
-      saved.id,
-    );
+    const teamIds = [dto.homeTeamId, dto.awayTeamId];
+    const recipients = [
+      ...new Set([
+        ...(await this.betUsage.fanEmailsForTeams(teamIds, saved.id)),
+        ...(await this.ticketUsage.fanEmailsForTeams(teamIds, saved.id)),
+      ]),
+    ];
     this.notifications.deliver(
       matchCreatedEmails(response, recipients),
       'partido nuevo',
@@ -134,6 +141,18 @@ export class MatchesService {
     return this.toResponses(matches.filter((match) => match.scheduledAt > now));
   }
 
+  // HU-GE-04: los que venden boletos: programados, con la venta abierta y sin haber llegado su hora.
+  // Por fecha.
+  async findOpenForTicketSales(): Promise<MatchResponseDto[]> {
+    const matches = await this.orderedByDate(
+      this.summaryQuery()
+        .where('game.status = :status', { status: MatchStatus.PROGRAMADO })
+        .andWhere('game.ticketSalesOpen = :open', { open: true }),
+    ).getMany();
+    const now = nowLocalDateTime();
+    return this.toResponses(matches.filter((match) => match.scheduledAt > now));
+  }
+
   // Solo mientras esté PROGRAMADO. La fase no cambia.
   async update(id: number, dto: UpdateMatchDto): Promise<MatchResponseDto> {
     const match = await this.findMatch(id);
@@ -149,7 +168,8 @@ export class MatchesService {
     );
     await this.validate(dto, phase, tournament, id, match.venue?.id ?? null);
 
-    // Las apuestas se hicieron por estos equipos (HU-GC-11): la fecha sí puede cambiar.
+    // Las apuestas y los boletos (HU-GC-11 y HU-GE-04) se hicieron para estos equipos: la fecha sí
+    // puede cambiar.
     const teamsChanged =
       dto.homeTeamId !== match.homeTeam.id ||
       dto.awayTeamId !== match.awayTeam.id;
@@ -161,6 +181,22 @@ export class MatchesService {
           `El partido ${matchLabel(match)} ya tiene apuestas (${bets}): sus equipos no se pueden cambiar`,
         );
       }
+      const tickets = await this.ticketUsage.countForMatch(id);
+      if (tickets > 0) {
+        throw new ApplicationException(
+          ErrorCase.INVALID_OPERATION,
+          `El partido ${matchLabel(match)} ya tiene boletos vendidos (${tickets}): sus equipos no se pueden cambiar`,
+        );
+      }
+    }
+
+    // HU-GE-04: los precios de la venta son de las localidades de su escenario.
+    const venueChanged = (dto.venueId ?? null) !== (match.venue?.id ?? null);
+    if (venueChanged && (await this.ticketUsage.hasPrices(id))) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `El partido ${matchLabel(match)} tiene la venta de entradas configurada en "${match.venue?.name}": quita sus precios antes de cambiar el escenario`,
+      );
     }
 
     await this.matchRepository.update(id, {
@@ -188,8 +224,9 @@ export class MatchesService {
     return this.findOne(id);
   }
 
-  // PROGRAMADO o EN_JUEGO → CANCELADO. Sus apuestas pendientes quedan anuladas (se devuelve lo
-  // apostado) en la misma transacción, y se avisa a cada aficionado (HU-GC-11).
+  // PROGRAMADO o EN_JUEGO → CANCELADO. Sus apuestas pendientes y sus boletos quedan anulados (se
+  // devuelve lo apostado y lo pagado) en la misma transacción, y se avisa a cada aficionado (HU-GC-11
+  // y HU-GE-04).
   async cancel(id: number): Promise<MatchResponseDto> {
     const match = await this.findMatch(id);
     if (
@@ -201,23 +238,30 @@ export class MatchesService {
         `El partido ${matchLabel(match)} ya está ${MATCH_STATUS_LABEL[match.status]}: no se puede cancelar`,
       );
     }
-    const voided = await this.matchRepository.manager.transaction(
-      async (manager) => {
+    const { voided, voidedTickets } =
+      await this.matchRepository.manager.transaction(async (manager) => {
         await manager.update(Match, id, { status: MatchStatus.CANCELADO });
-        return this.betSettlement.voidAll(id, manager);
-      },
-    );
+        return {
+          voided: await this.betSettlement.voidAll(id, manager),
+          voidedTickets: await this.ticketUsage.voidAll(id, manager),
+        };
+      });
     const response = await this.findOne(id);
     this.notifications.deliver(
       voidedEmails(response, voided),
       'apuestas anuladas',
+    );
+    this.notifications.deliver(
+      voidedTicketEmails(response, voidedTickets),
+      'boletos anulados',
     );
     return response;
   }
 
   // Solo un partido programado o cancelado. Uno en juego se cancela primero, y uno finalizado se
   // queda: es historial del torneo. Uno cancelado que alcanzó a jugarse puede tener anotaciones
-  // (HU-GC-07): se eliminan primero. Uno con apuestas (HU-GC-11) se queda: son historial.
+  // (HU-GC-07): se eliminan primero. Uno con apuestas (HU-GC-11) o boletos (HU-GE-04) se queda: son
+  // historial. Los precios de su venta se van con él.
   async remove(id: number): Promise<void> {
     const match = await this.findMatch(id);
     if (match.status === MatchStatus.EN_JUEGO) {
@@ -244,6 +288,13 @@ export class MatchesService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `No se puede eliminar el partido ${matchLabel(match)} porque tiene apuestas (${bets}): son historial de los aficionados`,
+      );
+    }
+    const tickets = await this.ticketUsage.countForMatch(id);
+    if (tickets > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar el partido ${matchLabel(match)} porque tiene boletos (${tickets}): son historial de los aficionados`,
       );
     }
     await this.matchRepository.delete(id);

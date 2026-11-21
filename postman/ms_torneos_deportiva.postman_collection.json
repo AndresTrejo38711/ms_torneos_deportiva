@@ -1069,6 +1069,116 @@
       "key": "localityGraderiaId",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "bolAnaVisaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bolAnaNequiId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bolBetoNequiId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sportBoletosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentBolId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamGacelasBolId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamHalconesBolId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamIbisBolId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamJabaliesBolId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseBolSemiId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "venueBolEstadioId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "localityBolNorteId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "localityBolVipId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "localityBolSurId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "venueBolColiseoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "localityBolGraderiaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchBol1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchBol2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticketAna1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticketAna2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticketBetoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticketAnaVipId",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -16346,7 +16456,7 @@
     },
     {
       "name": "HU-GC-06 · Partidos",
-      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 52\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 50, 51\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 53, 55, 57\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 59, 62; carpeta HU-GC-07: 58, 73, 75; carpeta HU-GC-11: 72\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → carpeta HU-GE-02: 31, 33, 36, 37\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 54, 63\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"partido nuevo\\\"\" (en la carpeta HU-GC-11, al programar la Final); los compradores de boletos se suman con el Anexo 4",
+      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 52\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 50, 51\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 53, 55, 57\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 59, 62; carpeta HU-GC-07: 58, 73, 75; carpeta HU-GC-11: 72\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → carpeta HU-GE-02: 31, 33, 36, 37\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 54, 63\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"partido nuevo\\\"\" (en la carpeta HU-GC-11, al programar la Final): les llega a quienes apostaron o compraron boletos en partidos anteriores de esos equipos",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -19426,7 +19536,7 @@
     },
     {
       "name": "HU-GC-07 · Resultados y anotaciones",
-      "description": "Resultado oficial de un partido: `PUT /api/deportiva/matches/{id}/result` con `homeScore` y `awayScore` (y `homePenalties`/`awayPenalties` solo en una fase final que termina empatada). La primera vez el partido debe estar `EN_JUEGO` y queda `FINALIZADO`; después se corrige con la misma ruta mientras ninguna fase posterior del torneo tenga partidos. Se consulta con `GET /matches/{id}` (`result`, null mientras está pendiente).\n\nAnotaciones: `/api/deportiva/scores` (equipo, jugador, minuto y `points`, por defecto 1). El jugador debe tener contrato con ese equipo el día del partido, y en un partido finalizado lo que suman las anotaciones de un equipo no puede pasar su marcador oficial. `liveScore` del partido es lo que suman.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los partidos finalizados son historial y no se eliminan, así que el torneo, los equipos y los jugadores quedan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El partido debe estar previamente registrado en el sistema. → peticiones 33, 41, 76\n2. El sistema debe permitir registrar el resultado correspondiente a los equipos participantes. → peticiones 43, 46, 47, 63, 66\n3. Solo se deben poder registrar resultados para los equipos que participan en el partido. → peticiones 47\n4. El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan. → peticiones 24, 48, 52, 53, 61, 72; carpeta HU-GC-11: 69\n5. El resultado debe quedar asociado con el partido correspondiente. → peticiones 23, 47, 48\n6. El sistema debe permitir registrar una o varias anotaciones asociadas con el partido. → peticiones 25, 27, 28, 29, 31, 49, 50, 68\n7. Cada anotación debe estar asociada con el jugador que la realizó. → peticiones 27, 37\n8. El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido. → peticiones 29, 34, 35, 36\n9. El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas. → peticiones 30, 38, 39, 40, 42, 51, 54, 55, 74\n10. Eliminar una anotación no debe eliminar al jugador ni al partido asociado. → peticiones 56, 57\n11. Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente. → peticiones 27, 38, 39, 57, 70\n12. Cuando se registre una anotación, el sistema debe enviar una notificación a los aficionados que hayan adquirido un boleto para el partido o realizado una apuesta sobre este. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"anotación\\\"\" (en la carpeta HU-GC-11, la anotación de Lucas); los compradores de boletos se suman con el Anexo 4\n13. Al finalizar y registrar el resultado del partido, el sistema debe enviar una notificación con el resumen del encuentro a los aficionados que hayan adquirido un boleto o realizado una apuesta sobre el partido. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"resultado del partido\\\"\" (en la carpeta HU-GC-11, el resultado de G1); los compradores de boletos se suman con el Anexo 4",
+      "description": "Resultado oficial de un partido: `PUT /api/deportiva/matches/{id}/result` con `homeScore` y `awayScore` (y `homePenalties`/`awayPenalties` solo en una fase final que termina empatada). La primera vez el partido debe estar `EN_JUEGO` y queda `FINALIZADO`; después se corrige con la misma ruta mientras ninguna fase posterior del torneo tenga partidos. Se consulta con `GET /matches/{id}` (`result`, null mientras está pendiente).\n\nAnotaciones: `/api/deportiva/scores` (equipo, jugador, minuto y `points`, por defecto 1). El jugador debe tener contrato con ese equipo el día del partido, y en un partido finalizado lo que suman las anotaciones de un equipo no puede pasar su marcador oficial. `liveScore` del partido es lo que suman.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los partidos finalizados son historial y no se eliminan, así que el torneo, los equipos y los jugadores quedan desactivados.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El partido debe estar previamente registrado en el sistema. → peticiones 33, 41, 76\n2. El sistema debe permitir registrar el resultado correspondiente a los equipos participantes. → peticiones 43, 46, 47, 63, 66\n3. Solo se deben poder registrar resultados para los equipos que participan en el partido. → peticiones 47\n4. El sistema debe permitir consultar y modificar el resultado del encuentro cuando las reglas de la competencia lo permitan. → peticiones 24, 48, 52, 53, 61, 72; carpeta HU-GC-11: 69\n5. El resultado debe quedar asociado con el partido correspondiente. → peticiones 23, 47, 48\n6. El sistema debe permitir registrar una o varias anotaciones asociadas con el partido. → peticiones 25, 27, 28, 29, 31, 49, 50, 68\n7. Cada anotación debe estar asociada con el jugador que la realizó. → peticiones 27, 37\n8. El jugador seleccionado para una anotación debe pertenecer a uno de los equipos participantes del partido. → peticiones 29, 34, 35, 36\n9. El sistema debe permitir consultar, modificar y eliminar las anotaciones registradas. → peticiones 30, 38, 39, 40, 42, 51, 54, 55, 74\n10. Eliminar una anotación no debe eliminar al jugador ni al partido asociado. → peticiones 56, 57\n11. Las anotaciones deben conservar su relación con el partido y con el jugador correspondiente. → peticiones 27, 38, 39, 57, 70\n12. Cuando se registre una anotación, el sistema debe enviar una notificación a los aficionados que hayan adquirido un boleto para el partido o realizado una apuesta sobre este. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"anotación\\\"\" (en la carpeta HU-GC-11, la anotación de Lucas): les llega a quienes apostaron o compraron boletos para el partido\n13. Al finalizar y registrar el resultado del partido, el sistema debe enviar una notificación con el resumen del encuentro a los aficionados que hayan adquirido un boleto o realizado una apuesta sobre el partido. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"resultado del partido\\\"\" (en la carpeta HU-GC-11, el resultado de G1): les llega a quienes apostaron o compraron boletos para el partido, sin repetir",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -34509,7 +34619,7 @@
     },
     {
       "name": "HU-GE-03 · Localidades",
-      "description": "Localidades de cada escenario: `/api/deportiva/localities`. Cada localidad es del escenario donde está; su precio se fija por partido al habilitar la venta (HU-GE-04). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El escenario debe estar previamente registrado en el sistema. → peticiones 01, 02\n2. El sistema debe permitir registrar una o varias localidades para un escenario (norte, sur, VIP, etc). → peticiones 03, 04, 05\n3. Cada localidad debe quedar asociada con el escenario correspondiente. → peticiones 03, 15, 16, 18\n4. El sistema debe permitir consultar las localidades disponibles en un escenario. → peticiones 16, 17, 18\n5. Se debe poder consultar la información detallada de cada localidad. → peticiones 19, 20\n6. Se debe permitir actualizar la información de una localidad. → peticiones 21\n7. Se debe permitir eliminar o desactivar una localidad cuando las reglas del sistema lo permitan. → peticiones 24, 34\n8. Antes de eliminar una localidad, se debe validar si tiene boletos u otra información asociada. → se prueba con la venta de entradas (HU-GE-04, bloque 3 del Anexo 4): todavía no existen boletos\n9. La eliminación de una localidad no debe eliminar el escenario al que pertenece. → peticiones 35\n10. El sistema debe impedir el registro de localidades duplicadas dentro del mismo escenario cuando correspondan al mismo espacio. → peticiones 06, 13, 23\n11. Los cambios realizados deben quedar almacenados correctamente. → peticiones 22, 25, 35, 36",
+      "description": "Localidades de cada escenario: `/api/deportiva/localities`. Cada localidad es del escenario donde está; su precio se fija por partido al habilitar la venta (HU-GE-04). Ejecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Las últimas peticiones borran lo creado.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El escenario debe estar previamente registrado en el sistema. → peticiones 01, 02\n2. El sistema debe permitir registrar una o varias localidades para un escenario (norte, sur, VIP, etc). → peticiones 03, 04, 05\n3. Cada localidad debe quedar asociada con el escenario correspondiente. → peticiones 03, 15, 16, 18\n4. El sistema debe permitir consultar las localidades disponibles en un escenario. → peticiones 16, 17, 18\n5. Se debe poder consultar la información detallada de cada localidad. → peticiones 19, 20\n6. Se debe permitir actualizar la información de una localidad. → peticiones 21\n7. Se debe permitir eliminar o desactivar una localidad cuando las reglas del sistema lo permitan. → peticiones 24, 34\n8. Antes de eliminar una localidad, se debe validar si tiene boletos u otra información asociada. → carpeta HU-GE-04: 61, 64\n9. La eliminación de una localidad no debe eliminar el escenario al que pertenece. → peticiones 35\n10. El sistema debe impedir el registro de localidades duplicadas dentro del mismo escenario cuando correspondan al mismo espacio. → peticiones 06, 13, 23\n11. Los cambios realizados deben quedar almacenados correctamente. → peticiones 22, 25, 35, 36",
       "item": [
         {
           "name": "01 Crear el estadio (201)",
@@ -35868,6 +35978,3237 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/venues/{{venueOtroId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GE-04 · Venta de entradas",
+      "description": "Venta de entradas: el administrador configura la de cada partido con `PUT /api/deportiva/matches/{id}/ticketing` (precio por localidad del escenario del partido, abrirla o cerrarla) y la consulta con `GET` en la misma ruta; el aficionado ve los partidos que venden boletos (`GET /api/deportiva/ticketing/matches`), compra (`POST /api/deportiva/tickets`) y consulta los suyos (`GET /api/deportiva/tickets`); el administrador ve los de un partido (`GET /api/deportiva/tickets/matches/{matchId}`).\n\nUna compra genera un boleto por entrada, con su código, y todos comparten la referencia de pago. La venta se cierra sola a la hora del partido. **El pago todavía es simulado**: la pasarela aprueba al instante (ePayco llega en el bloque 4).\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**, como la HU-GC-11: crea a Ana y Beto con el rol Aficionado; lo del administrador usa el token de la colección.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los boletos son historial, así que el torneo, los equipos y el estadio quedan desactivados, y en deportiva quedan los aficionados con sus boletos.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El aficionado debe estar previamente registrado en el sistema. → peticiones 49\n2. El partido debe estar previamente registrado y habilitado para la venta de entradas. → peticiones 42, 43, 70\n3. El partido debe tener un escenario deportivo asignado. → peticiones 35\n4. El escenario debe contar con localidades disponibles para el partido, no se puede vender mas de la capacidad máxima. → peticiones 49, 52, 65\n5. El sistema debe permitir consultar los partidos que tienen venta de entradas habilitada. → peticiones 44, 71\n6. El sistema debe permitir seleccionar el partido al que el aficionado desea asistir. → peticiones 44\n7. El sistema debe mostrar las localidades disponibles para el escenario donde se realizará el partido. → peticiones 34, 44\n8. El aficionado debe poder seleccionar la localidad correspondiente antes de realizar la compra. → peticiones 45, 49, 62\n9. El sistema debe validar la disponibilidad de entradas para la localidad seleccionada. → peticiones 50, 51, 53\n10. El boleto generado debe quedar asociado con el partido, la localidad seleccionada y el aficionado que realizó la compra. → peticiones 49, 55\n11. El sistema no debe permitir generar boletos para localidades que no correspondan al escenario donde se realizará el partido. → peticiones 36, 46\n12. El sistema no debe permitir vender entradas cuando se haya alcanzado la capacidad disponible de la localidad. → peticiones 52, 53\n13. El sistema debe permitir consultar los boletos adquiridos por un aficionado. → peticiones 54, 73\n14. El sistema debe permitir consultar los boletos vendidos para un partido. → peticiones 57, 58\n15. Cada boleto debe permitir identificar, como mínimo, el partido, la localidad y el aficionado asociado. → peticiones 49, 55\n16. Una vez realizada correctamente la compra, el sistema debe confirmar la generación del boleto. → peticiones 49\n17. Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente. → peticiones 42, 45, 48, 50, 52, 70\n18. Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado → pendiente: en este bloque la pasarela de pago es simulada (aprueba al instante); ePayco llega en el bloque 4 del Anexo 4",
+      "item": [
+        {
+          "name": "01 Preparar: el administrador inicia sesión en ms_torneos_security (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));",
+                  "// Contraseña de los dos aficionados de prueba (cumple la política de ms_torneos_security).",
+                  "pm.collectionVariables.set(\"fanPassword\", `Af#${pm.collectionVariables.get(\"suffix\")}x`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"securityAdminToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: buscar el rol Aficionado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{securityUrl}}/roles",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const fanRole = pm.response.json().find((role) => role.name === \"Aficionado\");",
+                  "pm.collectionVariables.set(\"fanRoleId\", fanRole ? fanRole.id : \"\");",
+                  "pm.test(\"El seeder creó el rol Aficionado\", function () {",
+                  "    pm.expect(Boolean(fanRole)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear la usuaria Ana (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ana Hincha\",\n  \"email\": \"ana.bol.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear el usuario Beto (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Beto Hincha\",\n  \"email\": \"beto.bol.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanBetoUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: darle a Ana el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanAnaUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: darle a Beto el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanBetoUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: Ana inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.bol.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: Beto inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"beto.bol.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanBetoToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Preparar: catálogo de métodos de pago (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/payment-methods",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const catalog = pm.response.json();",
+                  "const idOf = (code) => (catalog.find((m) => m.code === code) || {}).id;",
+                  "pm.collectionVariables.set(\"pmCreditoId\", idOf(\"TARJETA_CREDITO\"));",
+                  "pm.collectionVariables.set(\"pmNequiId\", idOf(\"NEQUI\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Preparar: Ana registra su Visa (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}},\n  \"alias\": \"Visa boletos\",\n  \"holderName\": \"Ana Hincha\",\n  \"brand\": \"VISA\",\n  \"lastFour\": \"2222\",\n  \"expiryMonth\": 6,\n  \"expiryYear\": 2032\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"bolAnaVisaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Preparar: Ana registra su Nequi (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmNequiId}},\n  \"phone\": \"3005551111\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"bolAnaNequiId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Preparar: Beto registra su Nequi (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmNequiId}},\n  \"phone\": \"3115551111\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"bolBetoNequiId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Preparar: crear el deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol Boletos {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportBoletosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Preparar: crear la Copa Boletos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Boletos {{suffix}}\",\n  \"sportId\": {{sportBoletosId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentBolId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Preparar: crear el equipo Gacelas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gacelas BOL {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamGacelasBolId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Preparar: crear el equipo Halcones (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Halcones BOL {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamHalconesBolId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Preparar: crear el equipo Ibis (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ibis BOL {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamIbisBolId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Preparar: crear el equipo Jabalíes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jabalíes BOL {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamJabaliesBolId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Preparar: asociar Gacelas al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamGacelasBolId}},\n  \"sportId\": {{sportBoletosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Preparar: asociar Halcones al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamHalconesBolId}},\n  \"sportId\": {{sportBoletosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Preparar: asociar Ibis al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamIbisBolId}},\n  \"sportId\": {{sportBoletosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Preparar: asociar Jabalíes al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamJabaliesBolId}},\n  \"sportId\": {{sportBoletosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Preparar: inscribir los cuatro equipos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentBolId}},\n  \"teamIds\": [\n    {{teamGacelasBolId}},\n    {{teamHalconesBolId}},\n    {{teamIbisBolId}},\n    {{teamJabaliesBolId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Preparar: crear la Semifinal, de 4 equipos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentBolId}},\n  \"type\": \"FINAL\",\n  \"name\": \"Semifinal\",\n  \"teamsCount\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseBolSemiId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Preparar: crear el Estadio (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/venues",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Estadio BOL {{suffix}}\",\n  \"address\": \"Avenida Paralela\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"venueBolEstadioId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Preparar: Norte, de 3 puestos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/localities",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venueId\": {{venueBolEstadioId}},\n  \"name\": \"Norte\",\n  \"capacity\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"localityBolNorteId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Preparar: VIP, de 2 puestos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/localities",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venueId\": {{venueBolEstadioId}},\n  \"name\": \"VIP\",\n  \"capacity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"localityBolVipId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Preparar: Sur, de 100 puestos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/localities",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venueId\": {{venueBolEstadioId}},\n  \"name\": \"Sur\",\n  \"capacity\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"localityBolSurId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Preparar: crear el Coliseo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/venues",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Coliseo BOL {{suffix}}\",\n  \"address\": \"Calle 48\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"venueBolColiseoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Preparar: la Gradería del Coliseo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/localities",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venueId\": {{venueBolColiseoId}},\n  \"name\": \"Gradería\",\n  \"capacity\": 50\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"localityBolGraderiaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Preparar: asignar el Estadio y el Coliseo a la Copa (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-venues",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentBolId}},\n  \"venueIds\": [\n    {{venueBolEstadioId}},\n    {{venueBolColiseoId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Preparar: Gacelas vs Halcones en el Estadio (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseBolSemiId}},\n  \"homeTeamId\": {{teamGacelasBolId}},\n  \"awayTeamId\": {{teamHalconesBolId}},\n  \"scheduledAt\": \"2030-04-10T15:00\",\n  \"bracketPosition\": 1,\n  \"venueId\": {{venueBolEstadioId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchBol1Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Preparar: Ibis vs Jabalíes, todavía sin escenario (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseBolSemiId}},\n  \"homeTeamId\": {{teamIbisBolId}},\n  \"awayTeamId\": {{teamJabaliesBolId}},\n  \"scheduledAt\": \"2030-04-10T18:00\",\n  \"bracketPosition\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchBol2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 La venta del partido antes de configurarla (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "description": "Criterio HU-GE-04 #7: El sistema debe mostrar las localidades disponibles para el escenario donde se realizará el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cerrada, con las tres localidades del Estadio y sin precios\", function () {",
+                  "    const sale = pm.response.json();",
+                  "    pm.expect(sale.open).to.eql(false);",
+                  "    pm.expect(sale.onSale).to.eql(false);",
+                  "    pm.expect(sale.localities.map((l) => l.name)).to.eql([\"Norte\", \"Sur\", \"VIP\"]);",
+                  "    pm.expect(sale.localities.every((l) => l.price === null)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Vender en un partido sin escenario (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol2Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolNorteId}},\n      \"price\": 30000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GE-04 #3: El partido debe tener un escenario deportivo asignado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no tiene escenario\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Vender la Gradería del Coliseo en un partido del Estadio (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolGraderiaId}},\n      \"price\": 30000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GE-04 #11: El sistema no debe permitir generar boletos para localidades que no correspondan al escenario donde se realizará el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no es de\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Una localidad dos veces (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolNorteId}},\n      \"price\": 30000\n    },\n    {\n      \"localityId\": {{localityBolNorteId}},\n      \"price\": 40000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"dos veces\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Precio por debajo de $1.000 (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolNorteId}},\n      \"price\": 500\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje del precio de la primera localidad\", function () {",
+                  "    pm.expect(pm.response.json()[\"prices.0.price\"]).to.eql(\"El precio debe ser un número entero de pesos entre 1.000 y 2.000.000\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Abrir la venta sin precios (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"al menos una localidad\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Fijar los precios de Norte y VIP, con la venta cerrada (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": false,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolNorteId}},\n      \"price\": 30000\n    },\n    {\n      \"localityId\": {{localityBolVipId}},\n      \"price\": 80000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Precios guardados y la venta cerrada\", function () {",
+                  "    const sale = pm.response.json();",
+                  "    pm.expect(sale.open).to.eql(false);",
+                  "    pm.expect(sale.localities.find((l) => l.id === Number(pm.collectionVariables.get(\"localityBolNorteId\"))).price).to.eql(30000);",
+                  "    pm.expect(sale.localities.find((l) => l.id === Number(pm.collectionVariables.get(\"localityBolSurId\"))).price).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Partidos con venta: la Copa todavía no aparece (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/ticketing/matches",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sin el partido de la venta cerrada\", function () {",
+                  "    pm.expect(pm.response.json().map((row) => row.match.id)).to.not.include(Number(pm.collectionVariables.get(\"matchBol1Id\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Comprar con la venta cerrada (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolNorteId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #2: El partido debe estar previamente registrado y habilitado para la venta de entradas.\n\nCriterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no está abierta\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Abrir la venta (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolNorteId}},\n      \"price\": 30000\n    },\n    {\n      \"localityId\": {{localityBolVipId}},\n      \"price\": 80000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GE-04 #2: El partido debe estar previamente registrado y habilitado para la venta de entradas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Abierta y a la venta\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.open).to.eql(true);",
+                  "    pm.expect(body.onSale).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Partidos con venta: Gacelas vs Halcones con Norte y VIP (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/ticketing/matches",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #5: El sistema debe permitir consultar los partidos que tienen venta de entradas habilitada.\n\nCriterio HU-GE-04 #6: El sistema debe permitir seleccionar el partido al que el aficionado desea asistir.\n\nCriterio HU-GE-04 #7: El sistema debe mostrar las localidades disponibles para el escenario donde se realizará el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"El partido con las localidades que vende (Sur no tiene precio)\", function () {",
+                  "    const row = pm.response.json().find((r) => r.match.id === Number(pm.collectionVariables.get(\"matchBol1Id\")));",
+                  "    pm.expect(Boolean(row)).to.eql(true);",
+                  "    pm.expect(row.localities.map((l) => l.name)).to.eql([\"Norte\", \"VIP\"]);",
+                  "    pm.expect(row.localities[0].price).to.eql(30000);",
+                  "    pm.expect(row.localities[0].available).to.eql(3);",
+                  "    pm.expect(row.match.venue.id).to.eql(Number(pm.collectionVariables.get(\"venueBolEstadioId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 Comprar en Sur, que no tiene precio en el partido (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolSurId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #8: El aficionado debe poder seleccionar la localidad correspondiente antes de realizar la compra.\n\nCriterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no está a la venta\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 Comprar en la Gradería del Coliseo (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolGraderiaId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #11: El sistema no debe permitir generar boletos para localidades que no correspondan al escenario donde se realizará el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no es de\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 Once boletos en una compra (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolNorteId}},\n  \"quantity\": 11,\n  \"fanPaymentMethodId\": {{bolAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.quantity).to.eql(\"La cantidad debe ser un número entero entre 1 y 10\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 Pagar con el Nequi de Beto (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolNorteId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolBetoNequiId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente.\n\nSolo con uno de sus métodos de pago: el de otro aficionado responde como si no existiera."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Ana compra 2 boletos en Norte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolNorteId}},\n  \"quantity\": 2,\n  \"fanPaymentMethodId\": {{bolAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #1: El aficionado debe estar previamente registrado en el sistema.\n\nCriterio HU-GE-04 #4: El escenario debe contar con localidades disponibles para el partido, no se puede vender mas de la capacidad máxima.\n\nCriterio HU-GE-04 #8: El aficionado debe poder seleccionar la localidad correspondiente antes de realizar la compra.\n\nCriterio HU-GE-04 #10: El boleto generado debe quedar asociado con el partido, la localidad seleccionada y el aficionado que realizó la compra.\n\nCriterio HU-GE-04 #15: Cada boleto debe permitir identificar, como mínimo, el partido, la localidad y el aficionado asociado.\n\nCriterio HU-GE-04 #16: Una vez realizada correctamente la compra, el sistema debe confirmar la generación del boleto.\n\nLa respuesta con los boletos generados es la confirmación de la compra; además llega un correo con los códigos (con NOTIFICATIONS_URL configurada)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"ticketAna1Id\", pm.response.json().tickets[0].id);",
+                  "pm.collectionVariables.set(\"ticketAna2Id\", pm.response.json().tickets[1].id);",
+                  "pm.test(\"Compra pagada: dos boletos con su código, del partido, de Norte y de Ana\", function () {",
+                  "    const purchase = pm.response.json();",
+                  "    pm.expect(purchase.status).to.eql(\"PAGADO\");",
+                  "    pm.expect(purchase.gateway).to.eql(\"simulada\");",
+                  "    pm.expect(purchase.quantity).to.eql(2);",
+                  "    pm.expect(purchase.total).to.eql(60000);",
+                  "    const [t1, t2] = purchase.tickets;",
+                  "    pm.expect(t1.code).to.match(/^BOL-[A-Z2-9]{8}$/);",
+                  "    pm.expect(t1.code).to.not.eql(t2.code);",
+                  "    pm.expect(t1.reference).to.eql(purchase.reference);",
+                  "    pm.expect(t1.match.id).to.eql(Number(pm.collectionVariables.get(\"matchBol1Id\")));",
+                  "    pm.expect(t1.locality.id).to.eql(Number(pm.collectionVariables.get(\"localityBolNorteId\")));",
+                  "    pm.expect(t1.fan.email).to.eql(\"ana.bol.\" + pm.collectionVariables.get(\"suffix\") + \"@prueba.local\");",
+                  "    pm.expect(t1.price).to.eql(30000);",
+                  "    pm.expect(t1.status).to.eql(\"PAGADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "50 Beto pide 2 en Norte, donde queda 1 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolNorteId}},\n  \"quantity\": 2,\n  \"fanPaymentMethodId\": {{bolBetoNequiId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #9: El sistema debe validar la disponibilidad de entradas para la localidad seleccionada.\n\nCriterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"quedan 1 boleto\");",
+                  "    pm.expect(message).to.include(\"no alcanzan para 2\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Beto compra el último de Norte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolNorteId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolBetoNequiId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #9: El sistema debe validar la disponibilidad de entradas para la localidad seleccionada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"ticketBetoId\", pm.response.json().tickets[0].id);",
+                  "pm.test(\"Un boleto pagado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.quantity).to.eql(1);",
+                  "    pm.expect(body.total).to.eql(30000);",
+                  "    pm.expect(body.status).to.eql(\"PAGADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "52 Norte está agotada (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolNorteId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #4: El escenario debe contar con localidades disponibles para el partido, no se puede vender mas de la capacidad máxima.\n\nCriterio HU-GE-04 #12: El sistema no debe permitir vender entradas cuando se haya alcanzado la capacidad disponible de la localidad.\n\nCriterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"agotada\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "53 La venta del partido: Norte vendida, VIP disponible (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "description": "Criterio HU-GE-04 #9: El sistema debe validar la disponibilidad de entradas para la localidad seleccionada.\n\nCriterio HU-GE-04 #12: El sistema no debe permitir vender entradas cuando se haya alcanzado la capacidad disponible de la localidad."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lo vendido y lo disponible de cada localidad\", function () {",
+                  "    const sale = pm.response.json();",
+                  "    const norte = sale.localities.find((l) => l.id === Number(pm.collectionVariables.get(\"localityBolNorteId\")));",
+                  "    const vip = sale.localities.find((l) => l.id === Number(pm.collectionVariables.get(\"localityBolVipId\")));",
+                  "    pm.expect([norte.sold, norte.available]).to.eql([3, 0]);",
+                  "    pm.expect([vip.sold, vip.available]).to.eql([0, 2]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "54 Mis boletos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tickets",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #13: El sistema debe permitir consultar los boletos adquiridos por un aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Los dos de Ana, del más reciente al más antiguo\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"ticketAna2Id\")), Number(pm.collectionVariables.get(\"ticketAna1Id\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "55 Detalle de un boleto de Ana (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tickets/{{ticketAna1Id}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #15: Cada boleto debe permitir identificar, como mínimo, el partido, la localidad y el aficionado asociado.\n\nCriterio HU-GE-04 #10: El boleto generado debe quedar asociado con el partido, la localidad seleccionada y el aficionado que realizó la compra."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Identifica el partido, la localidad y el aficionado\", function () {",
+                  "    const ticket = pm.response.json();",
+                  "    pm.expect(ticket.match.homeTeam.name).to.include(\"Gacelas\");",
+                  "    pm.expect(ticket.match.venue.name).to.eql(\"Estadio BOL \" + pm.collectionVariables.get(\"suffix\"));",
+                  "    pm.expect(ticket.locality.name).to.eql(\"Norte\");",
+                  "    pm.expect(ticket.fan.email).to.include(\"ana.bol.\");",
+                  "    pm.expect(ticket.paymentMethod.alias).to.eql(\"Visa boletos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "56 El boleto de Beto no es de Ana (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tickets/{{ticketBetoId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "57 Boletos vendidos del partido (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tickets/matches/{{matchBol1Id}}",
+            "description": "Criterio HU-GE-04 #14: El sistema debe permitir consultar los boletos vendidos para un partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Los tres, en el orden en que se compraron\", function () {",
+                  "    const ids = pm.response.json().map((item) => item.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"ticketAna1Id\")), Number(pm.collectionVariables.get(\"ticketAna2Id\")), Number(pm.collectionVariables.get(\"ticketBetoId\"))]);",
+                  "});",
+                  "pm.test(\"Cada uno con su aficionado\", function () {",
+                  "    pm.expect(pm.response.json()[2].fan.email).to.include(\"beto.bol.\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "58 Boletos de un partido que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tickets/matches/{{noExiste}}",
+            "description": "Criterio HU-GE-04 #14: El sistema debe permitir consultar los boletos vendidos para un partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "59 Quitar Norte de la venta, con boletos vendidos (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolVipId}},\n      \"price\": 80000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya tiene boletos vendidos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "60 Subir el precio de VIP (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolNorteId}},\n      \"price\": 30000\n    },\n    {\n      \"localityId\": {{localityBolVipId}},\n      \"price\": 90000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"VIP a $90.000\", function () {",
+                  "    pm.expect(pm.response.json().localities.find((l) => l.id === Number(pm.collectionVariables.get(\"localityBolVipId\"))).price).to.eql(90000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "61 Eliminar VIP, que tiene precio en la venta (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/localities/{{localityBolVipId}}",
+            "description": "Criterio HU-GE-03 #8: Antes de eliminar una localidad, se debe validar si tiene boletos u otra información asociada.\n\nAunque todavía no tenga boletos, el precio en la venta de un partido es información asociada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"tiene precio\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "62 Ana compra 1 en VIP con su Nequi (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolVipId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolAnaNequiId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #8: El aficionado debe poder seleccionar la localidad correspondiente antes de realizar la compra."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"ticketAnaVipId\", pm.response.json().tickets[0].id);",
+                  "pm.test(\"Al precio nuevo, pagado con Nequi\", function () {",
+                  "    const ticket = pm.response.json().tickets[0];",
+                  "    pm.expect(ticket.price).to.eql(90000);",
+                  "    pm.expect(ticket.paymentMethod.name).to.eql(\"Nequi\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "63 Los boletos de Norte conservan su precio (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tickets/{{ticketAna1Id}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "El boleto copia el precio al comprarse: cambiar el precio después no lo toca."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sigue en $30.000\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.price).to.eql(30000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64 Eliminar Norte, que tiene boletos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/localities/{{localityBolNorteId}}",
+            "description": "Criterio HU-GE-03 #8: Antes de eliminar una localidad, se debe validar si tiene boletos u otra información asociada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"tiene boletos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "65 Bajar la capacidad de Norte por debajo de lo vendido (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/localities/{{localityBolNorteId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Norte\",\n  \"capacity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GE-04 #4: El escenario debe contar con localidades disponibles para el partido, no se puede vender mas de la capacidad máxima."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Ya se vendieron 3\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "66 Cambiar el partido al Coliseo, con la venta configurada (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeTeamId\": {{teamGacelasBolId}},\n  \"awayTeamId\": {{teamHalconesBolId}},\n  \"scheduledAt\": \"2030-04-10T15:00\",\n  \"bracketPosition\": 1,\n  \"venueId\": {{venueBolColiseoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Los precios son de las localidades del escenario: el partido no cambia de escenario mientras tenga la venta configurada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"venta de entradas configurada\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "67 Eliminar el partido, que tiene boletos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"tiene boletos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "68 Eliminar la Visa de Ana, con boletos (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-payment-methods/{{bolAnaVisaId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Un método de pago con boletos solo se desactiva (HU-GC-10, criterio 9)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"tiene boletos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "69 Iniciar el partido (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"En juego\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_JUEGO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "70 Comprar con el partido en juego (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolVipId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolAnaVisaId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #2: El partido debe estar previamente registrado y habilitado para la venta de entradas.\n\nCriterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya no vende boletos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "71 Partidos con venta: ya no aparece el partido en juego (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/ticketing/matches",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #5: El sistema debe permitir consultar los partidos que tienen venta de entradas habilitada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sin el partido\", function () {",
+                  "    pm.expect(pm.response.json().map((row) => row.match.id)).to.not.include(Number(pm.collectionVariables.get(\"matchBol1Id\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "72 Cancelar el partido (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/cancel"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cancelado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"CANCELADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "73 Los boletos de Ana quedaron anulados (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tickets",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #13: El sistema debe permitir consultar los boletos adquiridos por un aficionado.\n\nAl cancelar el partido sus boletos quedan anulados y se devuelve lo pagado (con la pasarela simulada no hay dinero real); a cada aficionado le llega un correo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Anulados, con la fecha en que se anularon\", function () {",
+                  "    const tickets = pm.response.json();",
+                  "    pm.expect(tickets.map((t) => t.status)).to.eql([\"ANULADO\", \"ANULADO\", \"ANULADO\"]);",
+                  "    pm.expect(tickets.every((t) => t.closedAt !== null)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "74 Limpieza: eliminar Ibis vs Jabalíes, sin boletos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBol2Id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "75 Limpieza: retirar el Coliseo de la Copa (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/tournament-venues/{{tournamentBolId}}/{{venueBolColiseoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "76 Limpieza: eliminar la Gradería (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/localities/{{localityBolGraderiaId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "77 Limpieza: eliminar el Coliseo (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/venues/{{venueBolColiseoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "78 Limpieza: desactivar el Estadio (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/venues/{{venueBolEstadioId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "79 Limpieza: desactivar la Copa (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentBolId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "80 Limpieza: desactivar Gacelas (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamGacelasBolId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "81 Limpieza: desactivar Halcones (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamHalconesBolId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "82 Limpieza: desactivar Ibis (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamIbisBolId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "83 Limpieza: desactivar Jabalíes (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamJabaliesBolId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "84 Limpieza: quitarle a Ana el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanAnaUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "85 Limpieza: quitarle a Beto el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanBetoUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "86 Limpieza: eliminar a Ana (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanAnaUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "87 Limpieza: eliminar a Beto (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanBetoUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
           },
           "event": [
             {

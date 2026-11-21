@@ -10,6 +10,7 @@ import { resultEmails } from '../notifications/match-emails';
 import { NotificationClient } from '../notifications/notification.client';
 import { PhaseType } from '../phases/entities/phase-type.enum';
 import { ScoreTotalsService } from '../scores/score-totals.service';
+import { TicketUsageService } from '../tickets/ticket-usage.service';
 import { MatchResponseDto } from './dto/match-response.dto';
 import { RegisterResultDto } from './dto/register-result.dto';
 import { MatchStatus } from './entities/match-status.enum';
@@ -21,7 +22,8 @@ type Penalties = { home: number | null; away: number | null };
 
 // HU-GC-07 · El resultado oficial de un partido. Está aparte de MatchesService (que programa y
 // cambia el estado de los partidos) porque es otra HU con sus propias reglas (S de SOLID).
-// Al registrarlo se liquidan las apuestas del partido (HU-GC-11) y se avisa a quienes apostaron.
+// Al registrarlo se liquidan las apuestas del partido (HU-GC-11) y se avisa a quienes apostaron o
+// compraron boletos (HU-GE-04).
 @Injectable()
 export class MatchResultsService {
   constructor(
@@ -32,6 +34,7 @@ export class MatchResultsService {
     private readonly betUsage: BetUsageService,
     private readonly betSettlement: BetSettlementService,
     private readonly notifications: NotificationClient,
+    private readonly ticketUsage: TicketUsageService,
   ) {}
 
   // Registrar (partido EN_JUEGO → FINALIZADO) o corregir (partido ya FINALIZADO).
@@ -77,8 +80,9 @@ export class MatchResultsService {
     );
 
     const response = await this.matchesService.findOne(id);
+    const ticketHolders = await this.ticketUsage.fanEmailsForMatch(id);
     this.notifications.deliver(
-      resultEmails(response, settled),
+      resultEmails(response, settled, ticketHolders),
       'resultado del partido',
     );
     return response;

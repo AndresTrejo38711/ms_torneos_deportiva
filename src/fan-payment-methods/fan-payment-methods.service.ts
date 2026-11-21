@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BetUsageService } from '../bets/bet-usage.service';
+import { TicketUsageService } from '../tickets/ticket-usage.service';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { Fan } from '../fans/entities/fan.entity';
@@ -32,6 +33,7 @@ export class FanPaymentMethodsService {
     private readonly fansService: FansService,
     private readonly paymentMethodsService: PaymentMethodsService,
     private readonly betUsage: BetUsageService,
+    private readonly ticketUsage: TicketUsageService,
   ) {}
 
   async create(
@@ -148,6 +150,14 @@ export class FanPaymentMethodsService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `${describe(method)} tiene apuestas (${bets}): no se puede eliminar, desactívalo en su lugar para conservarlas`,
+      );
+    }
+    // HU-GE-04: lo mismo con los boletos.
+    const tickets = await this.ticketUsage.countForPaymentMethod(id);
+    if (tickets > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `${describe(method)} tiene boletos (${tickets}): no se puede eliminar, desactívalo en su lugar para conservarlos`,
       );
     }
     await this.methodRepository.delete(id);

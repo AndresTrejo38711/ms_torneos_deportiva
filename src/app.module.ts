@@ -20,6 +20,7 @@ import { SportsModule } from './sports/sports.module';
 import { TeamPlayersModule } from './team-players/team-players.module';
 import { TeamSportsModule } from './team-sports/team-sports.module';
 import { TeamsModule } from './teams/teams.module';
+import { TicketsModule } from './tickets/tickets.module';
 import { TournamentDevelopmentModule } from './tournament-development/tournament-development.module';
 import { TournamentTeamsModule } from './tournament-teams/tournament-teams.module';
 import { TournamentVenuesModule } from './tournament-venues/tournament-venues.module';
@@ -82,6 +83,7 @@ import { VenuesModule } from './venues/venues.module';
     VenuesModule, // HU-GE-01
     TournamentVenuesModule, // HU-GE-02
     LocalitiesModule, // HU-GE-03
+    TicketsModule, // HU-GE-04
   ],
 })
 export class AppModule {}

@@ -13,9 +13,10 @@ import {
 import { Email } from './notification.client';
 
 // Texto de los correos sobre un partido (HU-GC-06 y HU-GC-07). Solo arman el mensaje: no consultan
-// ni envían nada. Los boletos (Anexo 4) se suman a los destinatarios cuando existan.
+// ni envían nada. Les llegan a quienes apostaron y a quienes compraron boletos (HU-GE-04).
 
-// HU-GC-06, criterio 13: a quienes apostaron en partidos anteriores de estos equipos.
+// HU-GC-06, criterio 13: a quienes apostaron o compraron boletos en partidos anteriores de estos
+// equipos.
 export function matchCreatedEmails(
   match: MatchResponseDto,
   recipients: string[],
@@ -25,12 +26,12 @@ export function matchCreatedEmails(
     'Hola,\n\n' +
     `Se programó un nuevo partido en ${match.tournament.name} (${match.phase.name}): ` +
     `${teamsOf(match)}, el ${whenOf(match.scheduledAt)}.\n\n` +
-    'Te escribimos porque apostaste en partidos anteriores de estos equipos.';
+    'Te escribimos porque apostaste o compraste boletos en partidos anteriores de estos equipos.';
   return recipients.map((to) => ({ to, subject, message }));
 }
 
-// HU-GC-07, criterio 12: a quienes apostaron en el partido. match ya trae el marcador con esta
-// anotación sumada.
+// HU-GC-07, criterio 12: a quienes apostaron o compraron boletos para el partido. match ya trae el
+// marcador con esta anotación sumada.
 export function scoreEmails(
   match: MatchResponseDto,
   score: ScoreResponseDto,
@@ -43,13 +44,18 @@ export function scoreEmails(
     `${score.player.firstName} ${score.player.lastName} anotó para ${score.team.name} en el minuto ` +
     `${score.minute}${points}.\n` +
     `Marcador: ${match.homeTeam.name} ${match.liveScore.home} - ${match.liveScore.away} ${match.awayTeam.name}.\n\n` +
-    'Te escribimos porque apostaste en este partido.';
+    'Te escribimos porque apostaste o compraste boletos para este partido.';
   return recipients.map((to) => ({ to, subject, message }));
 }
 
 // HU-GC-07, criterio 13, y HU-GC-11 (aviso de liquidación): un correo por aficionado con el resumen
-// del partido y cómo quedaron sus apuestas.
-export function resultEmails(match: MatchResponseDto, settled: Bet[]): Email[] {
+// del partido. Quien apostó recibe además cómo quedaron sus apuestas; quien solo compró boletos
+// (ticketHolders), el resumen. Nadie recibe dos.
+export function resultEmails(
+  match: MatchResponseDto,
+  settled: Bet[],
+  ticketHolders: string[] = [],
+): Email[] {
   const result = match.result;
   if (!result) {
     return [];
@@ -63,13 +69,23 @@ export function resultEmails(match: MatchResponseDto, settled: Bet[]): Email[] {
     `Resultado: ${match.homeTeam.name} ${result.homeScore} - ${result.awayScore} ${match.awayTeam.name}${penalties}.`;
   const subject = `Terminó ${teamsOf(match)}${SUBJECT_SUFFIX}`;
 
-  return groupByFan(settled).map(([to, bets]) => ({
+  const bettors = groupByFan(settled);
+  const withBets: Email[] = bettors.map(([to, bets]) => ({
     to,
     subject,
     message:
       `Hola,\n\n${summary}\n\nTus apuestas:\n` +
       bets.map((bet) => `- ${betLine(bet, match)}`).join('\n'),
   }));
+  const written = new Set(bettors.map(([to]) => to));
+  const onlyTickets: Email[] = ticketHolders
+    .filter((to) => !written.has(to))
+    .map((to) => ({
+      to,
+      subject,
+      message: `Hola,\n\n${summary}\n\nTe escribimos porque compraste boletos para este partido.`,
+    }));
+  return [...withBets, ...onlyTickets];
 }
 
 // HU-GC-11: el partido se canceló y sus apuestas quedaron anuladas.

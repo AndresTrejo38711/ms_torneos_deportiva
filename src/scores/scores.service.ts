@@ -12,6 +12,7 @@ import { scoreEmails } from '../notifications/match-emails';
 import { NotificationClient } from '../notifications/notification.client';
 import { PlayersService } from '../players/players.service';
 import { TeamPlayersService } from '../team-players/team-players.service';
+import { TicketUsageService } from '../tickets/ticket-usage.service';
 import { CreateScoreDto } from './dto/create-score.dto';
 import { DEFAULT_SCORE_POINTS, ScoreFieldsDto } from './dto/score-fields.dto';
 import { ScoreResponseDto } from './dto/score-response.dto';
@@ -35,10 +36,10 @@ export class ScoresService {
     private readonly scoreTotals: ScoreTotalsService,
     private readonly betUsage: BetUsageService,
     private readonly notifications: NotificationClient,
+    private readonly ticketUsage: TicketUsageService,
   ) {}
 
-  // Se avisa a quienes apostaron en el partido (HU-GC-07, criterio 12; los boletos llegan con el
-  // Anexo 4).
+  // Se avisa a quienes apostaron o compraron boletos para el partido (HU-GC-07, criterio 12).
   async create(dto: CreateScoreDto): Promise<ScoreResponseDto> {
     const match = await this.matchesService.findOne(dto.matchId);
     await this.validate(dto, match);
@@ -55,7 +56,12 @@ export class ScoresService {
     const score = await this.findOne(saved.id);
 
     const updated = await this.matchesService.findOne(match.id); // con el marcador nuevo
-    const recipients = await this.betUsage.fanEmailsForMatch(match.id);
+    const recipients = [
+      ...new Set([
+        ...(await this.betUsage.fanEmailsForMatch(match.id)),
+        ...(await this.ticketUsage.fanEmailsForMatch(match.id)),
+      ]),
+    ];
     this.notifications.deliver(
       scoreEmails(updated, score, recipients),
       'anotación',

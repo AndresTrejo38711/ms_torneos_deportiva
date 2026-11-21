@@ -5,6 +5,7 @@ import { MatchesModule } from '../matches/matches.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { PlayersModule } from '../players/players.module';
 import { TeamPlayersModule } from '../team-players/team-players.module';
+import { TicketUsageModule } from '../tickets/ticket-usage.module';
 import { Score } from './entities/score.entity';
 import { ScoreTotalsModule } from './score-totals.module';
 import { ScoresController } from './scores.controller';
@@ -22,6 +23,7 @@ import { ScoresService } from './scores.service';
     ScoreTotalsModule,
     BetSettlementModule,
     NotificationsModule,
+    TicketUsageModule,
   ],
   controllers: [ScoresController],
   providers: [ScoresService],

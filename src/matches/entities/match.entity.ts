@@ -129,4 +129,9 @@ export class Match {
   // Si recibe apuestas nuevas. Además debe estar programado y no haber llegado su hora.
   @Column({ name: 'betting_open', default: false })
   bettingOpen: boolean;
+
+  // HU-GE-04 (Anexo 4). Si vende boletos: lo abre o lo cierra el administrador. Los precios de cada
+  // localidad están en ticket_prices.
+  @Column({ name: 'ticket_sales_open', default: false })
+  ticketSalesOpen: boolean;
 }
