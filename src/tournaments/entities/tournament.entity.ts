@@ -8,6 +8,7 @@ import {
   Unique,
 } from 'typeorm';
 import { Phase } from '../../phases/entities/phase.entity';
+import { TournamentVenue } from '../../tournament-venues/entities/tournament-venue.entity';
 import { Sport } from '../../sports/entities/sport.entity';
 import { TournamentTeam } from '../../tournament-teams/entities/tournament-team.entity';
 import { TournamentCategory } from './tournament-category.enum';
@@ -75,4 +76,11 @@ export class Tournament {
   // HU-GC-03. Sus fases (de grupos y finales). La llave foránea tournament_id está en phases.
   @OneToMany(() => Phase, (phase) => phase.tournament)
   phases: Phase[];
+
+  // HU-GE-02 (Anexo 4). Escenarios asignados, a través de la tabla intermedia tournament_venues.
+  @OneToMany(
+    () => TournamentVenue,
+    (tournamentVenue) => tournamentVenue.tournament,
+  )
+  tournamentVenues: TournamentVenue[];
 }

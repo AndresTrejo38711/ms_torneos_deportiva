@@ -10,6 +10,7 @@ import { DECIMAL_NUMBER } from '../../common/persistence/decimal.transformer';
 import { LOCAL_DATE_TIME } from '../../common/persistence/local-date-time.transformer';
 import { Phase } from '../../phases/entities/phase.entity';
 import { Team } from '../../teams/entities/team.entity';
+import { Venue } from '../../venues/entities/venue.entity';
 import { MatchStatus } from './match-status.enum';
 
 // HU-GC-06. Encuentro entre dos equipos dentro de una fase de un torneo.
@@ -64,6 +65,15 @@ export class Match {
   // siguiente, los de 3 y 4 en la 2, y así.
   @Column({ name: 'bracket_position', type: 'int', nullable: true })
   bracketPosition: number | null;
+
+  // HU-GC-06 (criterio 11) y HU-GE-02. Escenario donde se juega; opcional. Debe ser uno de los
+  // escenarios asignados a su torneo. RESTRICT: no se borra un escenario que tenga partidos.
+  @ManyToOne(() => Venue, (venue) => venue.matches, {
+    nullable: true,
+    onDelete: 'RESTRICT',
+  })
+  @JoinColumn({ name: 'venue_id', foreignKeyConstraintName: 'fk_match_venue' })
+  venue: Venue | null;
 
   @Column({ type: 'enum', enum: MatchStatus, default: MatchStatus.PROGRAMADO })
   status: MatchStatus;

@@ -1,6 +1,7 @@
 import { PhaseSummaryDto } from '../../phases/dto/phase-response.dto';
 import { TeamSummaryDto } from '../../teams/dto/team-response.dto';
 import { TournamentSummaryDto } from '../../tournaments/dto/tournament-response.dto';
+import { VenueLocationDto } from '../../venues/dto/venue-response.dto';
 import { MatchStatus } from '../entities/match-status.enum';
 
 // El grupo en el que se juega un partido de fase de grupos.
@@ -45,6 +46,8 @@ export class MatchResponseDto {
   scheduledAt: string;
   round: number | null;
   bracketPosition: number | null;
+  // HU-GC-06 (criterio 11) y HU-GE-02: dónde se juega; null si todavía no tiene escenario.
+  venue: VenueLocationDto | null;
   status: MatchStatus;
   // null = resultado pendiente (la HU-GC-08 lo usa para separar jugados y pendientes).
   result: MatchResultDto | null;

@@ -42,4 +42,11 @@ export class MatchFieldsDto {
   @IsInt({ message: 'La posición en la llave debe ser un número entero' })
   @Min(1, { message: 'La posición en la llave debe ser mayor que 0' })
   bracketPosition?: number | null;
+
+  // Opcional (HU-GC-06, criterio 11; HU-GE-02): uno de los escenarios asignados al torneo. Sin él (o
+  // en null) el partido queda sin escenario.
+  @IsOptional()
+  @IsInt({ message: 'El id del escenario debe ser un número entero' })
+  @IsPositive({ message: 'El id del escenario debe ser mayor que 0' })
+  venueId?: number | null;
 }

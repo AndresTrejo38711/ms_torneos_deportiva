@@ -1,6 +1,7 @@
 import { toPhaseSummary } from '../phases/phases.mapper';
 import { toTeamSummary } from '../teams/teams.mapper';
 import { toTournamentSummary } from '../tournaments/tournaments.mapper';
+import { toVenueLocation } from '../venues/venues.mapper';
 import {
   LiveScoreDto,
   MatchBettingDto,
@@ -10,8 +11,8 @@ import {
 } from './dto/match-response.dto';
 import { Match } from './entities/match.entity';
 
-// Entidad → DTO de respuesta. El partido debe venir con phase (y su tournament), homeTeam y
-// awayTeam cargados. El grupo y el marcador en vivo no se guardan en el partido: los calcula el
+// Entidad → DTO de respuesta. El partido debe venir con phase (y su tournament), homeTeam, awayTeam
+// y venue (con su parent) cargados. El grupo y el marcador en vivo no se guardan en el partido: los calcula el
 // service (con los equipos y con las anotaciones).
 export function toMatchResponse(
   match: Match,
@@ -28,6 +29,7 @@ export function toMatchResponse(
     scheduledAt: match.scheduledAt,
     round: match.round,
     bracketPosition: match.bracketPosition,
+    venue: match.venue ? toVenueLocation(match.venue) : null,
     status: match.status,
     result: toMatchResult(match),
     liveScore,

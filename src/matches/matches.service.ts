@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { BetSettlementService } from '../bets/bet-settlement.service';
 import { BetUsageService } from '../bets/bet-usage.service';
 import { ApplicationException } from '../common/errors/application.exception';
@@ -19,9 +19,11 @@ import { PhasesService } from '../phases/phases.service';
 import { TeamResponseDto } from '../teams/dto/team-response.dto';
 import { TeamsService } from '../teams/teams.service';
 import { TournamentTeamsService } from '../tournament-teams/tournament-teams.service';
+import { TournamentVenuesService } from '../tournament-venues/tournament-venues.service';
 import { TournamentResponseDto } from '../tournaments/dto/tournament-response.dto';
 import { TournamentsService } from '../tournaments/tournaments.service';
 import { ScoreTotalsService } from '../scores/score-totals.service';
+import { VenuesService } from '../venues/venues.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { MatchFieldsDto } from './dto/match-fields.dto';
 import { MatchGroupDto, MatchResponseDto } from './dto/match-response.dto';
@@ -37,7 +39,8 @@ export class MatchesService {
   // Los services de fases, torneos, grupos, equipos e inscripciones llegan porque MatchesModule
   // importa sus módulos: con ellos se valida todo lo que el partido necesita, con los mismos
   // mensajes de sus HU. ScoreTotalsService da lo que suman las anotaciones (HU-GC-07), y los de
-  // apuestas y notificaciones (HU-GC-11) llegan de módulos que no dependen de nadie.
+  // apuestas y notificaciones (HU-GC-11) llegan de módulos que no dependen de nadie. Los de escenarios
+  // (Anexo 4) validan el escenario del partido.
   constructor(
     @InjectRepository(Match)
     private readonly matchRepository: Repository<Match>,
@@ -50,6 +53,8 @@ export class MatchesService {
     private readonly betUsage: BetUsageService,
     private readonly betSettlement: BetSettlementService,
     private readonly notifications: NotificationClient,
+    private readonly venuesService: VenuesService,
+    private readonly tournamentVenuesService: TournamentVenuesService,
   ) {}
 
   // El partido nuevo queda PROGRAMADO. Se avisa a quienes apostaron en partidos anteriores de esos
@@ -76,6 +81,7 @@ export class MatchesService {
         scheduledAt: dto.scheduledAt,
         round: dto.round ?? null,
         bracketPosition: dto.bracketPosition ?? null,
+        venue: dto.venueId ? { id: dto.venueId } : null,
       }),
     );
 
@@ -141,7 +147,7 @@ export class MatchesService {
     const tournament = await this.tournamentsService.findOne(
       phase.tournament.id,
     );
-    await this.validate(dto, phase, tournament, id);
+    await this.validate(dto, phase, tournament, id, match.venue?.id ?? null);
 
     // Las apuestas se hicieron por estos equipos (HU-GC-11): la fecha sí puede cambiar.
     const teamsChanged =
@@ -163,6 +169,7 @@ export class MatchesService {
       scheduledAt: dto.scheduledAt,
       round: dto.round ?? null,
       bracketPosition: dto.bracketPosition ?? null,
+      venue: dto.venueId ? { id: dto.venueId } : null,
     });
 
     return this.findOne(id);
@@ -244,12 +251,14 @@ export class MatchesService {
 
   // ---------------------------------------------------------------------------------------------
 
-  // Las reglas de crear y editar. excludeId es el partido que se está editando (no choca consigo).
+  // Las reglas de crear y editar. excludeId es el partido que se está editando (no choca consigo) y
+  // currentVenueId, el escenario que ya tenía.
   private async validate(
     dto: MatchFieldsDto,
     phase: PhaseResponseDto,
     tournament: TournamentResponseDto,
     excludeId?: number,
+    currentVenueId: number | null = null,
   ): Promise<void> {
     if (dto.homeTeamId === dto.awayTeamId) {
       throw new ApplicationException(
@@ -272,6 +281,65 @@ export class MatchesService {
       await this.validateGroupMatch(dto, phase, home, away);
     } else {
       await this.validateFinalMatch(dto, phase, home, away, excludeId);
+    }
+
+    await this.validateVenue(dto, tournament, excludeId, currentVenueId);
+  }
+
+  // HU-GC-06 (criterio 11) y HU-GE-02. El escenario es opcional. Si viene, debe ser uno de los
+  // escenarios del torneo y estar disponible (eso solo se revisa si cambia: un partido conserva el que
+  // ya tenía aunque luego lo desactiven), y no puede tener otro partido a la misma hora. Los
+  // cancelados no cuentan.
+  private async validateVenue(
+    dto: MatchFieldsDto,
+    tournament: TournamentResponseDto,
+    excludeId: number | undefined,
+    currentVenueId: number | null,
+  ): Promise<void> {
+    const venueId = dto.venueId ?? null;
+    if (venueId === null) {
+      return;
+    }
+    const venue = await this.venuesService.findOne(venueId); // 404 si no existe
+
+    if (venueId !== currentVenueId) {
+      const assigned = await this.tournamentVenuesService.isAssigned(
+        tournament.id,
+        venueId,
+      );
+      if (!assigned) {
+        throw new ApplicationException(
+          ErrorCase.INVALID_OPERATION,
+          `El escenario "${venue.name}" no está asignado a "${tournament.name}": asígnalo al torneo primero`,
+        );
+      }
+      if (!venue.available) {
+        const reason =
+          venue.active && venue.parent
+            ? `El escenario "${venue.name}" está dentro de "${venue.parent.name}", que está desactivado`
+            : `El escenario "${venue.name}" está desactivado`;
+        throw new ApplicationException(
+          ErrorCase.INVALID_OPERATION,
+          `${reason}: no se le pueden programar partidos`,
+        );
+      }
+    }
+
+    const clash = await this.matchRepository.findOne({
+      where: {
+        venue: { id: venueId },
+        scheduledAt: dto.scheduledAt,
+        status: Not(MatchStatus.CANCELADO),
+        ...(excludeId ? { id: Not(excludeId) } : {}),
+      },
+      relations: { homeTeam: true, awayTeam: true },
+    });
+    if (clash) {
+      const [day, time] = dto.scheduledAt.split('T');
+      throw new ApplicationException(
+        ErrorCase.ALREADY_EXISTS,
+        `El escenario "${venue.name}" ya tiene el partido ${matchLabel(clash)} el ${day} a las ${time}`,
+      );
     }
   }
 
@@ -441,15 +509,17 @@ export class MatchesService {
     return match;
   }
 
-  // Lo que necesita la respuesta: la fase con su torneo y los dos equipos. El alias es "game"
-  // porque MATCH es palabra de MySQL.
+  // Lo que necesita la respuesta: la fase con su torneo, los dos equipos y el escenario (con el que
+  // lo contiene, para su ubicación). El alias es "game" porque MATCH es palabra de MySQL.
   private summaryQuery() {
     return this.matchRepository
       .createQueryBuilder('game')
       .innerJoinAndSelect('game.phase', 'phase')
       .innerJoinAndSelect('phase.tournament', 'tournament')
       .innerJoinAndSelect('game.homeTeam', 'homeTeam')
-      .innerJoinAndSelect('game.awayTeam', 'awayTeam');
+      .innerJoinAndSelect('game.awayTeam', 'awayTeam')
+      .leftJoinAndSelect('game.venue', 'venue')
+      .leftJoinAndSelect('venue.parent', 'venueParent');
   }
 
   private orderedByDate(query: ReturnType<MatchesService['summaryQuery']>) {

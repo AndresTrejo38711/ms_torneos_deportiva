@@ -7,7 +7,9 @@ import { PhasesModule } from '../phases/phases.module';
 import { ScoreTotalsModule } from '../scores/score-totals.module';
 import { TeamsModule } from '../teams/teams.module';
 import { TournamentTeamsModule } from '../tournament-teams/tournament-teams.module';
+import { TournamentVenuesModule } from '../tournament-venues/tournament-venues.module';
 import { TournamentsModule } from '../tournaments/tournaments.module';
+import { VenuesModule } from '../venues/venues.module';
 import { Match } from './entities/match.entity';
 import { MatchBettingController } from './match-betting.controller';
 import { MatchBettingService } from './match-betting.service';
@@ -20,7 +22,8 @@ import { MatchesService } from './matches.service';
 // grupos, equipos e inscripciones para validar cada partido. Ninguno de ellos importa este módulo:
 // los que necesitan saber si algo tiene partidos usan MatchUsageModule. Las sumas de las anotaciones
 // llegan de ScoreTotalsModule, y lo de las apuestas (liquidar, anular, contar) de BetSettlementModule:
-// ninguno de los dos depende de nadie. Las cuotas (HU-GC-11) también se fijan aquí.
+// ninguno de los dos depende de nadie. Las cuotas (HU-GC-11) también se fijan aquí. VenuesModule y
+// TournamentVenuesModule (Anexo 4) validan el escenario del partido; tampoco importan este módulo.
 //
 // Se exporta MatchesService para las anotaciones (HU-GC-07) y las apuestas (HU-GC-11), que validan
 // el partido con él.
@@ -35,6 +38,8 @@ import { MatchesService } from './matches.service';
     ScoreTotalsModule,
     BetSettlementModule,
     NotificationsModule,
+    VenuesModule,
+    TournamentVenuesModule,
   ],
   controllers: [
     MatchesController,

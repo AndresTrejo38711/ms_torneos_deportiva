@@ -137,6 +137,21 @@ export class TournamentsService {
       );
     }
 
+    // HU-GE-02 (Anexo 4): primero se retiran sus escenarios.
+    const withVenues = await this.tournamentRepository.findOne({
+      where: { id },
+      relations: { tournamentVenues: { venue: true } },
+    });
+    const venues = (withVenues?.tournamentVenues ?? [])
+      .map((row) => row.venue.name)
+      .sort((a, b) => a.localeCompare(b, 'es'));
+    if (venues.length > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${tournament.name}" porque tiene escenarios asignados (${venues.join(', ')}). Retíralos primero o desactiva el torneo`,
+      );
+    }
+
     await this.tournamentRepository.delete(id);
   }
 

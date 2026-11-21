@@ -6,6 +6,7 @@ import { FanPaymentMethodsModule } from './fan-payment-methods/fan-payment-metho
 import { FansModule } from './fans/fans.module';
 import { GroupTeamsModule } from './group-teams/group-teams.module';
 import { GroupsModule } from './groups/groups.module';
+import { LocalitiesModule } from './localities/localities.module';
 import { MatchesModule } from './matches/matches.module';
 import { PhasesModule } from './phases/phases.module';
 import { PlayerProfilesModule } from './player-profiles/player-profiles.module';
@@ -21,7 +22,9 @@ import { TeamSportsModule } from './team-sports/team-sports.module';
 import { TeamsModule } from './teams/teams.module';
 import { TournamentDevelopmentModule } from './tournament-development/tournament-development.module';
 import { TournamentTeamsModule } from './tournament-teams/tournament-teams.module';
+import { TournamentVenuesModule } from './tournament-venues/tournament-venues.module';
 import { TournamentsModule } from './tournaments/tournaments.module';
+import { VenuesModule } from './venues/venues.module';
 
 @Module({
   imports: [
@@ -74,6 +77,11 @@ import { TournamentsModule } from './tournaments/tournaments.module';
     PaymentMethodsModule, // HU-GC-10 (catálogo)
     FanPaymentMethodsModule, // HU-GC-10
     BetsModule, // HU-GC-11
+
+    // Anexo 4 (Gestión de escenarios).
+    VenuesModule, // HU-GE-01
+    TournamentVenuesModule, // HU-GE-02
+    LocalitiesModule, // HU-GE-03
   ],
 })
 export class AppModule {}
