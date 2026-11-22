@@ -27,6 +27,8 @@ export function toTicketResponse(ticket: Ticket): TicketResponseDto {
     status: ticket.status,
     price: ticket.price,
     reference: ticket.paymentReference,
+    gatewayReference: ticket.gatewayReference,
+    paymentDetail: ticket.paymentDetail,
     match: {
       id: match.id,
       tournament: toTournamentSummary(match.phase.tournament),

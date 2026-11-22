@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { ParseIdPipe } from '../common/validation/parse-id.pipe';
 import type { AuthenticatedUser } from '../security/authenticated-user';
 import { CurrentUser } from '../security/current-user.decorator';
 import { BuyTicketsDto } from './dto/buy-tickets.dto';
+import { ConfirmPaymentDto } from './dto/confirm-payment.dto';
 import {
   TicketPurchaseResponseDto,
   TicketResponseDto,
@@ -23,6 +32,19 @@ export class TicketsController {
     @Body() dto: BuyTicketsDto,
   ): Promise<TicketPurchaseResponseDto> {
     return this.ticketsService.buy(user, dto);
+  }
+
+  // Confirmar el pago de una compra que quedó pendiente en la pasarela (ePayco), con la referencia
+  // que esta le dio al aficionado: { "gatewayReference": "68fb83729d094878e015be00" }. 200: no crea
+  // nada, responde la compra como quedó.
+  @Post('payments/:reference/confirm')
+  @HttpCode(HttpStatus.OK)
+  confirm(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('reference') reference: string,
+    @Body() dto: ConfirmPaymentDto,
+  ): Promise<TicketPurchaseResponseDto> {
+    return this.ticketsService.confirm(user, reference, dto);
   }
 
   // Los míos.

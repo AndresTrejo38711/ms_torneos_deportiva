@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { BetsModule } from './bets/bets.module';
 import { FanPaymentMethodsModule } from './fan-payment-methods/fan-payment-methods.module';
+import { FanTeamsModule } from './fan-teams/fan-teams.module';
 import { FansModule } from './fans/fans.module';
 import { GroupTeamsModule } from './group-teams/group-teams.module';
 import { GroupsModule } from './groups/groups.module';
@@ -84,6 +85,7 @@ import { VenuesModule } from './venues/venues.module';
     TournamentVenuesModule, // HU-GE-02
     LocalitiesModule, // HU-GE-03
     TicketsModule, // HU-GE-04
+    FanTeamsModule, // HU-GE-05
   ],
 })
 export class AppModule {}

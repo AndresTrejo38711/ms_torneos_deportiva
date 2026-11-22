@@ -46,6 +46,27 @@ export function ticketsPurchasedEmail(
   };
 }
 
+// El pago se aprobó tarde (la reserva de los boletos ya había vencido) y la compra no se pudo
+// cumplir: los boletos quedaron anulados y se devuelve lo pagado. purchase.detail dice por qué.
+export function lateTicketsVoidedEmail(
+  purchase: TicketPurchaseResponseDto,
+): Email | null {
+  const [first] = purchase.tickets;
+  if (!first) {
+    return null;
+  }
+  const { match } = first;
+  return {
+    to: first.fan.email,
+    subject: `Compra anulada: ${teamsOf(match)}${SUBJECT_SUFFIX}`,
+    message:
+      'Hola,\n\n' +
+      `Tu pago de ${pesos(purchase.total)} (referencia ${purchase.reference}) para ` +
+      `${teamsOf(match)} (${match.tournament.name}) se aprobó, pero la compra quedó anulada.\n\n` +
+      (purchase.detail ?? 'Se te devuelve lo pagado.'),
+  };
+}
+
 // El partido se canceló: los boletos quedaron anulados y se devuelve lo pagado. Un correo por
 // aficionado.
 export function voidedTicketEmails(

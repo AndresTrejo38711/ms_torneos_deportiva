@@ -16,18 +16,38 @@ import { Email } from './notification.client';
 // ni envían nada. Les llegan a quienes apostaron y a quienes compraron boletos (HU-GE-04).
 
 // HU-GC-06, criterio 13: a quienes apostaron o compraron boletos en partidos anteriores de estos
-// equipos.
+// equipos (participants) y a quienes siguen a alguno (followers, HU-GE-05). Un correo por persona, que
+// dice por qué le llega.
 export function matchCreatedEmails(
   match: MatchResponseDto,
-  recipients: string[],
+  participants: string[],
+  followers: { email: string; teams: string[] }[],
 ): Email[] {
   const subject = `Nuevo partido: ${teamsOf(match)}${SUBJECT_SUFFIX}`;
-  const message =
+  const intro =
     'Hola,\n\n' +
     `Se programó un nuevo partido en ${match.tournament.name} (${match.phase.name}): ` +
-    `${teamsOf(match)}, el ${whenOf(match.scheduledAt)}.\n\n` +
-    'Te escribimos porque apostaste o compraste boletos en partidos anteriores de estos equipos.';
-  return recipients.map((to) => ({ to, subject, message }));
+    `${teamsOf(match)}, el ${whenOf(match.scheduledAt)}.\n\n`;
+  const following = new Map(followers.map((f) => [f.email, f.teams]));
+  const participated = new Set(participants);
+  const recipients = [...new Set([...following.keys(), ...participants])];
+  return recipients.map((to) => {
+    const reasons: string[] = [];
+    const teams = following.get(to);
+    if (teams) {
+      reasons.push(`sigues a ${teams.join(' y ')}`);
+    }
+    if (participated.has(to)) {
+      reasons.push(
+        'apostaste o compraste boletos en partidos anteriores de estos equipos',
+      );
+    }
+    return {
+      to,
+      subject,
+      message: `${intro}Te escribimos porque ${reasons.join(' y porque ')}.`,
+    };
+  });
 }
 
 // HU-GC-07, criterio 12: a quienes apostaron o compraron boletos para el partido. match ya trae el

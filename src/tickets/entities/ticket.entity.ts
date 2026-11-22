@@ -64,6 +64,25 @@ export class Ticket {
   @Column({ name: 'payment_reference', type: 'varchar', length: 40 })
   paymentReference: string;
 
+  // La que la pasarela le dio al pago (en ePayco, ref_payco). Se guarda al confirmarlo, para poder
+  // volver a consultarlo mientras siga pendiente.
+  @Column({
+    name: 'gateway_reference',
+    type: 'varchar',
+    length: 40,
+    nullable: true,
+  })
+  gatewayReference: string | null;
+
+  // Lo que dijo la pasarela cuando no aprobó el pago o lo dejó pendiente ("Fondos insuficientes").
+  @Column({
+    name: 'payment_detail',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  paymentDetail: string | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BetSettlementModule } from '../bets/bet-settlement.module';
+import { FanTeamUsageModule } from '../fan-teams/fan-team-usage.module';
 import { GroupsModule } from '../groups/groups.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { PhasesModule } from '../phases/phases.module';
@@ -26,6 +27,7 @@ import { MatchesService } from './matches.service';
 // ninguno de los dos depende de nadie. Las cuotas (HU-GC-11) también se fijan aquí. VenuesModule y
 // TournamentVenuesModule (Anexo 4) validan el escenario del partido; tampoco importan este módulo.
 // TicketUsageModule (no depende de nadie) dice qué boletos tiene y los anula al cancelarlo (HU-GE-04).
+// FanTeamUsageModule (tampoco depende de nadie) dice quién sigue a sus equipos (HU-GE-05).
 //
 // Se exporta MatchesService para las anotaciones (HU-GC-07) y las apuestas (HU-GC-11), que validan
 // el partido con él.
@@ -43,6 +45,7 @@ import { MatchesService } from './matches.service';
     VenuesModule,
     TournamentVenuesModule,
     TicketUsageModule,
+    FanTeamUsageModule,
   ],
   controllers: [
     MatchesController,

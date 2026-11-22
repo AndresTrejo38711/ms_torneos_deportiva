@@ -5,6 +5,7 @@ import { BetSettlementService } from '../bets/bet-settlement.service';
 import { BetUsageService } from '../bets/bet-usage.service';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
+import { FanTeamUsageService } from '../fan-teams/fan-team-usage.service';
 import { nowLocalDateTime } from '../common/persistence/local-date-time.transformer';
 import { GroupsService } from '../groups/groups.service';
 import {
@@ -42,8 +43,8 @@ export class MatchesService {
   // importa sus módulos: con ellos se valida todo lo que el partido necesita, con los mismos
   // mensajes de sus HU. ScoreTotalsService da lo que suman las anotaciones (HU-GC-07), y los de
   // apuestas y notificaciones (HU-GC-11) llegan de módulos que no dependen de nadie. Los de escenarios
-  // (Anexo 4) validan el escenario del partido, y TicketUsageService (que tampoco depende de nadie)
-  // dice qué boletos tiene (HU-GE-04).
+  // (Anexo 4) validan el escenario del partido, TicketUsageService (que tampoco depende de nadie)
+  // dice qué boletos tiene (HU-GE-04) y FanTeamUsageService, quién sigue a sus equipos (HU-GE-05).
   constructor(
     @InjectRepository(Match)
     private readonly matchRepository: Repository<Match>,
@@ -59,10 +60,11 @@ export class MatchesService {
     private readonly venuesService: VenuesService,
     private readonly tournamentVenuesService: TournamentVenuesService,
     private readonly ticketUsage: TicketUsageService,
+    private readonly fanTeamUsage: FanTeamUsageService,
   ) {}
 
   // El partido nuevo queda PROGRAMADO. Se avisa a quienes apostaron o compraron boletos en partidos
-  // anteriores de esos equipos (HU-GC-06, criterio 13).
+  // anteriores de esos equipos (HU-GC-06, criterio 13) y a quienes los siguen (HU-GE-05).
   async create(dto: CreateMatchDto): Promise<MatchResponseDto> {
     const phase = await this.phasesService.findOne(dto.phaseId);
     const tournament = await this.tournamentsService.findOne(
@@ -91,14 +93,17 @@ export class MatchesService {
 
     const response = await this.findOne(saved.id);
     const teamIds = [dto.homeTeamId, dto.awayTeamId];
-    const recipients = [
+    // A quienes apostaron o compraron boletos en partidos anteriores de estos equipos (criterio 13) y
+    // a quienes los siguen (HU-GE-05, decisión del Anexo 4).
+    const participants = [
       ...new Set([
         ...(await this.betUsage.fanEmailsForTeams(teamIds, saved.id)),
         ...(await this.ticketUsage.fanEmailsForTeams(teamIds, saved.id)),
       ]),
     ];
+    const followers = await this.fanTeamUsage.followersOf(teamIds);
     this.notifications.deliver(
-      matchCreatedEmails(response, recipients),
+      matchCreatedEmails(response, participants, followers),
       'partido nuevo',
     );
     return response;

@@ -32,6 +32,10 @@ export class TicketResponseDto {
   status: TicketStatus;
   price: number; // el de la localidad al comprarlo
   reference: string; // la de la compra (la comparten los boletos de una misma compra)
+  // La del pago en la pasarela (ref_payco en ePayco), cuando ya se confirmó.
+  gatewayReference: string | null;
+  // Por qué la pasarela no aprobó el pago o lo dejó pendiente.
+  paymentDetail: string | null;
   match: TicketMatchDto;
   locality: TicketLocalityDto;
   fan: BetFanDto;
@@ -51,8 +55,11 @@ export class TicketPurchaseResponseDto {
   total: number;
   // Con qué pasarela se cobró ("simulada", "ePayco").
   gateway: string;
-  // Solo si el pago quedó PENDIENTE: lo que el front necesita para abrir la pasarela (bloque 4).
+  // Solo al comprar, si el pago quedó PENDIENTE: lo que el front necesita para abrir la pasarela. En
+  // ePayco: { sessionId, test }, lo que pide ePayco.checkout.configure(...).
   checkout: Record<string, unknown> | null;
+  // Lo que dijo la pasarela si no aprobó el pago o lo dejó pendiente.
+  detail: string | null;
   tickets: TicketResponseDto[];
 }
 

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
+import { FanTeamUsageService } from '../fan-teams/fan-team-usage.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { TeamResponseDto } from './dto/team-response.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
@@ -15,6 +16,7 @@ export class TeamsService {
   constructor(
     @InjectRepository(Team)
     private readonly teamRepository: Repository<Team>,
+    private readonly fanTeamUsage: FanTeamUsageService,
   ) {}
 
   async create(dto: CreateTeamDto): Promise<TeamResponseDto> {
@@ -111,6 +113,16 @@ export class TeamsService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `No se puede eliminar "${team.name}" porque tiene historial de contratos con jugadores (${contracts} ${contracts === 1 ? 'contrato' : 'contratos'}). Desactívalo en su lugar`,
+      );
+    }
+
+    // Los aficionados que lo siguen (HU-GE-05) tampoco se pueden quitar desde aquí: la salida es
+    // desactivarlo (decisión del Anexo 4).
+    const followers = await this.fanTeamUsage.countFollowers(id);
+    if (followers > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar "${team.name}" porque lo ${followers === 1 ? 'sigue 1 aficionado' : `siguen ${followers} aficionados`}. Desactívalo en su lugar`,
       );
     }
 

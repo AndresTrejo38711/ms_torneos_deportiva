@@ -1179,6 +1179,51 @@
       "key": "ticketAnaVipId",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "bolAnaSinFondosId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bolAnaAmexId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bolPendienteRef",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bolPendiente2Ref",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sportIntId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamLobosIntId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamMartinesIntId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamNutriasIntId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamOcelotesIntId",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -35997,7 +36042,7 @@
     },
     {
       "name": "HU-GE-04 · Venta de entradas",
-      "description": "Venta de entradas: el administrador configura la de cada partido con `PUT /api/deportiva/matches/{id}/ticketing` (precio por localidad del escenario del partido, abrirla o cerrarla) y la consulta con `GET` en la misma ruta; el aficionado ve los partidos que venden boletos (`GET /api/deportiva/ticketing/matches`), compra (`POST /api/deportiva/tickets`) y consulta los suyos (`GET /api/deportiva/tickets`); el administrador ve los de un partido (`GET /api/deportiva/tickets/matches/{matchId}`).\n\nUna compra genera un boleto por entrada, con su código, y todos comparten la referencia de pago. La venta se cierra sola a la hora del partido. **El pago todavía es simulado**: la pasarela aprueba al instante (ePayco llega en el bloque 4).\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**, como la HU-GC-11: crea a Ana y Beto con el rol Aficionado; lo del administrador usa el token de la colección.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los boletos son historial, así que el torneo, los equipos y el estadio quedan desactivados, y en deportiva quedan los aficionados con sus boletos.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El aficionado debe estar previamente registrado en el sistema. → peticiones 49\n2. El partido debe estar previamente registrado y habilitado para la venta de entradas. → peticiones 42, 43, 70\n3. El partido debe tener un escenario deportivo asignado. → peticiones 35\n4. El escenario debe contar con localidades disponibles para el partido, no se puede vender mas de la capacidad máxima. → peticiones 49, 52, 65\n5. El sistema debe permitir consultar los partidos que tienen venta de entradas habilitada. → peticiones 44, 71\n6. El sistema debe permitir seleccionar el partido al que el aficionado desea asistir. → peticiones 44\n7. El sistema debe mostrar las localidades disponibles para el escenario donde se realizará el partido. → peticiones 34, 44\n8. El aficionado debe poder seleccionar la localidad correspondiente antes de realizar la compra. → peticiones 45, 49, 62\n9. El sistema debe validar la disponibilidad de entradas para la localidad seleccionada. → peticiones 50, 51, 53\n10. El boleto generado debe quedar asociado con el partido, la localidad seleccionada y el aficionado que realizó la compra. → peticiones 49, 55\n11. El sistema no debe permitir generar boletos para localidades que no correspondan al escenario donde se realizará el partido. → peticiones 36, 46\n12. El sistema no debe permitir vender entradas cuando se haya alcanzado la capacidad disponible de la localidad. → peticiones 52, 53\n13. El sistema debe permitir consultar los boletos adquiridos por un aficionado. → peticiones 54, 73\n14. El sistema debe permitir consultar los boletos vendidos para un partido. → peticiones 57, 58\n15. Cada boleto debe permitir identificar, como mínimo, el partido, la localidad y el aficionado asociado. → peticiones 49, 55\n16. Una vez realizada correctamente la compra, el sistema debe confirmar la generación del boleto. → peticiones 49\n17. Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente. → peticiones 42, 45, 48, 50, 52, 70\n18. Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado → pendiente: en este bloque la pasarela de pago es simulada (aprueba al instante); ePayco llega en el bloque 4 del Anexo 4",
+      "description": "Venta de entradas: el administrador configura la de cada partido con `PUT /api/deportiva/matches/{id}/ticketing` (precio por localidad del escenario del partido, abrirla o cerrarla) y la consulta con `GET` en la misma ruta; el aficionado ve los partidos que venden boletos (`GET /api/deportiva/ticketing/matches`), compra (`POST /api/deportiva/tickets`) y consulta los suyos (`GET /api/deportiva/tickets`); el administrador ve los de un partido (`GET /api/deportiva/tickets/matches/{matchId}`).\n\nUna compra genera un boleto por entrada, con su código, y todos comparten la referencia de pago. La venta se cierra sola a la hora del partido.\n\n**Pago.** Con `PAYMENTS_PROVIDER=epayco` la compra queda pendiente: el front abre el checkout de ePayco con `checkout.sessionId` y, al terminar, confirma el pago con `POST /api/deportiva/tickets/payments/{reference}/confirm` y la `ref_payco` que dio ePayco (el back se la pregunta a ePayco). Esta carpeta usa la pasarela **simulada** (la de por defecto), que imita las tarjetas de prueba de ePayco por sus últimos 4 dígitos: 3283 sin fondos, 7642 pendiente; las demás se aprueban al instante. Al confirmar un pago simulado, la referencia decide: termina en `-RECHAZADA` rechaza, en `-PENDIENTE` sigue pendiente, cualquier otra aprueba.\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**, como la HU-GC-11: crea a Ana y Beto con el rol Aficionado; lo del administrador usa el token de la colección.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se puede: los boletos son historial, así que el torneo, los equipos y el estadio quedan desactivados, y en deportiva quedan los aficionados con sus boletos.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El aficionado debe estar previamente registrado en el sistema. → peticiones 49\n2. El partido debe estar previamente registrado y habilitado para la venta de entradas. → peticiones 42, 43, 89\n3. El partido debe tener un escenario deportivo asignado. → peticiones 35\n4. El escenario debe contar con localidades disponibles para el partido, no se puede vender mas de la capacidad máxima. → peticiones 49, 52, 65\n5. El sistema debe permitir consultar los partidos que tienen venta de entradas habilitada. → peticiones 44, 90\n6. El sistema debe permitir seleccionar el partido al que el aficionado desea asistir. → peticiones 44\n7. El sistema debe mostrar las localidades disponibles para el escenario donde se realizará el partido. → peticiones 34, 44\n8. El aficionado debe poder seleccionar la localidad correspondiente antes de realizar la compra. → peticiones 45, 49, 62\n9. El sistema debe validar la disponibilidad de entradas para la localidad seleccionada. → peticiones 50, 51, 53, 75, 86\n10. El boleto generado debe quedar asociado con el partido, la localidad seleccionada y el aficionado que realizó la compra. → peticiones 49, 55\n11. El sistema no debe permitir generar boletos para localidades que no correspondan al escenario donde se realizará el partido. → peticiones 36, 46\n12. El sistema no debe permitir vender entradas cuando se haya alcanzado la capacidad disponible de la localidad. → peticiones 52, 53\n13. El sistema debe permitir consultar los boletos adquiridos por un aficionado. → peticiones 54, 73, 92\n14. El sistema debe permitir consultar los boletos vendidos para un partido. → peticiones 57, 58\n15. Cada boleto debe permitir identificar, como mínimo, el partido, la localidad y el aficionado asociado. → peticiones 49, 55\n16. Una vez realizada correctamente la compra, el sistema debe confirmar la generación del boleto. → peticiones 49, 81\n17. Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente. → peticiones 42, 45, 48, 50, 52, 72, 73, 84, 89\n18. Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado → peticiones 72, 74, 79, 81, 84, 85",
       "item": [
         {
           "name": "01 Preparar: el administrador inicia sesión en ms_torneos_security (200)",
@@ -38716,7 +38761,898 @@
           ]
         },
         {
-          "name": "69 Iniciar el partido (200)",
+          "name": "69 Poner Sur a la venta, a $20.000 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"open\": true,\n  \"prices\": [\n    {\n      \"localityId\": {{localityBolNorteId}},\n      \"price\": 30000\n    },\n    {\n      \"localityId\": {{localityBolVipId}},\n      \"price\": 90000\n    },\n    {\n      \"localityId\": {{localityBolSurId}},\n      \"price\": 20000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sur a $20.000\", function () {",
+                  "    pm.expect(pm.response.json().localities.find((l) => l.id === Number(pm.collectionVariables.get(\"localityBolSurId\"))).price).to.eql(20000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "70 Preparar: Ana registra la Visa de prueba sin fondos, terminada en 3283 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}},\n  \"alias\": \"Visa sin fondos\",\n  \"holderName\": \"Ana Hincha\",\n  \"brand\": \"VISA\",\n  \"lastFour\": \"3283\",\n  \"expiryMonth\": 12,\n  \"expiryYear\": 2032\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"bolAnaSinFondosId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "71 Preparar: Ana registra la Amex de prueba que queda pendiente, terminada en 7642 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-payment-methods",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethodId\": {{pmCreditoId}},\n  \"alias\": \"Amex pendiente\",\n  \"holderName\": \"Ana Hincha\",\n  \"brand\": \"AMEX\",\n  \"lastFour\": \"7642\",\n  \"expiryMonth\": 12,\n  \"expiryYear\": 2032\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"bolAnaAmexId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "72 Comprar con la Visa sin fondos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolSurId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolAnaSinFondosId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente.\n\nCriterio HU-GE-04 #18: Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado\n\nLa pasarela no aprueba el pago: el boleto queda rechazado, no aparta cupo y el mensaje dice por qué."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no aprobó el pago\");",
+                  "    pm.expect(message).to.include(\"Fondos insuficientes\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "73 Mis boletos: el rechazado, con el motivo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tickets",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #13: El sistema debe permitir consultar los boletos adquiridos por un aficionado.\n\nCriterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"El más reciente está rechazado por fondos insuficientes\", function () {",
+                  "    const [ticket] = pm.response.json();",
+                  "    pm.expect(ticket.status).to.eql(\"RECHAZADO\");",
+                  "    pm.expect(ticket.paymentDetail).to.eql(\"Fondos insuficientes\");",
+                  "    pm.expect(ticket.closedAt).to.not.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "74 Comprar 2 en Sur con la Amex: el pago queda pendiente (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolSurId}},\n  \"quantity\": 2,\n  \"fanPaymentMethodId\": {{bolAnaAmexId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #18: Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado\n\nAsí queda una compra con ePayco: pendiente, y checkout trae el sessionId con el que el front abre el pago. Los boletos pendientes apartan su cupo 15 minutos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"bolPendienteRef\", pm.response.json().reference);",
+                  "pm.test(\"Pendiente, con lo necesario para abrir la pasarela\", function () {",
+                  "    const purchase = pm.response.json();",
+                  "    pm.expect(purchase.status).to.eql(\"PENDIENTE\");",
+                  "    pm.expect(purchase.gateway).to.eql(\"simulada\");",
+                  "    pm.expect(purchase.checkout.sessionId).to.eql(\"SIM-\" + purchase.reference);",
+                  "    pm.expect(purchase.checkout.test).to.eql(true);",
+                  "    pm.expect(purchase.tickets.map((t) => t.status)).to.eql([\"PENDIENTE\", \"PENDIENTE\"]);",
+                  "    pm.expect(purchase.tickets[0].paidAt).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "75 La venta: los 2 pendientes apartan su cupo en Sur (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "description": "Criterio HU-GE-04 #9: El sistema debe validar la disponibilidad de entradas para la localidad seleccionada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sur con 2 apartados; el rechazado no cuenta\", function () {",
+                  "    const sur = pm.response.json().localities.find((l) => l.id === Number(pm.collectionVariables.get(\"localityBolSurId\")));",
+                  "    pm.expect([sur.sold, sur.available]).to.eql([2, 98]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "76 Beto confirma la compra de Ana (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendienteRef}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gatewayReference\": \"SIM-BETO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No tienes una compra\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "77 Confirmar sin la referencia del pago (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendienteRef}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Falta la referencia del pago\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "78 Referencia del pago con caracteres no permitidos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendienteRef}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gatewayReference\": \"abc/../123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.gatewayReference).to.eql(\"La referencia del pago solo lleva letras, números y guiones\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "79 Confirmar: la pasarela dice que sigue pendiente (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendienteRef}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gatewayReference\": \"SIM-PAGO1-PENDIENTE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #18: Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado\n\nCon ePayco pasa con PSE o efectivo: el pago puede tardar en aprobarse."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sigue pendiente, con lo que dijo la pasarela\", function () {",
+                  "    const purchase = pm.response.json();",
+                  "    pm.expect(purchase.status).to.eql(\"PENDIENTE\");",
+                  "    pm.expect(purchase.detail).to.eql(\"Transacción pendiente por validación\");",
+                  "    pm.expect(purchase.tickets[0].gatewayReference).to.eql(\"SIM-PAGO1-PENDIENTE\");",
+                  "    pm.expect(purchase.checkout).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "80 Volver a consultar, sin enviar la referencia (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendienteRef}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Se consulta la que quedó guardada: sigue pendiente\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"PENDIENTE\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "81 Confirmar: la pasarela aprobó el pago (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendienteRef}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gatewayReference\": \"SIM-PAGO1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #16: Una vez realizada correctamente la compra, el sistema debe confirmar la generación del boleto.\n\nCriterio HU-GE-04 #18: Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado\n\nEl back le pregunta a la pasarela por ese pago (con ePayco, a secure.epayco.co con la ref_payco) y revisa que sea de esta compra y por el total. Al quedar pagada llega el correo con los códigos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Pagada: los dos boletos sirven para entrar\", function () {",
+                  "    const purchase = pm.response.json();",
+                  "    pm.expect(purchase.status).to.eql(\"PAGADO\");",
+                  "    pm.expect(purchase.detail).to.eql(null);",
+                  "    pm.expect(purchase.tickets.map((t) => t.status)).to.eql([\"PAGADO\", \"PAGADO\"]);",
+                  "    pm.expect(purchase.tickets.every((t) => t.paidAt !== null)).to.eql(true);",
+                  "    pm.expect(purchase.tickets[0].gatewayReference).to.eql(\"SIM-PAGO1\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "82 Confirmar otra vez una compra pagada (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendienteRef}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gatewayReference\": \"SIM-OTRO-RECHAZADA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Una compra que ya terminó se responde como está: confirmar dos veces no cobra ni envía nada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"No cambia: sigue pagada\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"PAGADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "83 Comprar 1 en Sur con la Amex (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchId\": {{matchBol1Id}},\n  \"localityId\": {{localityBolSurId}},\n  \"quantity\": 1,\n  \"fanPaymentMethodId\": {{bolAnaAmexId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"bolPendiente2Ref\", pm.response.json().reference);",
+                  "pm.test(\"Pendiente\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"PENDIENTE\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "84 Confirmar: la pasarela rechazó el pago (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendiente2Ref}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gatewayReference\": \"SIM-PAGO2-RECHAZADA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #17: Si la compra no puede completarse, el sistema debe informar al aficionado el motivo correspondiente.\n\nCriterio HU-GE-04 #18: Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Rechazada, con el motivo\", function () {",
+                  "    const purchase = pm.response.json();",
+                  "    pm.expect(purchase.status).to.eql(\"RECHAZADO\");",
+                  "    pm.expect(purchase.detail).to.eql(\"Fondos insuficientes\");",
+                  "    pm.expect(purchase.tickets[0].closedAt).to.not.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "85 Reintentar en la pasarela: el pago nuevo se aprueba (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/{{bolPendiente2Ref}}/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gatewayReference\": \"SIM-PAGO3\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-04 #18: Se debe permitir pagar de manera electrónica el boleto haciendo uso de Epayco o algún servicio de tercero parecido, según el método de pago seleccionado por el aficionado\n\nEn la pasarela se puede volver a intentar un pago rechazado: si llega otro pago para la misma compra, se consulta. Como el cupo ya no estaba apartado, antes de aprobarla se revisa que la localidad no se haya llenado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Pagada con el pago nuevo\", function () {",
+                  "    const purchase = pm.response.json();",
+                  "    pm.expect(purchase.status).to.eql(\"PAGADO\");",
+                  "    pm.expect(purchase.tickets[0].gatewayReference).to.eql(\"SIM-PAGO3\");",
+                  "    pm.expect(purchase.tickets[0].closedAt).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "86 La venta: Sur con 3 vendidos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchBol1Id}}/ticketing",
+            "description": "Criterio HU-GE-04 #9: El sistema debe validar la disponibilidad de entradas para la localidad seleccionada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"3 en Sur\", function () {",
+                  "    const sur = pm.response.json().localities.find((l) => l.id === Number(pm.collectionVariables.get(\"localityBolSurId\")));",
+                  "    pm.expect([sur.sold, sur.available]).to.eql([3, 97]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "87 Confirmar una compra que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tickets/payments/TKT-NOEXISTE-0000/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gatewayReference\": \"SIM-PAGO4\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "88 Iniciar el partido (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -38741,7 +39677,7 @@
           ]
         },
         {
-          "name": "70 Comprar con el partido en juego (400)",
+          "name": "89 Comprar con el partido en juego (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -38794,7 +39730,7 @@
           ]
         },
         {
-          "name": "71 Partidos con venta: ya no aparece el partido en juego (200)",
+          "name": "90 Partidos con venta: ya no aparece el partido en juego (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -38829,7 +39765,7 @@
           ]
         },
         {
-          "name": "72 Cancelar el partido (200)",
+          "name": "91 Cancelar el partido (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -38854,7 +39790,7 @@
           ]
         },
         {
-          "name": "73 Los boletos de Ana quedaron anulados (200)",
+          "name": "92 Los boletos de Ana quedaron anulados (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -38880,9 +39816,9 @@
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.test(\"Anulados, con la fecha en que se anularon\", function () {",
+                  "pm.test(\"Anulados los pagados, con la fecha en que se anularon; el rechazado sigue rechazado\", function () {",
                   "    const tickets = pm.response.json();",
-                  "    pm.expect(tickets.map((t) => t.status)).to.eql([\"ANULADO\", \"ANULADO\", \"ANULADO\"]);",
+                  "    pm.expect(tickets.map((t) => t.status)).to.eql([\"ANULADO\", \"ANULADO\", \"ANULADO\", \"RECHAZADO\", \"ANULADO\", \"ANULADO\", \"ANULADO\"]);",
                   "    pm.expect(tickets.every((t) => t.closedAt !== null)).to.eql(true);",
                   "});"
                 ]
@@ -38891,7 +39827,7 @@
           ]
         },
         {
-          "name": "74 Limpieza: eliminar Ibis vs Jabalíes, sin boletos (204)",
+          "name": "93 Limpieza: eliminar Ibis vs Jabalíes, sin boletos (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -38912,7 +39848,7 @@
           ]
         },
         {
-          "name": "75 Limpieza: retirar el Coliseo de la Copa (204)",
+          "name": "94 Limpieza: retirar el Coliseo de la Copa (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -38933,7 +39869,7 @@
           ]
         },
         {
-          "name": "76 Limpieza: eliminar la Gradería (204)",
+          "name": "95 Limpieza: eliminar la Gradería (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -38954,7 +39890,7 @@
           ]
         },
         {
-          "name": "77 Limpieza: eliminar el Coliseo (204)",
+          "name": "96 Limpieza: eliminar el Coliseo (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -38975,7 +39911,7 @@
           ]
         },
         {
-          "name": "78 Limpieza: desactivar el Estadio (200)",
+          "name": "97 Limpieza: desactivar el Estadio (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -38996,7 +39932,7 @@
           ]
         },
         {
-          "name": "79 Limpieza: desactivar la Copa (200)",
+          "name": "98 Limpieza: desactivar la Copa (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -39017,7 +39953,7 @@
           ]
         },
         {
-          "name": "80 Limpieza: desactivar Gacelas (200)",
+          "name": "99 Limpieza: desactivar Gacelas (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -39038,7 +39974,7 @@
           ]
         },
         {
-          "name": "81 Limpieza: desactivar Halcones (200)",
+          "name": "100 Limpieza: desactivar Halcones (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -39059,7 +39995,7 @@
           ]
         },
         {
-          "name": "82 Limpieza: desactivar Ibis (200)",
+          "name": "101 Limpieza: desactivar Ibis (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -39080,7 +40016,7 @@
           ]
         },
         {
-          "name": "83 Limpieza: desactivar Jabalíes (200)",
+          "name": "102 Limpieza: desactivar Jabalíes (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -39101,7 +40037,7 @@
           ]
         },
         {
-          "name": "84 Limpieza: quitarle a Ana el rol Aficionado (204)",
+          "name": "103 Limpieza: quitarle a Ana el rol Aficionado (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -39132,7 +40068,7 @@
           ]
         },
         {
-          "name": "85 Limpieza: quitarle a Beto el rol Aficionado (204)",
+          "name": "104 Limpieza: quitarle a Beto el rol Aficionado (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -39163,7 +40099,7 @@
           ]
         },
         {
-          "name": "86 Limpieza: eliminar a Ana (204)",
+          "name": "105 Limpieza: eliminar a Ana (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -39194,7 +40130,2041 @@
           ]
         },
         {
-          "name": "87 Limpieza: eliminar a Beto (204)",
+          "name": "106 Limpieza: eliminar a Beto (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanBetoUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GE-05 · Equipos de interés",
+      "description": "Equipos de interés del aficionado: ve los equipos que puede seguir (`GET /api/deportiva/fan-teams/teams`), sigue uno o varios (`POST /api/deportiva/fan-teams` con `{ \"teamIds\": [...] }`), consulta los que sigue (`GET /api/deportiva/fan-teams`) y deja de seguir uno (`DELETE /api/deportiva/fan-teams/{teamId}`). El administrador ve los aficionados de un equipo (`GET /api/deportiva/fan-teams/teams/{teamId}/fans`).\n\nSeguir es todo o nada: si un equipo no existe, está desactivado o ya lo sigue, no se sigue ninguno. Un equipo con seguidores no se elimina (solo se desactiva). Cuando un equipo que alguien sigue tiene un partido nuevo, le llega el correo de \"partido nuevo\" (con NOTIFICATIONS_URL configurada).\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**, como la HU-GE-04: crea a Ana y Beto con el rol Aficionado; lo del administrador usa el token de la colección.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra todo lo que creó, salvo los aficionados en deportiva.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El aficionado debe estar previamente registrado en el sistema. → peticiones 16, 17\n2. El equipo debe estar previamente registrado en el sistema. → peticiones 21, 22, 46\n3. El sistema debe permitir al aficionado consultar los equipos disponibles. → peticiones 18, 28, 44\n4. El aficionado debe poder asociarse con uno o varios equipos. → peticiones 24\n5. Un equipo puede estar asociado con varios aficionados. → peticiones 29, 31\n6. No se debe permitir registrar más de una vez la misma asociación entre un aficionado y un equipo. → peticiones 20, 25, 26\n7. El sistema debe permitir consultar los equipos asociados con un aficionado. → peticiones 17, 27, 30\n8. El sistema debe permitir consultar los aficionados asociados con un equipo cuando el administrador deportivo lo requiera. → peticiones 31, 32, 33, 34\n9. El aficionado debe poder retirar su asociación con un equipo. → peticiones 36, 37, 39, 45\n10. Retirar la asociación no debe eliminar al aficionado ni al equipo del sistema. → peticiones 39, 40\n11. Los cambios realizados deben quedar almacenados correctamente. → peticiones 23, 24, 27, 39",
+      "item": [
+        {
+          "name": "01 Preparar: el administrador inicia sesión en ms_torneos_security (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));",
+                  "// Contraseña de los dos aficionados de prueba (cumple la política de ms_torneos_security).",
+                  "pm.collectionVariables.set(\"fanPassword\", `Af#${pm.collectionVariables.get(\"suffix\")}x`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"securityAdminToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: buscar el rol Aficionado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{securityUrl}}/roles",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const fanRole = pm.response.json().find((role) => role.name === \"Aficionado\");",
+                  "pm.collectionVariables.set(\"fanRoleId\", fanRole ? fanRole.id : \"\");",
+                  "pm.test(\"El seeder creó el rol Aficionado\", function () {",
+                  "    pm.expect(Boolean(fanRole)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear la usuaria Ana (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ana Hincha\",\n  \"email\": \"ana.int.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: crear el usuario Beto (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Beto Hincha\",\n  \"email\": \"beto.int.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanBetoUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: darle a Ana el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanAnaUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: darle a Beto el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanBetoUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: Ana inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.int.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: Beto inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"beto.int.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanBetoToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Preparar: crear el deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol Interés {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportIntId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Preparar: crear el equipo Lobos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lobos INT {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamLobosIntId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Preparar: crear el equipo Martines (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Martines INT {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamMartinesIntId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Preparar: crear el equipo Nutrias (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nutrias INT {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamNutriasIntId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Preparar: crear el equipo Ocelotes (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ocelotes INT {{suffix}}\",\n  \"city\": \"Pereira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamOcelotesIntId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Preparar: asociar Lobos al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamLobosIntId}},\n  \"sportId\": {{sportIntId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Preparar: desactivar Ocelotes (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamOcelotesIntId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Sin iniciar sesión no hay equipos de interés (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams",
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Criterio HU-GE-05 #1: El aficionado debe estar previamente registrado en el sistema.\n\nSolo un aficionado registrado (con su token) sigue equipos: el aficionado sale del token."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Ana todavía no sigue equipos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #1: El aficionado debe estar previamente registrado en el sistema.\n\nCriterio HU-GE-05 #7: El sistema debe permitir consultar los equipos asociados con un aficionado.\n\nLa primera petición de Ana la registra como aficionada en deportiva."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lista vacía\", function () {",
+                  "    pm.expect(pm.response.json()).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Equipos que Ana puede seguir (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #3: El sistema debe permitir al aficionado consultar los equipos disponibles."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Los activos, por nombre, sin seguir todavía; Ocelotes no aparece\", function () {",
+                  "    const teams = pm.response.json();",
+                  "    const at = (key) => teams.findIndex((t) => t.id === Number(pm.collectionVariables.get(key)));",
+                  "    pm.expect(at(\"teamLobosIntId\") < at(\"teamMartinesIntId\")).to.eql(true);",
+                  "    pm.expect(at(\"teamMartinesIntId\") < at(\"teamNutriasIntId\")).to.eql(true);",
+                  "    const lobos = teams.find((t) => t.id === Number(pm.collectionVariables.get(\"teamLobosIntId\")));",
+                  "    pm.expect(lobos.followed).to.eql(false);",
+                  "    pm.expect(lobos.city).to.eql(\"Pereira\");",
+                  "    pm.expect(lobos.sports.map((s) => s.name)).to.eql([\"Fútbol Interés \" + pm.collectionVariables.get(\"suffix\")]);",
+                  "    pm.expect(teams.some((t) => t.id === Number(pm.collectionVariables.get(\"teamOcelotesIntId\")))).to.eql(false);",
+                  "    pm.expect(teams.some((t) => t.id === Number(pm.collectionVariables.get(\"teamNutriasIntId\")))).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Seguir una lista vacía (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.teamIds).to.eql(\"Elige al menos un equipo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 El mismo equipo dos veces en la lista (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamLobosIntId}},\n    {{teamLobosIntId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #6: No se debe permitir registrar más de una vez la misma asociación entre un aficionado y un equipo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.teamIds).to.eql(\"Un equipo no puede aparecer dos veces en la lista\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Seguir Lobos y un equipo que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamLobosIntId}},\n    {{noExiste}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #2: El equipo debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No existe el equipo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Seguir Lobos y Ocelotes, que está desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamLobosIntId}},\n    {{teamOcelotesIntId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #2: El equipo debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No se siguió ningún equipo\");",
+                  "    pm.expect(message).to.include(\"desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Nada quedó guardado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #11: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sigue vacía: es todo o nada\", function () {",
+                  "    pm.expect(pm.response.json()).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Ana sigue a Martines y a Lobos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamMartinesIntId}},\n    {{teamLobosIntId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #4: El aficionado debe poder asociarse con uno o varios equipos.\n\nCriterio HU-GE-05 #11: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Los dos, por nombre\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamLobosIntId\")), Number(pm.collectionVariables.get(\"teamMartinesIntId\"))]);",
+                  "});",
+                  "pm.test(\"Con sus datos y desde cuándo los sigue\", function () {",
+                  "    const [lobos] = pm.response.json();",
+                  "    pm.expect(lobos.team.name).to.eql(\"Lobos INT \" + pm.collectionVariables.get(\"suffix\"));",
+                  "    pm.expect(lobos.team.active).to.eql(true);",
+                  "    pm.expect(lobos.team.sports.length).to.eql(1);",
+                  "    pm.expect(lobos.since).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$/);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Seguir otra vez a Martines (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamMartinesIntId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #6: No se debe permitir registrar más de una vez la misma asociación entre un aficionado y un equipo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"Ya sigues a\");",
+                  "    pm.expect(message).to.include(\"Martines\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Seguir Nutrias y Lobos, que ya sigue (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamNutriasIntId}},\n    {{teamLobosIntId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #6: No se debe permitir registrar más de una vez la misma asociación entre un aficionado y un equipo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"errorCase = ALREADY_EXISTS\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"ALREADY_EXISTS\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No se siguió ningún equipo\");",
+                  "    pm.expect(message).to.include(\"Ya sigues a\");",
+                  "    pm.expect(message).to.include(\"Lobos\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Los equipos de Ana (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #7: El sistema debe permitir consultar los equipos asociados con un aficionado.\n\nCriterio HU-GE-05 #11: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lobos y Martines, sin Nutrias\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamLobosIntId\")), Number(pm.collectionVariables.get(\"teamMartinesIntId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Equipos disponibles: marca los que Ana sigue (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #3: El sistema debe permitir al aficionado consultar los equipos disponibles."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lobos y Martines seguidos, Nutrias no\", function () {",
+                  "    const teams = pm.response.json();",
+                  "    const followed = (key) => teams.find((t) => t.id === Number(pm.collectionVariables.get(key))).followed;",
+                  "    pm.expect([followed(\"teamLobosIntId\"), followed(\"teamMartinesIntId\"), followed(\"teamNutriasIntId\")]).to.eql([true, true, false]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Beto también sigue a Lobos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamLobosIntId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #5: Un equipo puede estar asociado con varios aficionados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Lobos\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamLobosIntId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Los equipos de Beto: no ve los de Ana (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #7: El sistema debe permitir consultar los equipos asociados con un aficionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Solo Lobos\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamLobosIntId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Aficionados de Lobos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/teams/{{teamLobosIntId}}/fans",
+            "description": "Criterio HU-GE-05 #5: Un equipo puede estar asociado con varios aficionados.\n\nCriterio HU-GE-05 #8: El sistema debe permitir consultar los aficionados asociados con un equipo cuando el administrador deportivo lo requiera."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Ana y Beto, en el orden en que empezaron a seguirlo\", function () {",
+                  "    const fans = pm.response.json();",
+                  "    pm.expect(fans.map((row) => row.fan.email.split(\".\")[0])).to.eql([\"ana\", \"beto\"]);",
+                  "    pm.expect(fans.every((row) => /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$/.test(row.since))).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Aficionados de Nutrias: ninguno (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/teams/{{teamNutriasIntId}}/fans",
+            "description": "Criterio HU-GE-05 #8: El sistema debe permitir consultar los aficionados asociados con un equipo cuando el administrador deportivo lo requiera."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lista vacía\", function () {",
+                  "    pm.expect(pm.response.json()).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Aficionados de un equipo que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/teams/{{noExiste}}/fans",
+            "description": "Criterio HU-GE-05 #8: El sistema debe permitir consultar los aficionados asociados con un equipo cuando el administrador deportivo lo requiera."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Ana no puede ver los aficionados de un equipo (403)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/teams/{{teamLobosIntId}}/fans",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #8: El sistema debe permitir consultar los aficionados asociados con un equipo cuando el administrador deportivo lo requiera.\n\nEs consulta del administrador deportivo: el rol Aficionado no tiene ese permiso."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "pm.test(\"errorCase = FORBIDDEN\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"FORBIDDEN\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Eliminar Martines, que tiene un seguidor (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamMartinesIntId}}",
+            "description": "Un equipo con seguidores no se elimina: se desactiva (decisión del Anexo 4)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"lo sigue 1 aficionado\");",
+                  "    pm.expect(message).to.include(\"Desactívalo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Ana deja de seguir a Martines (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/{{teamMartinesIntId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #9: El aficionado debe poder retirar su asociación con un equipo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Dejar de seguir otra vez a Martines (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/{{teamMartinesIntId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #9: El aficionado debe poder retirar su asociación con un equipo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No sigues a\");",
+                  "    pm.expect(message).to.include(\"Martines\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 Dejar de seguir un equipo que no existe (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/{{noExiste}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No existe el equipo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Ana sigue registrada y conserva Lobos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #9: El aficionado debe poder retirar su asociación con un equipo.\n\nCriterio HU-GE-05 #10: Retirar la asociación no debe eliminar al aficionado ni al equipo del sistema.\n\nCriterio HU-GE-05 #11: Los cambios realizados deben quedar almacenados correctamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Solo Lobos\", function () {",
+                  "    const ids = pm.response.json().map((row) => row.team.id);",
+                  "    pm.expect(ids).to.eql([Number(pm.collectionVariables.get(\"teamLobosIntId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Martines sigue en el sistema (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamMartinesIntId}}",
+            "description": "Criterio HU-GE-05 #10: Retirar la asociación no debe eliminar al aficionado ni al equipo del sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"El mismo equipo, activo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Sin seguidores, Martines ya se puede eliminar (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamMartinesIntId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Desactivar Lobos (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamLobosIntId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Desactivado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Ana conserva Lobos, ahora inactivo (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Desactivar un equipo no borra a sus seguidores: el aficionado lo sigue viendo y puede dejarlo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lobos con active en false\", function () {",
+                  "    pm.expect(pm.response.json()[0].team.active).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Lobos ya no está entre los disponibles (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/teams",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #3: El sistema debe permitir al aficionado consultar los equipos disponibles."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Sin Lobos\", function () {",
+                  "    pm.expect(pm.response.json().some((t) => t.id === Number(pm.collectionVariables.get(\"teamLobosIntId\")))).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 Beto deja de seguir a Lobos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/{{teamLobosIntId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #9: El aficionado debe poder retirar su asociación con un equipo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 Beto no puede volver a seguir a Lobos desactivado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/fan-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamIds\": [\n    {{teamLobosIntId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanBetoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GE-05 #2: El equipo debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"desactivado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 Limpieza: Ana deja de seguir a Lobos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/fan-teams/{{teamLobosIntId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 Limpieza: retirar Lobos del deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/team-sports/{{teamLobosIntId}}/{{sportIntId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Limpieza: eliminar Lobos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamLobosIntId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "50 Limpieza: eliminar Nutrias (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamNutriasIntId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Limpieza: eliminar Ocelotes (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamOcelotesIntId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "52 Limpieza: eliminar el deporte (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/sports/{{sportIntId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "53 Limpieza: quitarle a Ana el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanAnaUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "54 Limpieza: quitarle a Beto el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanBetoUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "55 Limpieza: eliminar a Ana (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanAnaUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "56 Limpieza: eliminar a Beto (204)",
           "request": {
             "method": "DELETE",
             "header": [],
