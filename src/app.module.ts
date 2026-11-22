@@ -26,6 +26,7 @@ import { TournamentDevelopmentModule } from './tournament-development/tournament
 import { TournamentTeamsModule } from './tournament-teams/tournament-teams.module';
 import { TournamentVenuesModule } from './tournament-venues/tournament-venues.module';
 import { TournamentsModule } from './tournaments/tournaments.module';
+import { TrackingModule } from './tracking/tracking.module';
 import { VenuesModule } from './venues/venues.module';
 
 @Module({
@@ -75,6 +76,7 @@ import { VenuesModule } from './venues/venues.module';
     MatchesModule, // HU-GC-06 y HU-GC-07 (resultado)
     ScoresModule, // HU-GC-07 (anotaciones)
     TournamentDevelopmentModule, // HU-GC-08
+    TrackingModule, // HU-GC-09 (seguimiento en vivo)
     FansModule, // HU-GC-10 y HU-GC-11 (aficionados)
     PaymentMethodsModule, // HU-GC-10 (catálogo)
     FanPaymentMethodsModule, // HU-GC-10

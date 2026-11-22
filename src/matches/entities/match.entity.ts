@@ -10,6 +10,7 @@ import { DECIMAL_NUMBER } from '../../common/persistence/decimal.transformer';
 import { LOCAL_DATE_TIME } from '../../common/persistence/local-date-time.transformer';
 import { Phase } from '../../phases/entities/phase.entity';
 import { Team } from '../../teams/entities/team.entity';
+import { TrackingStatus } from '../../tracking/entities/tracking-status.enum';
 import { Venue } from '../../venues/entities/venue.entity';
 import { MatchStatus } from './match-status.enum';
 
@@ -134,4 +135,20 @@ export class Match {
   // localidad están en ticket_prices.
   @Column({ name: 'ticket_sales_open', default: false })
   ticketSalesOpen: boolean;
+
+  // HU-GC-09. El seguimiento en vivo del partido (la pizarra): su estado y cuándo empezó y terminó.
+  // La pelota y las posiciones están en balls y position_records.
+  @Column({
+    name: 'tracking_status',
+    type: 'enum',
+    enum: TrackingStatus,
+    default: TrackingStatus.SIN_INICIAR,
+  })
+  trackingStatus: TrackingStatus;
+
+  @Column({ name: 'tracking_started_at', type: 'datetime', nullable: true })
+  trackingStartedAt: Date | null;
+
+  @Column({ name: 'tracking_finished_at', type: 'datetime', nullable: true })
+  trackingFinishedAt: Date | null;
 }

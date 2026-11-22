@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "ms_torneos_deportiva · Anexos 2, 3 y 4 (Gestión Deportiva, de Competencias y de Escenarios)",
-    "description": "Pruebas de los módulos de gestión deportiva (HU-GD), de competencias (HU-GC) y de escenarios (HU-GE), una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security, salvo en las carpetas HU-GC-10 y HU-GC-11: los métodos de pago y las apuestas son de cada aficionado y deportiva necesita saber quién hace la petición.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
+    "description": "Pruebas de los módulos de gestión deportiva (HU-GD), de competencias (HU-GC) y de escenarios (HU-GE), una carpeta por historia de usuario. Cada carpeta lista sus criterios de aceptación y qué peticiones los prueban; cada petición dice qué criterio prueba.\n\n**Antes de empezar:** levanta `ms_torneos_deportiva` (puerto 8182) con `npm run start:dev`. Mientras `SECURITY_ENABLED=false` en su `.env`, no hace falta token ni ms_torneos_security, salvo en las carpetas HU-GC-09, HU-GC-10, HU-GC-11, HU-GE-04 y HU-GE-05: usan aficionados de verdad (lo que el hincha puede ver, sus métodos de pago, apuestas, boletos y equipos) y deportiva necesita saber quién hace la petición.\n\nEjecuta cada carpeta completa con *Run folder*: las peticiones dependen de las anteriores.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -781,12 +781,102 @@
       "type": "string"
     },
     {
-      "key": "fanBetoUserId",
+      "key": "fanAnaToken",
       "value": "",
       "type": "string"
     },
     {
-      "key": "fanAnaToken",
+      "key": "sportSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tournamentSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phaseSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamCondoresSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamDelfinesSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamGaviotasSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "groupSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerSegAriasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerSegBeltranId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerSegCanoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerSegDiazId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playerSegErazoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchSeg2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "matchSeg3Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ballSegId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "trackingStartedAt",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "positionFirstId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "fanBetoUserId",
       "value": "",
       "type": "string"
     },
@@ -25220,6 +25310,3297 @@
                 "exec": [
                   "pm.test(\"Status 200\", function () {",
                   "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HU-GC-09 · Seguimiento deportivo del partido",
+      "description": "Seguimiento en vivo de un partido (la pizarra), **etapa 1: lo que se guarda y se consulta**. El socket que avisa a las pizarras abiertas (etapa 2) y la pantalla (etapa 3) vienen después.\n\n- `GET /api/deportiva/tracking/matches`: partidos en juego y partidos con seguimiento.\n- `GET /api/deportiva/tracking/matches/{matchId}`: lo que muestra la pizarra (partido, deporte, estado del seguimiento, pelota, jugadores de cada equipo con su última posición, contadores y últimas posiciones).\n- `GET /api/deportiva/tracking/matches/{matchId}/positions?afterId=&limit=`: el historial, en orden.\n- `PATCH .../start` (`{ \"ballName\": \"...\" }` opcional, crea la pelota la primera vez), `PATCH .../pause` y `PATCH .../finish`.\n- `POST .../positions` con `{ \"positions\": [{ \"playerId\": 7, \"x\": 54, \"y\": 31 }, { \"ball\": true, \"x\": 57, \"y\": 29 }] }`: x y y de 0 a 100 (porcentaje del campo), todas o ninguna, hasta 50.\n\nLos jugadores son los que tenían contrato con el local o el visitante el día del partido. El seguimiento solo se inicia con el partido en juego, y se finaliza solo al registrar el resultado o cancelar el partido. Finalizar no borra nada; un partido con posiciones no se elimina.\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**: crea una aficionada (Ana) para comprobar que el hincha ve la pizarra pero no la cambia. Lo del administrador usa el token de la colección.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se desactiva lo que no se puede borrar: los partidos finalizados y los que tienen posiciones son historial.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El partido debe estar previamente registrado en el sistema. → peticiones 30, 31, 52, 88\n2. El sistema debe permitir acceder a una pizarra que represente gráficamente el espacio de juego correspondiente al deporte. → pendiente: la pizarra se dibuja en el front (etapa 3); la foto de la pizarra ya trae el deporte\n3. En la pizarra se deben visualizar los jugadores que participan en el partido. → peticiones 31, 56, 66\n4. Cada jugador debe poder ser identificado visualmente dentro de la pizarra. → peticiones 31\n5. El sistema debe diferenciar los jugadores de cada equipo participante. → peticiones 31\n6. La pelota debe visualizarse de manera independiente de los jugadores. → peticiones 39, 56\n7. El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones). → peticiones 44, 54, 55, 78\n8. El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones). → peticiones 44, 54, 55\n9. Cuando cambie la posición de un jugador, su ubicación debe actualizarse en la pizarra. → pendiente: el aviso en vivo a la pizarra llega con el socket (etapa 2) y se ve en el front (etapa 3)\n10. Cuando cambie la posición de la pelota, su ubicación debe actualizarse en la pizarra. → pendiente: el aviso en vivo a la pizarra llega con el socket (etapa 2) y se ve en el front (etapa 3)\n11. Las posiciones registradas deben estar asociadas con el partido correspondiente. → peticiones 54, 57\n12. Cada registro de posición debe permitir identificar a qué jugador o pelota pertenece. → peticiones 45, 46, 54, 57\n13. El sistema debe conservar los registros de posición necesarios para representar el seguimiento realizado durante el partido. → peticiones 56, 57, 58, 70, 82\n14. Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado. → peticiones 31, 49, 50\n15. La pelota mostrada debe corresponder a la utilizada en el partido. → peticiones 39, 56, 64, 77\n16. La finalización del seguimiento no debe eliminar la información del partido, los jugadores ni la pelota. → peticiones 70, 74, 75, 80, 86",
+      "item": [
+        {
+          "name": "01 Preparar: el administrador inicia sesión en ms_torneos_security (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Sufijo nuevo en cada corrida para que nombres y documentos no choquen con corridas anteriores.",
+                  "pm.collectionVariables.set(\"suffix\", Date.now().toString().slice(-6));",
+                  "// Contraseña de los dos aficionados de prueba (cumple la política de ms_torneos_security).",
+                  "pm.collectionVariables.set(\"fanPassword\", `Af#${pm.collectionVariables.get(\"suffix\")}x`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"securityAdminToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Preparar: buscar el rol Aficionado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{securityUrl}}/roles",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const fanRole = pm.response.json().find((role) => role.name === \"Aficionado\");",
+                  "pm.collectionVariables.set(\"fanRoleId\", fanRole ? fanRole.id : \"\");",
+                  "pm.test(\"El seeder creó el rol Aficionado\", function () {",
+                  "    pm.expect(Boolean(fanRole)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Preparar: crear la usuaria Ana (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ana Pizarra\",\n  \"email\": \"ana.seg.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Preparar: darle a Ana el rol Aficionado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/user-roles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{fanAnaUserId}},\n  \"roleId\": {{fanRoleId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Preparar: Ana inicia sesión (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{securityUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.seg.{{suffix}}@prueba.local\",\n  \"password\": \"{{fanPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"fanAnaToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Preparar: crear el deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fútbol Seguimiento {{suffix}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"sportSegId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Preparar: crear el torneo Copa Pizarra (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournaments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Copa Pizarra {{suffix}}\",\n  \"sportId\": {{sportSegId}},\n  \"category\": \"MASCULINO\",\n  \"startDate\": \"2030-02-01\",\n  \"endDate\": \"2030-06-30\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"tournamentSegId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Preparar: crear la Fase de grupos (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/phases",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentSegId}},\n  \"type\": \"GRUPOS\",\n  \"name\": \"Fase de grupos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"phaseSegId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Preparar: crear el equipo Cóndores (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cóndores Seg {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamCondoresSegId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Preparar: crear el equipo Delfines (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Delfines Seg {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamDelfinesSegId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 Preparar: crear el equipo Gaviotas (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gaviotas Seg {{suffix}}\",\n  \"city\": \"Manizales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"teamGaviotasSegId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Preparar: asociar Cóndores al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamCondoresSegId}},\n  \"sportId\": {{sportSegId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Preparar: asociar Delfines al deporte (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-sports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamDelfinesSegId}},\n  \"sportId\": {{sportSegId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Preparar: inscribir a Cóndores y Delfines (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tournament-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentSegId}},\n  \"teamIds\": [\n    {{teamCondoresSegId}},\n    {{teamDelfinesSegId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Preparar: crear el Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseSegId}},\n  \"name\": \"Grupo A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"groupSegId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Preparar: Cóndores y Delfines al Grupo A (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/group-teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": {{groupSegId}},\n  \"teamIds\": [\n    {{teamCondoresSegId}},\n    {{teamDelfinesSegId}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Preparar: crear al jugador Andrés Arias (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"91{{suffix}}\",\n  \"firstName\": \"Andrés\",\n  \"lastName\": \"Arias\",\n  \"birthDate\": \"1998-04-20\",\n  \"position\": \"Portero\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerSegAriasId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 Preparar: crear al jugador Bruno Beltrán (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"92{{suffix}}\",\n  \"firstName\": \"Bruno\",\n  \"lastName\": \"Beltrán\",\n  \"birthDate\": \"1998-04-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerSegBeltranId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 Preparar: crear al jugador Carlos Cano (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"93{{suffix}}\",\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Cano\",\n  \"birthDate\": \"1998-04-20\",\n  \"position\": \"Delantero\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerSegCanoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 Preparar: crear al jugador Darío Díaz (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"94{{suffix}}\",\n  \"firstName\": \"Darío\",\n  \"lastName\": \"Díaz\",\n  \"birthDate\": \"1998-04-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerSegDiazId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 Preparar: crear al jugador Esteban Erazo (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"95{{suffix}}\",\n  \"firstName\": \"Esteban\",\n  \"lastName\": \"Erazo\",\n  \"birthDate\": \"1998-04-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"playerSegErazoId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 Preparar: contrato de Andrés desde el 2030-01-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamCondoresSegId}},\n  \"playerId\": {{playerSegAriasId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 Preparar: contrato de Bruno desde el 2030-01-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamCondoresSegId}},\n  \"playerId\": {{playerSegBeltranId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 Preparar: contrato de Carlos desde el 2030-01-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamDelfinesSegId}},\n  \"playerId\": {{playerSegCanoId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 Preparar: contrato de Darío desde el 2030-01-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamGaviotasSegId}},\n  \"playerId\": {{playerSegDiazId}},\n  \"startDate\": \"2030-01-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 Preparar: contrato de Esteban desde el 2030-03-01 (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/team-players",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": {{teamDelfinesSegId}},\n  \"playerId\": {{playerSegErazoId}},\n  \"startDate\": \"2030-03-01\",\n  \"endDate\": \"2030-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 Preparar: programar Cóndores vs Delfines (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseSegId}},\n  \"homeTeamId\": {{teamCondoresSegId}},\n  \"awayTeamId\": {{teamDelfinesSegId}},\n  \"scheduledAt\": \"2030-02-10T18:00\",\n  \"round\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchSegId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 Preparar: programar Delfines vs Cóndores (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseSegId}},\n  \"homeTeamId\": {{teamDelfinesSegId}},\n  \"awayTeamId\": {{teamCondoresSegId}},\n  \"scheduledAt\": \"2030-02-17T18:00\",\n  \"round\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchSeg2Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 Preparar: programar Cóndores vs Delfines, tercer partido (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phaseId\": {{phaseSegId}},\n  \"homeTeamId\": {{teamCondoresSegId}},\n  \"awayTeamId\": {{teamDelfinesSegId}},\n  \"scheduledAt\": \"2030-02-24T18:00\",\n  \"round\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"matchSeg3Id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 Pizarra de un partido que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{noExiste}}",
+            "description": "Criterio HU-GC-09 #1: El partido debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"No existe el partido\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "31 Pizarra del partido programado: jugadores de cada equipo, sin pelota ni posiciones (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}",
+            "description": "Criterio HU-GC-09 #1: El partido debe estar previamente registrado en el sistema.\n\nCriterio HU-GC-09 #3: En la pizarra se deben visualizar los jugadores que participan en el partido.\n\nCriterio HU-GC-09 #4: Cada jugador debe poder ser identificado visualmente dentro de la pizarra.\n\nCriterio HU-GC-09 #5: El sistema debe diferenciar los jugadores de cada equipo participante.\n\nCriterio HU-GC-09 #14: Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado.\n\nTrae el deporte del torneo (con el de su padre si es un subdeporte) para que la pizarra dibuje su campo (criterio 2, en el front)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento sin iniciar, sin pelota y nada registrado\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.tracking).to.eql({ status: \"SIN_INICIAR\", startedAt: null, finishedAt: null });",
+                  "    pm.expect(b.ball).to.eql(null);",
+                  "    pm.expect(b.totals).to.eql({ records: 0, playersTracked: 0 });",
+                  "    pm.expect(b.latest).to.eql([]);",
+                  "    pm.expect(b.match.id).to.eql(Number(pm.collectionVariables.get(\"matchSegId\")));",
+                  "});",
+                  "pm.test(\"El deporte del torneo, para dibujar su campo\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.sport.name).to.eql(\"Fútbol Seguimiento \" + pm.collectionVariables.get(\"suffix\"));",
+                  "    pm.expect(b.sport.parentName).to.eql(null);",
+                  "});",
+                  "pm.test(\"Cada equipo con su plantilla del día del partido (sin Díaz, de otro equipo, ni Erazo, que llega en marzo)\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.home.team.id).to.eql(Number(pm.collectionVariables.get(\"teamCondoresSegId\")));",
+                  "    pm.expect(b.away.team.id).to.eql(Number(pm.collectionVariables.get(\"teamDelfinesSegId\")));",
+                  "    pm.expect(b.home.players.map((p) => p.id)).to.eql([Number(pm.collectionVariables.get(\"playerSegAriasId\")), Number(pm.collectionVariables.get(\"playerSegBeltranId\"))]);",
+                  "    pm.expect(b.away.players.map((p) => p.id)).to.eql([Number(pm.collectionVariables.get(\"playerSegCanoId\"))]);",
+                  "});",
+                  "pm.test(\"Cada jugador con su nombre y su posición de juego, sin documento y todavía sin posición\", function () {",
+                  "    const b = pm.response.json();",
+                  "    const arias = b.home.players[0];",
+                  "    pm.expect([arias.firstName, arias.lastName, arias.position]).to.eql([\"Andrés\", \"Arias\", \"Portero\"]);",
+                  "    pm.expect(arias.lastPosition).to.eql(null);",
+                  "    pm.expect(b.home.players[1].position).to.eql(null);",
+                  "    pm.expect(Object.keys(arias)).to.not.include(\"documentNumber\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "32 Iniciar el seguimiento de un partido programado (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"todavía no ha empezado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "33 Registrar posiciones sin iniciar el seguimiento (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 50,\n      \"y\": 50\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no se ha iniciado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "34 Pausar un seguimiento sin iniciar (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/pause"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no se ha iniciado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "35 Finalizar un seguimiento sin iniciar (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/finish"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no hay nada que finalizar\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "36 Nombre de pelota de más de 60 caracteres (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSeg2Id}}/start",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ballName\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.ballName).to.eql(\"El nombre de la pelota debe tener máximo 60 caracteres\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "37 Iniciar el partido Cóndores vs Delfines (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSegId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"En juego\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"EN_JUEGO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "38 El partido en juego aparece en la lista de seguimiento (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Con su seguimiento sin iniciar; el partido programado no aparece\", function () {",
+                  "    const rows = pm.response.json();",
+                  "    const row = rows.find((r) => r.match.id === Number(pm.collectionVariables.get(\"matchSegId\")));",
+                  "    pm.expect(row.tracking.status).to.eql(\"SIN_INICIAR\");",
+                  "    pm.expect(rows.some((r) => r.match.id === Number(pm.collectionVariables.get(\"matchSeg2Id\")))).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "39 Iniciar el seguimiento con el nombre de la pelota (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/start",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ballName\": \"  Balón oficial Golty  \"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #6: La pelota debe visualizarse de manera independiente de los jugadores.\n\nCriterio HU-GC-09 #15: La pelota mostrada debe corresponder a la utilizada en el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento ACTIVO\", function () {",
+                  "    pm.expect(pm.response.json().tracking.status).to.eql(\"ACTIVO\");",
+                  "});",
+                  "pm.test(\"Se crea la pelota del partido, aparte de los jugadores\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.ball.name).to.eql(\"Balón oficial Golty\");",
+                  "    pm.expect(b.ball.lastPosition).to.eql(null);",
+                  "    pm.expect(typeof b.tracking.startedAt).to.eql(\"string\");",
+                  "    pm.collectionVariables.set(\"ballSegId\", b.ball.id);",
+                  "    pm.collectionVariables.set(\"trackingStartedAt\", b.tracking.startedAt);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "40 Iniciar un seguimiento que ya está activo (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya está activo\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "41 Posiciones sin datos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.positions).to.eql(\"La lista de posiciones es obligatoria\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "42 Lista de posiciones vacía (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.positions).to.eql(\"Envía al menos una posición\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "43 Más de 50 posiciones en una petición (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    },\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.positions).to.eql(\"Se pueden registrar máximo 50 posiciones por petición\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "44 Coordenadas fuera del campo, con 3 decimales o sin dar (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 101\n    },\n    {\n      \"playerId\": {{playerSegAriasId}},\n      \"x\": 10.123,\n      \"y\": 5\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body[\"positions.0.x\"]).to.eql(\"La coordenada x debe ser un número entre 0 y 100, con máximo 2 decimales\");",
+                  "    pm.expect(body[\"positions.0.y\"]).to.eql(\"La coordenada y es obligatoria\");",
+                  "    pm.expect(body[\"positions.1.x\"]).to.eql(\"La coordenada x debe ser un número entre 0 y 100, con máximo 2 decimales\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "45 Una posición de un jugador y de la pelota a la vez (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"playerId\": {{playerSegAriasId}},\n      \"ball\": true,\n      \"x\": 10,\n      \"y\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #12: Cada registro de posición debe permitir identificar a qué jugador o pelota pertenece."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"La posición 1\");",
+                  "    pm.expect(message).to.include(\"no de los dos ni de ninguno\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "46 Una posición que no es de nadie (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 20,\n      \"y\": 20\n    },\n    {\n      \"x\": 10,\n      \"y\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #12: Cada registro de posición debe permitir identificar a qué jugador o pelota pertenece."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"La posición 2\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "47 El mismo jugador dos veces en una petición (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"playerId\": {{playerSegAriasId}},\n      \"x\": 10,\n      \"y\": 10\n    },\n    {\n      \"playerId\": {{playerSegAriasId}},\n      \"x\": 11,\n      \"y\": 11\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"aparece dos veces\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "48 La pelota dos veces en una petición (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 10,\n      \"y\": 10\n    },\n    {\n      \"ball\": true,\n      \"x\": 11,\n      \"y\": 11\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"La pelota aparece dos veces\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "49 Posición de un jugador de otro equipo (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"playerId\": {{playerSegAriasId}},\n      \"x\": 10,\n      \"y\": 10\n    },\n    {\n      \"playerId\": {{playerSegDiazId}},\n      \"x\": 40,\n      \"y\": 40\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #14: Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado.\n\nTodas o ninguna: la posición de Arias tampoco se guarda."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"\\\"Darío Díaz\\\" no juega el partido\");",
+                  "    pm.expect(message).to.include(\"no tenía contrato\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "50 Posición de un jugador cuyo contrato empieza después del partido (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"playerId\": {{playerSegErazoId}},\n      \"x\": 40,\n      \"y\": 40\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #14: Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"\\\"Esteban Erazo\\\" no juega el partido\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Posición de un jugador que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"playerId\": {{noExiste}},\n      \"x\": 10,\n      \"y\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "52 Posiciones de un partido que no existe (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{noExiste}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 10,\n      \"y\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #1: El partido debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "53 Nada se guardó con las peticiones rechazadas (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cero registros\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.totals.records).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "54 Registrar a los tres jugadores y la pelota (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"playerId\": {{playerSegAriasId}},\n      \"x\": 10,\n      \"y\": 50\n    },\n    {\n      \"playerId\": {{playerSegBeltranId}},\n      \"x\": 30.5,\n      \"y\": 20.25\n    },\n    {\n      \"playerId\": {{playerSegCanoId}},\n      \"x\": 70,\n      \"y\": 40\n    },\n    {\n      \"ball\": true,\n      \"x\": 50,\n      \"y\": 50\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #11: Las posiciones registradas deben estar asociadas con el partido correspondiente.\n\nCriterio HU-GC-09 #12: Cada registro de posición debe permitir identificar a qué jugador o pelota pertenece.\n\nLa hora la pone el servidor, con milisegundos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set(\"positionFirstId\", r[0].id);",
+                  "pm.test(\"Cada registro dice de qué partido es y si es de un jugador o de la pelota\", function () {",
+                  "    const r = pm.response.json();",
+                  "    pm.expect(r.map((p) => [p.playerId, p.ball, p.x, p.y])).to.eql([[Number(pm.collectionVariables.get(\"playerSegAriasId\")), false, 10, 50], [Number(pm.collectionVariables.get(\"playerSegBeltranId\")), false, 30.5, 20.25], [Number(pm.collectionVariables.get(\"playerSegCanoId\")), false, 70, 40], [null, true, 50, 50]]);",
+                  "    pm.expect(r.every((p) => p.matchId === Number(pm.collectionVariables.get(\"matchSegId\")))).to.eql(true);",
+                  "    pm.expect(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}$/.test(r[0].recordedAt)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "55 Actualizar a Arias y la pelota (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"playerId\": {{playerSegAriasId}},\n      \"x\": 12,\n      \"y\": 52\n    },\n    {\n      \"ball\": true,\n      \"x\": 55.5,\n      \"y\": 48\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones).\n\nActualizar una posición es registrar una nueva: la última es la actual y la anterior se conserva."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Dos registros nuevos\", function () {",
+                  "    pm.expect(pm.response.json().length).to.eql(2);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "56 La pizarra muestra la última posición de cada uno (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}",
+            "description": "Criterio HU-GC-09 #3: En la pizarra se deben visualizar los jugadores que participan en el partido.\n\nCriterio HU-GC-09 #6: La pelota debe visualizarse de manera independiente de los jugadores.\n\nCriterio HU-GC-09 #13: El sistema debe conservar los registros de posición necesarios para representar el seguimiento realizado durante el partido.\n\nCriterio HU-GC-09 #15: La pelota mostrada debe corresponder a la utilizada en el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Arias y la pelota en su posición nueva; Beltrán y Cano en la única que tienen\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.home.players[0].lastPosition.x).to.eql(12);",
+                  "    pm.expect(b.home.players[0].lastPosition.y).to.eql(52);",
+                  "    pm.expect([b.home.players[1].lastPosition.x, b.home.players[1].lastPosition.y]).to.eql([30.5, 20.25]);",
+                  "    pm.expect([b.away.players[0].lastPosition.x, b.away.players[0].lastPosition.y]).to.eql([70, 40]);",
+                  "    pm.expect([b.ball.lastPosition.x, b.ball.lastPosition.y]).to.eql([55.5, 48]);",
+                  "    pm.expect(b.ball.id).to.eql(Number(pm.collectionVariables.get(\"ballSegId\")));",
+                  "});",
+                  "pm.test(\"Seis registros, tres jugadores con posición y las últimas de la más nueva a la más vieja\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.totals).to.eql({ records: 6, playersTracked: 3 });",
+                  "    pm.expect(b.latest.length).to.eql(6);",
+                  "    pm.expect(b.latest[0].ball).to.eql(true);",
+                  "    pm.expect(b.latest[1].playerId).to.eql(Number(pm.collectionVariables.get(\"playerSegAriasId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "57 El historial conserva todos los registros, en orden (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "description": "Criterio HU-GC-09 #11: Las posiciones registradas deben estar asociadas con el partido correspondiente.\n\nCriterio HU-GC-09 #12: Cada registro de posición debe permitir identificar a qué jugador o pelota pertenece.\n\nCriterio HU-GC-09 #13: El sistema debe conservar los registros de posición necesarios para representar el seguimiento realizado durante el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Los seis, y el primero de Arias sigue con su posición de entonces\", function () {",
+                  "    const r = pm.response.json();",
+                  "    pm.expect(r.length).to.eql(6);",
+                  "    pm.expect(r[0].id).to.eql(Number(pm.collectionVariables.get(\"positionFirstId\")));",
+                  "    pm.expect([r[0].playerId, r[0].x, r[0].y]).to.eql([Number(pm.collectionVariables.get(\"playerSegAriasId\")), 10, 50]);",
+                  "    pm.expect(r.every((p, i) => i === 0 || p.id > r[i - 1].id)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "58 Historial por páginas: dos registros después del primero (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions?afterId={{positionFirstId}}&limit=2",
+            "description": "Criterio HU-GC-09 #13: El sistema debe conservar los registros de posición necesarios para representar el seguimiento realizado durante el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Beltrán y Cano\", function () {",
+                  "    pm.expect(pm.response.json().map((p) => p.playerId)).to.eql([Number(pm.collectionVariables.get(\"playerSegBeltranId\")), Number(pm.collectionVariables.get(\"playerSegCanoId\"))]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "59 Historial con un tamaño de página inválido (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions?limit=0"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensaje de cada campo\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.limit).to.eql(\"limit debe ser un número entero entre 1 y 1000\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "60 Historial de un partido que no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{noExiste}}/positions"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "61 Pausar el seguimiento (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/pause"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento PAUSADO\", function () {",
+                  "    pm.expect(pm.response.json().tracking.status).to.eql(\"PAUSADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "62 Registrar posiciones en pausa (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 60,\n      \"y\": 60\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"está en pausa\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "63 Pausar un seguimiento que ya está en pausa (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/pause"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya está en pausa\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64 Reanudar: la misma pelota y la misma hora de inicio (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/start",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ballName\": \"Otro balón\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #15: La pelota mostrada debe corresponder a la utilizada en el partido.\n\nEl nombre de la pelota solo se usa la primera vez; al reanudar se ignora."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento ACTIVO\", function () {",
+                  "    pm.expect(pm.response.json().tracking.status).to.eql(\"ACTIVO\");",
+                  "});",
+                  "pm.test(\"No se crea otra pelota\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.ball.id).to.eql(Number(pm.collectionVariables.get(\"ballSegId\")));",
+                  "    pm.expect(b.ball.name).to.eql(\"Balón oficial Golty\");",
+                  "    pm.expect(b.tracking.startedAt).to.eql(pm.collectionVariables.get(\"trackingStartedAt\"));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "65 Ana ve la lista de partidos con seguimiento (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Incluye Cóndores vs Delfines\", function () {",
+                  "    pm.expect(pm.response.json().some((r) => r.match.id === Number(pm.collectionVariables.get(\"matchSegId\")))).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "66 Ana ve la pizarra (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Criterio HU-GC-09 #3: En la pizarra se deben visualizar los jugadores que participan en el partido.\n\nLa HU es \"como administrador deportivo e hincha\": el hincha tiene los permisos de consultar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"La misma pizarra\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.totals.records).to.eql(6);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "67 Ana no puede registrar posiciones (403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "68 Ana no puede pausar el seguimiento (403)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/pause",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "69 Registrar el resultado: 0 a 0 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/matches/{{matchSegId}}/result",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeScore\": 0,\n  \"awayScore\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Finalizado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"FINALIZADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "70 El resultado finalizó el seguimiento sin borrar nada (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}",
+            "description": "Criterio HU-GC-09 #13: El sistema debe conservar los registros de posición necesarios para representar el seguimiento realizado durante el partido.\n\nCriterio HU-GC-09 #16: La finalización del seguimiento no debe eliminar la información del partido, los jugadores ni la pelota."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento FINALIZADO\", function () {",
+                  "    pm.expect(pm.response.json().tracking.status).to.eql(\"FINALIZADO\");",
+                  "});",
+                  "pm.test(\"Con hora de fin; siguen la pelota, los jugadores y las seis posiciones\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(typeof b.tracking.finishedAt).to.eql(\"string\");",
+                  "    pm.expect(b.ball.id).to.eql(Number(pm.collectionVariables.get(\"ballSegId\")));",
+                  "    pm.expect(b.home.players.map((p) => p.id)).to.eql([Number(pm.collectionVariables.get(\"playerSegAriasId\")), Number(pm.collectionVariables.get(\"playerSegBeltranId\"))]);",
+                  "    pm.expect(b.totals.records).to.eql(6);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "71 Registrar posiciones con el seguimiento finalizado (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"ball\": true,\n      \"x\": 1,\n      \"y\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya finalizó\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "72 Volver a iniciar un seguimiento finalizado (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"no se vuelve a abrir\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "73 Finalizar otra vez (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/finish"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"ya finalizó\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "74 El partido sigue registrado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSegId}}",
+            "description": "Criterio HU-GC-09 #16: La finalización del seguimiento no debe eliminar la información del partido, los jugadores ni la pelota."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Finalizado, 0 a 0\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"FINALIZADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "75 Arias sigue registrado (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSegAriasId}}",
+            "description": "Criterio HU-GC-09 #16: La finalización del seguimiento no debe eliminar la información del partido, los jugadores ni la pelota."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"El mismo jugador\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.firstName).to.eql(\"Andrés\");",
+                  "    pm.expect(body.lastName).to.eql(\"Arias\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "76 Iniciar Delfines vs Cóndores (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSeg2Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "77 Iniciar su seguimiento sin dar nombre a la pelota (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSeg2Id}}/start",
+            "description": "Criterio HU-GC-09 #15: La pelota mostrada debe corresponder a la utilizada en el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Pelota con el nombre por defecto, distinta a la del otro partido\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.ball.name).to.eql(\"Balón del partido\");",
+                  "    pm.expect(b.ball.id === Number(pm.collectionVariables.get(\"ballSegId\"))).to.eql(false);",
+                  "    pm.expect(b.home.team.id).to.eql(Number(pm.collectionVariables.get(\"teamDelfinesSegId\")));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "78 Registrar la posición de Cano (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSeg2Id}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"playerId\": {{playerSegCanoId}},\n      \"x\": 5,\n      \"y\": 5\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "79 Pausar (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSeg2Id}}/pause"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento PAUSADO\", function () {",
+                  "    pm.expect(pm.response.json().tracking.status).to.eql(\"PAUSADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "80 Finalizar el seguimiento desde la pausa (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSeg2Id}}/finish",
+            "description": "Criterio HU-GC-09 #16: La finalización del seguimiento no debe eliminar la información del partido, los jugadores ni la pelota."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento FINALIZADO\", function () {",
+                  "    pm.expect(pm.response.json().tracking.status).to.eql(\"FINALIZADO\");",
+                  "});",
+                  "pm.test(\"El partido sigue en juego, con su pelota, sus jugadores y su posición\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.match.status).to.eql(\"EN_JUEGO\");",
+                  "    pm.expect(b.ball.name).to.eql(\"Balón del partido\");",
+                  "    pm.expect(b.home.players.map((p) => p.id)).to.eql([Number(pm.collectionVariables.get(\"playerSegCanoId\"))]);",
+                  "    pm.expect(b.totals.records).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "81 Cancelar Delfines vs Cóndores (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSeg2Id}}/cancel"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cancelado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"CANCELADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "82 Eliminar el partido cancelado, que tiene posiciones (400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSeg2Id}}",
+            "description": "Criterio HU-GC-09 #13: El sistema debe conservar los registros de posición necesarios para representar el seguimiento realizado durante el partido."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"errorCase = INVALID_OPERATION\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"INVALID_OPERATION\");",
+                  "});",
+                  "pm.test(\"El mensaje explica el motivo\", function () {",
+                  "    const message = pm.response.json().message;",
+                  "    pm.expect(message).to.include(\"posiciones registradas en su seguimiento (1)\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "83 Iniciar el tercer partido (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSeg3Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "84 Iniciar su seguimiento (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSeg3Id}}/start"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento ACTIVO\", function () {",
+                  "    pm.expect(pm.response.json().tracking.status).to.eql(\"ACTIVO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "85 Cancelar el tercer partido (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSeg3Id}}/cancel"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Cancelado\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.status).to.eql(\"CANCELADO\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "86 Cancelar el partido finalizó su seguimiento (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSeg3Id}}",
+            "description": "Criterio HU-GC-09 #16: La finalización del seguimiento no debe eliminar la información del partido, los jugadores ni la pelota."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Seguimiento FINALIZADO\", function () {",
+                  "    pm.expect(pm.response.json().tracking.status).to.eql(\"FINALIZADO\");",
+                  "});",
+                  "pm.test(\"Con su pelota\", function () {",
+                  "    const b = pm.response.json();",
+                  "    pm.expect(b.ball.name).to.eql(\"Balón del partido\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "87 Sin posiciones, el partido cancelado sí se elimina (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/matches/{{matchSeg3Id}}",
+            "description": "Su pelota se va con él."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "88 Su pizarra ya no existe (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSeg3Id}}",
+            "description": "Criterio HU-GC-09 #1: El partido debe estar previamente registrado en el sistema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"errorCase = NOT_FOUND\", function () {",
+                  "    pm.expect(pm.response.json().errorCase).to.eql(\"NOT_FOUND\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "89 Limpieza: desactivar Copa Pizarra (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tournaments/{{tournamentSegId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "90 Limpieza: desactivar a Andrés (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSegAriasId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "91 Limpieza: desactivar a Bruno (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSegBeltranId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "92 Limpieza: desactivar a Carlos (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSegCanoId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "93 Limpieza: desactivar a Darío (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSegDiazId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "94 Limpieza: desactivar a Esteban (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/players/{{playerSegErazoId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "95 Limpieza: desactivar Cóndores (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamCondoresSegId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "96 Limpieza: desactivar Delfines (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamDelfinesSegId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "97 Limpieza: desactivar Gaviotas (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/teams/{{teamGaviotasSegId}}/disable"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "98 Limpieza: quitarle a Ana el rol Aficionado (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/user-roles/{{fanAnaUserId}}/{{fanRoleId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "99 Limpieza: eliminar a Ana (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{securityUrl}}/users/{{fanAnaUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{securityAdminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
                   "});"
                 ]
               }

@@ -26,6 +26,7 @@ import { TournamentResponseDto } from '../tournaments/dto/tournament-response.dt
 import { TournamentsService } from '../tournaments/tournaments.service';
 import { ScoreTotalsService } from '../scores/score-totals.service';
 import { TicketUsageService } from '../tickets/ticket-usage.service';
+import { TrackingUsageService } from '../tracking/tracking-usage.service';
 import { VenuesService } from '../venues/venues.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { MatchFieldsDto } from './dto/match-fields.dto';
@@ -45,6 +46,8 @@ export class MatchesService {
   // apuestas y notificaciones (HU-GC-11) llegan de módulos que no dependen de nadie. Los de escenarios
   // (Anexo 4) validan el escenario del partido, TicketUsageService (que tampoco depende de nadie)
   // dice qué boletos tiene (HU-GE-04) y FanTeamUsageService, quién sigue a sus equipos (HU-GE-05).
+  // TrackingUsageService (tampoco depende de nadie) cuenta sus posiciones y cierra su seguimiento
+  // (HU-GC-09).
   constructor(
     @InjectRepository(Match)
     private readonly matchRepository: Repository<Match>,
@@ -61,6 +64,7 @@ export class MatchesService {
     private readonly tournamentVenuesService: TournamentVenuesService,
     private readonly ticketUsage: TicketUsageService,
     private readonly fanTeamUsage: FanTeamUsageService,
+    private readonly trackingUsage: TrackingUsageService,
   ) {}
 
   // El partido nuevo queda PROGRAMADO. Se avisa a quienes apostaron o compraron boletos en partidos
@@ -237,7 +241,7 @@ export class MatchesService {
 
   // PROGRAMADO o EN_JUEGO → CANCELADO. Sus apuestas pendientes y sus boletos quedan anulados (se
   // devuelve lo apostado y lo pagado) en la misma transacción, y se avisa a cada aficionado (HU-GC-11
-  // y HU-GE-04).
+  // y HU-GE-04). Su seguimiento en vivo, si estaba activo o en pausa, queda finalizado (HU-GC-09).
   async cancel(id: number): Promise<MatchResponseDto> {
     const match = await this.findMatch(id);
     if (
@@ -252,6 +256,7 @@ export class MatchesService {
     const { voided, voidedTickets } =
       await this.matchRepository.manager.transaction(async (manager) => {
         await manager.update(Match, id, { status: MatchStatus.CANCELADO });
+        await this.trackingUsage.close(id, manager);
         return {
           voided: await this.betSettlement.voidAll(id, manager),
           voidedTickets: await this.ticketUsage.voidAll(id, manager),
@@ -271,8 +276,9 @@ export class MatchesService {
 
   // Solo un partido programado o cancelado. Uno en juego se cancela primero, y uno finalizado se
   // queda: es historial del torneo. Uno cancelado que alcanzó a jugarse puede tener anotaciones
-  // (HU-GC-07): se eliminan primero. Uno con apuestas (HU-GC-11) o boletos (HU-GE-04) se queda: son
-  // historial. Los precios de su venta se van con él.
+  // (HU-GC-07): se eliminan primero. Uno con apuestas (HU-GC-11), boletos (HU-GE-04) o posiciones de
+  // su seguimiento (HU-GC-09) se queda: son historial. Los precios de su venta y su pelota (si se
+  // inició el seguimiento pero no alcanzó a registrar posiciones) se van con él.
   async remove(id: number): Promise<void> {
     const match = await this.findMatch(id);
     if (match.status === MatchStatus.EN_JUEGO) {
@@ -306,6 +312,13 @@ export class MatchesService {
       throw new ApplicationException(
         ErrorCase.INVALID_OPERATION,
         `No se puede eliminar el partido ${matchLabel(match)} porque tiene boletos (${tickets}): son historial de los aficionados`,
+      );
+    }
+    const positions = await this.trackingUsage.countForMatch(id);
+    if (positions > 0) {
+      throw new ApplicationException(
+        ErrorCase.INVALID_OPERATION,
+        `No se puede eliminar el partido ${matchLabel(match)} porque tiene posiciones registradas en su seguimiento (${positions}): son historial del partido`,
       );
     }
     await this.matchRepository.delete(id);

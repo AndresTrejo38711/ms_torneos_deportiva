@@ -11,6 +11,7 @@ import { TicketUsageModule } from '../tickets/ticket-usage.module';
 import { TournamentTeamsModule } from '../tournament-teams/tournament-teams.module';
 import { TournamentVenuesModule } from '../tournament-venues/tournament-venues.module';
 import { TournamentsModule } from '../tournaments/tournaments.module';
+import { TrackingUsageModule } from '../tracking/tracking-usage.module';
 import { VenuesModule } from '../venues/venues.module';
 import { Match } from './entities/match.entity';
 import { MatchBettingController } from './match-betting.controller';
@@ -28,6 +29,7 @@ import { MatchesService } from './matches.service';
 // TournamentVenuesModule (Anexo 4) validan el escenario del partido; tampoco importan este módulo.
 // TicketUsageModule (no depende de nadie) dice qué boletos tiene y los anula al cancelarlo (HU-GE-04).
 // FanTeamUsageModule (tampoco depende de nadie) dice quién sigue a sus equipos (HU-GE-05).
+// TrackingUsageModule (tampoco) cuenta sus posiciones y finaliza su seguimiento (HU-GC-09).
 //
 // Se exporta MatchesService para las anotaciones (HU-GC-07) y las apuestas (HU-GC-11), que validan
 // el partido con él.
@@ -46,6 +48,7 @@ import { MatchesService } from './matches.service';
     TournamentVenuesModule,
     TicketUsageModule,
     FanTeamUsageModule,
+    TrackingUsageModule,
   ],
   controllers: [
     MatchesController,

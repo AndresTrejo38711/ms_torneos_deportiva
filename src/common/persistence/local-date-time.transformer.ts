@@ -31,6 +31,16 @@ export function toLocalDateTime(value: Date): string {
   );
 }
 
+// Un Date con segundos y milisegundos, "AAAA-MM-DDTHH:mm:ss.SSS" en la hora local del servidor: para
+// las posiciones del seguimiento en vivo (HU-GC-09), que llegan varias por segundo.
+export function toLocalTimestamp(value: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return (
+    `${toLocalDateTime(value)}:${pad(value.getSeconds())}` +
+    `.${String(value.getMilliseconds()).padStart(3, '0')}`
+  );
+}
+
 // Ahora mismo, en el mismo formato.
 export function nowLocalDateTime(): string {
   return toLocalDateTime(new Date());

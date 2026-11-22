@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { today } from '../common/validation/date.validators';
+import { PlayerSummaryDto } from '../players/dto/player-response.dto';
+import { toPlayerSummary } from '../players/players.mapper';
 import { PlayersService } from '../players/players.service';
 import { TeamsService } from '../teams/teams.service';
 import {
@@ -115,6 +117,27 @@ export class TeamPlayersService {
     return contracts.some(
       (contract) =>
         contract.startDate <= day && effectiveEndDate(contract) >= day,
+    );
+  }
+
+  // HU-GC-09: la plantilla del equipo ese día, es decir, los jugadores con contrato que lo cubre (la
+  // misma regla de hadContractOn), por apellido y nombre. Un jugador va una vez aunque tenga dos
+  // contratos con el equipo.
+  async rosterOn(teamId: number, day: string): Promise<PlayerSummaryDto[]> {
+    const contracts = await this.teamPlayerRepository.find({
+      where: { team: { id: teamId } },
+      relations: { player: true },
+    });
+    const players = new Map<number, PlayerSummaryDto>();
+    for (const contract of contracts) {
+      if (contract.startDate <= day && effectiveEndDate(contract) >= day) {
+        players.set(contract.player.id, toPlayerSummary(contract.player));
+      }
+    }
+    return [...players.values()].sort(
+      (a, b) =>
+        a.lastName.localeCompare(b.lastName, 'es') ||
+        a.firstName.localeCompare(b.firstName, 'es'),
     );
   }
 

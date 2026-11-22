@@ -11,6 +11,7 @@ import { NotificationClient } from '../notifications/notification.client';
 import { PhaseType } from '../phases/entities/phase-type.enum';
 import { ScoreTotalsService } from '../scores/score-totals.service';
 import { TicketUsageService } from '../tickets/ticket-usage.service';
+import { TrackingUsageService } from '../tracking/tracking-usage.service';
 import { MatchResponseDto } from './dto/match-response.dto';
 import { RegisterResultDto } from './dto/register-result.dto';
 import { MatchStatus } from './entities/match-status.enum';
@@ -22,8 +23,8 @@ type Penalties = { home: number | null; away: number | null };
 
 // HU-GC-07 · El resultado oficial de un partido. Está aparte de MatchesService (que programa y
 // cambia el estado de los partidos) porque es otra HU con sus propias reglas (S de SOLID).
-// Al registrarlo se liquidan las apuestas del partido (HU-GC-11) y se avisa a quienes apostaron o
-// compraron boletos (HU-GE-04).
+// Al registrarlo se liquidan las apuestas del partido (HU-GC-11), se finaliza su seguimiento en vivo
+// (HU-GC-09) y se avisa a quienes apostaron o compraron boletos (HU-GE-04).
 @Injectable()
 export class MatchResultsService {
   constructor(
@@ -35,6 +36,7 @@ export class MatchResultsService {
     private readonly betSettlement: BetSettlementService,
     private readonly notifications: NotificationClient,
     private readonly ticketUsage: TicketUsageService,
+    private readonly trackingUsage: TrackingUsageService,
   ) {}
 
   // Registrar (partido EN_JUEGO → FINALIZADO) o corregir (partido ya FINALIZADO).
@@ -75,6 +77,7 @@ export class MatchResultsService {
           ...result,
           status: MatchStatus.FINALIZADO,
         });
+        await this.trackingUsage.close(id, manager);
         return this.betSettlement.settle(id, winningSelection(result), manager);
       },
     );
