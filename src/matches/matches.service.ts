@@ -109,6 +109,12 @@ export class MatchesService {
     return response;
   }
 
+  // Todos los partidos, de todos los torneos, por fecha (la lista general de Partidos).
+  async findAll(): Promise<MatchResponseDto[]> {
+    const matches = await this.orderedByDate(this.summaryQuery()).getMany();
+    return this.toResponses(matches);
+  }
+
   // Partidos de una fase, por fecha.
   async findByPhase(phaseId: number): Promise<MatchResponseDto[]> {
     await this.phasesService.findOne(phaseId); // 404 si la fase no existe

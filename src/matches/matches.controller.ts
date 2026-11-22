@@ -26,6 +26,12 @@ export class MatchesController {
     return this.matchesService.create(dto);
   }
 
+  // Todos los partidos, de todos los torneos, por fecha.
+  @Get()
+  findAll(): Promise<MatchResponseDto[]> {
+    return this.matchesService.findAll();
+  }
+
   // Partidos de una fase, por fecha.
   @Get('phases/:phaseId')
   findByPhase(

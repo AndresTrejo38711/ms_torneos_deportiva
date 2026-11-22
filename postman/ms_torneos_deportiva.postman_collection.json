@@ -10333,7 +10333,7 @@
     },
     {
       "name": "HU-GC-02 · Inscripciones",
-      "description": "Inscripciones de equipos en torneos: `/api/deportiva/tournament-teams`. `POST` recibe uno o varios equipos (`teamIds`) y es todo o nada: si uno no cumple, no se inscribe ninguno. Inscribir y retirar solo se puede mientras el torneo esté activo, no haya empezado y no haya pasado su cierre de inscripciones.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe estar previamente registrado en el sistema. → peticiones 29, 46\n2. El equipo debe estar previamente registrado en el sistema. → peticiones 28, 47\n3. El equipo debe estar asociado con el deporte correspondiente al torneo. → peticiones 24\n4. El sistema debe permitir inscribir uno o varios equipos en un torneo. → peticiones 18, 19, 25, 26\n5. Un mismo equipo puede estar inscrito en diferentes torneos. → peticiones 19, 22\n6. Un torneo puede contar con varios equipos inscritos. → peticiones 18, 20, 21\n7. No se debe permitir registrar dos veces al mismo equipo en el mismo torneo. → peticiones 23\n8. El sistema debe permitir consultar los equipos inscritos en un torneo. → peticiones 20\n9. El sistema debe permitir consultar los torneos en los que se encuentra inscrito un equipo. → peticiones 22\n10. Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan. → peticiones 39, 40, 45; carpeta HU-GC-06: 69\n11. Retirar una inscripción no debe eliminar el equipo ni el torneo del sistema. → peticiones 41, 42\n12. La información de la inscripción debe quedar asociada al equipo y al torneo correspondientes. → peticiones 18, 20, 22\n13. Si el torneo ya inició o el periodo de inscripciones se encuentra cerrado, el sistema debe impedir nuevas inscripciones o retiros cuando corresponda. → peticiones 33, 34, 45\n14. El sistema debe informar al usuario cuando una inscripción se haya realizado o retirado correctamente. → peticiones 18, 39",
+      "description": "Inscripciones de equipos en torneos: `/api/deportiva/tournament-teams`. `POST` recibe uno o varios equipos (`teamIds`) y es todo o nada: si uno no cumple, no se inscribe ninguno. Inscribir y retirar solo se puede mientras el torneo esté activo, no haya empezado y no haya pasado su cierre de inscripciones.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe estar previamente registrado en el sistema. → peticiones 29, 46\n2. El equipo debe estar previamente registrado en el sistema. → peticiones 28, 47\n3. El equipo debe estar asociado con el deporte correspondiente al torneo. → peticiones 24\n4. El sistema debe permitir inscribir uno o varios equipos en un torneo. → peticiones 18, 19, 25, 26\n5. Un mismo equipo puede estar inscrito en diferentes torneos. → peticiones 19, 22\n6. Un torneo puede contar con varios equipos inscritos. → peticiones 18, 20, 21\n7. No se debe permitir registrar dos veces al mismo equipo en el mismo torneo. → peticiones 23\n8. El sistema debe permitir consultar los equipos inscritos en un torneo. → peticiones 20\n9. El sistema debe permitir consultar los torneos en los que se encuentra inscrito un equipo. → peticiones 22\n10. Se debe permitir retirar la inscripción de un equipo mientras las reglas o el estado del torneo lo permitan. → peticiones 39, 40, 45; carpeta HU-GC-06: 70\n11. Retirar una inscripción no debe eliminar el equipo ni el torneo del sistema. → peticiones 41, 42\n12. La información de la inscripción debe quedar asociada al equipo y al torneo correspondientes. → peticiones 18, 20, 22\n13. Si el torneo ya inició o el periodo de inscripciones se encuentra cerrado, el sistema debe impedir nuevas inscripciones o retiros cuando corresponda. → peticiones 33, 34, 45\n14. El sistema debe informar al usuario cuando una inscripción se haya realizado o retirado correctamente. → peticiones 18, 39",
       "item": [
         {
           "name": "01 Preparar: crear el deporte Voleibol (201)",
@@ -12373,7 +12373,7 @@
     },
     {
       "name": "HU-GC-03 · Fases",
-      "description": "Fases de un torneo: `/api/deportiva/phases`. Toda fase es de grupos (`type: GRUPOS`) o final (`type: FINAL`); las dos usan las mismas rutas y se guardan en la misma tabla (herencia). El orden lo pone el sistema: cada fase nueva queda de última, y se cambia con `PUT /phases/tournaments/{id}/order`. Las fases finales tienen su propia carpeta (HU-GC-05).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe existir previamente en el sistema. → peticiones 11, 17\n2. El sistema debe permitir registrar una o varias fases para un torneo. → peticiones 05, 06, 07\n3. Cada fase debe estar asociada con un único torneo. → peticiones 05, 15\n4. Se debe permitir consultar las fases correspondientes a un torneo. → peticiones 14, 15\n5. Se debe poder actualizar la información de una fase. → peticiones 18, 19\n6. Se debe permitir eliminar una fase cuando no tenga información asociada que lo impida. → peticiones 26, 27; carpeta HU-GC-04: 48; carpeta HU-GC-06: 64\n7. El sistema debe permitir definir el orden en el que se desarrollarán las fases. → peticiones 06, 07, 14, 21, 22, 23, 27\n8. Cada fase debe corresponder al tipo de etapa definido para la competencia, como una fase de grupos o una fase final. → peticiones 05, 06, 09, 14, 20\n9. No se debe eliminar el torneo al modificar o eliminar una de sus fases. → peticiones 26, 28",
+      "description": "Fases de un torneo: `/api/deportiva/phases`. Toda fase es de grupos (`type: GRUPOS`) o final (`type: FINAL`); las dos usan las mismas rutas y se guardan en la misma tabla (herencia). El orden lo pone el sistema: cada fase nueva queda de última, y se cambia con `PUT /phases/tournaments/{id}/order`. Las fases finales tienen su propia carpeta (HU-GC-05).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe existir previamente en el sistema. → peticiones 11, 17\n2. El sistema debe permitir registrar una o varias fases para un torneo. → peticiones 05, 06, 07\n3. Cada fase debe estar asociada con un único torneo. → peticiones 05, 15\n4. Se debe permitir consultar las fases correspondientes a un torneo. → peticiones 14, 15\n5. Se debe poder actualizar la información de una fase. → peticiones 18, 19\n6. Se debe permitir eliminar una fase cuando no tenga información asociada que lo impida. → peticiones 26, 27; carpeta HU-GC-04: 48; carpeta HU-GC-06: 65\n7. El sistema debe permitir definir el orden en el que se desarrollarán las fases. → peticiones 06, 07, 14, 21, 22, 23, 27\n8. Cada fase debe corresponder al tipo de etapa definido para la competencia, como una fase de grupos o una fase final. → peticiones 05, 06, 09, 14, 20\n9. No se debe eliminar el torneo al modificar o eliminar una de sus fases. → peticiones 26, 28",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -13484,7 +13484,7 @@
     },
     {
       "name": "HU-GC-04 · Grupos",
-      "description": "Grupos de una fase de grupos: `/api/deportiva/groups`, y sus equipos: `/api/deportiva/group-teams`. `POST /group-teams` recibe uno o varios equipos y es todo o nada. Solo entran equipos inscritos en el torneo, y cada equipo va en un solo grupo por fase. Para consultar los equipos de un grupo: `GET /groups/{id}` o `GET /groups/phases/{phaseId}` (cada grupo trae sus equipos).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Debe existir previamente un torneo y una fase correspondiente. → peticiones 20, 23, 24, 32\n2. El sistema debe permitir registrar los grupos necesarios para la fase. → peticiones 20, 21\n3. Se debe poder consultar la información de los grupos registrados. → peticiones 38, 39, 40, 41\n4. Se debe permitir modificar la información de un grupo. → peticiones 42, 43\n5. Se debe permitir eliminar un grupo cuando las reglas de la competencia lo permitan. → peticiones 49, 52, 53; carpeta HU-GC-06: 67\n6. El sistema debe permitir asignar varios equipos a un grupo. → peticiones 27, 28\n7. Un grupo debe poder contener varios equipos. → peticiones 27, 28\n8. No se debe permitir registrar dos veces el mismo equipo dentro del mismo grupo. → peticiones 29\n9. Un equipo no debe quedar asignado simultáneamente a diferentes grupos de la misma fase. → peticiones 30, 31\n10. Se deben poder consultar los equipos que conforman cada grupo. → peticiones 38, 39\n11. La eliminación de un grupo no debe eliminar los equipos registrados en la plataforma. → peticiones 49, 50, 51, 54",
+      "description": "Grupos de una fase de grupos: `/api/deportiva/groups`, y sus equipos: `/api/deportiva/group-teams`. `POST /group-teams` recibe uno o varios equipos y es todo o nada. Solo entran equipos inscritos en el torneo, y cada equipo va en un solo grupo por fase. Para consultar los equipos de un grupo: `GET /groups/{id}` o `GET /groups/phases/{phaseId}` (cada grupo trae sus equipos).\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. Debe existir previamente un torneo y una fase correspondiente. → peticiones 20, 23, 24, 32\n2. El sistema debe permitir registrar los grupos necesarios para la fase. → peticiones 20, 21\n3. Se debe poder consultar la información de los grupos registrados. → peticiones 38, 39, 40, 41\n4. Se debe permitir modificar la información de un grupo. → peticiones 42, 43\n5. Se debe permitir eliminar un grupo cuando las reglas de la competencia lo permitan. → peticiones 49, 52, 53; carpeta HU-GC-06: 68\n6. El sistema debe permitir asignar varios equipos a un grupo. → peticiones 27, 28\n7. Un grupo debe poder contener varios equipos. → peticiones 27, 28\n8. No se debe permitir registrar dos veces el mismo equipo dentro del mismo grupo. → peticiones 29\n9. Un equipo no debe quedar asignado simultáneamente a diferentes grupos de la misma fase. → peticiones 30, 31\n10. Se deben poder consultar los equipos que conforman cada grupo. → peticiones 38, 39\n11. La eliminación de un grupo no debe eliminar los equipos registrados en la plataforma. → peticiones 49, 50, 51, 54",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -15866,7 +15866,7 @@
     },
     {
       "name": "HU-GC-05 · Fases finales",
-      "description": "Fases finales: las mismas rutas de `/api/deportiva/phases` con `type: FINAL`. Una fase final dice cuántos equipos la juegan (`teamsCount`: 2, 4, 8, 16, 32 o 64) y no tiene grupos.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe existir previamente. → peticiones 04, 07\n2. El sistema debe permitir registrar una fase final dentro de la estructura del torneo. → peticiones 04, 05, 06\n3. Se debe poder consultar la información correspondiente a la fase final. → peticiones 08, 09\n4. Se debe permitir actualizar su información mientras las reglas de la competencia lo permitan. → peticiones 10, 12; carpeta HU-GC-06: 65, 66\n5. Se debe permitir eliminar una fase final cuando no tenga partidos u otra información asociada que lo impida. → peticiones 15, 16; carpeta HU-GC-06: 64\n6. Los partidos correspondientes a esta etapa deben poder identificarse como parte de la fase final. → carpeta HU-GC-06: 41, 50\n7. La modificación de la fase final no debe afectar la información de las demás fases del torneo. → peticiones 11, 16",
+      "description": "Fases finales: las mismas rutas de `/api/deportiva/phases` con `type: FINAL`. Una fase final dice cuántos equipos la juegan (`teamsCount`: 2, 4, 8, 16, 32 o 64) y no tiene grupos.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo debe existir previamente. → peticiones 04, 07\n2. El sistema debe permitir registrar una fase final dentro de la estructura del torneo. → peticiones 04, 05, 06\n3. Se debe poder consultar la información correspondiente a la fase final. → peticiones 08, 09\n4. Se debe permitir actualizar su información mientras las reglas de la competencia lo permitan. → peticiones 10, 12; carpeta HU-GC-06: 66, 67\n5. Se debe permitir eliminar una fase final cuando no tenga partidos u otra información asociada que lo impida. → peticiones 15, 16; carpeta HU-GC-06: 65\n6. Los partidos correspondientes a esta etapa deben poder identificarse como parte de la fase final. → carpeta HU-GC-06: 41, 51\n7. La modificación de la fase final no debe afectar la información de las demás fases del torneo. → peticiones 11, 16",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -16501,7 +16501,7 @@
     },
     {
       "name": "HU-GC-06 · Partidos",
-      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 52\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 50, 51\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 53, 55, 57\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 59, 62; carpeta HU-GC-07: 58, 73, 75; carpeta HU-GC-11: 72\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → carpeta HU-GE-02: 31, 33, 36, 37\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 54, 63\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"partido nuevo\\\"\" (en la carpeta HU-GC-11, al programar la Final): les llega a quienes apostaron o compraron boletos en partidos anteriores de esos equipos",
+      "description": "Partidos de un torneo: `/api/deportiva/matches`. Cada partido es de una fase; el torneo sale de la fase y, en una fase de grupos, el grupo sale de los equipos (deben estar en el mismo). La fecha y hora es local, con el formato `AAAA-MM-DDTHH:mm`. En una fase final cada partido ocupa una posición de la llave y cada equipo juega una sola vez. Estados: `PROGRAMADO` (al crearlo; solo así se edita) → `EN_JUEGO` (`PATCH /{id}/start`) → `FINALIZADO` (con el resultado oficial, HU-GC-07); `PATCH /{id}/cancel` lo deja `CANCELADO`.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se borra lo que se creó.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El torneo y la fase correspondiente deben existir previamente. → peticiones 26, 33, 53\n2. El sistema debe permitir registrar un nuevo partido con la información requerida. → peticiones 26, 27, 28, 29, 30, 41, 47\n3. Cada partido debe estar asociado con una fase de la competencia. → peticiones 26, 41\n4. El sistema debe permitir definir los equipos que participarán en el partido. → peticiones 26, 34\n5. No se debe permitir que un equipo compita contra sí mismo. → peticiones 32\n6. Los equipos seleccionados deben encontrarse habilitados para participar en la competencia. → peticiones 35, 36, 37\n7. El sistema debe permitir consultar los partidos registrados. → peticiones 48, 49, 50\n8. Se debe poder consultar la información detallada de cada partido. → peticiones 51, 52\n9. Se debe permitir actualizar la información de un partido cuando su estado lo permita. → peticiones 54, 56, 58\n10. Se debe permitir eliminar un partido cuando no tenga información asociada que lo impida. → peticiones 60, 63; carpeta HU-GC-07: 58, 73, 75; carpeta HU-GC-11: 72\n11. Cuando corresponda, se debe poder asociar el partido con el escenario en el que será disputado. → carpeta HU-GE-02: 31, 33, 36, 37\n12. Los cambios realizados deben quedar almacenados correctamente. → peticiones 55, 64\n13. Se debe enviar un correo electrónico cuando se cree un partido a los aficionados que han participado en partidos anteriores a los equipos enfrentados. → se verifica fuera de Postman: llega al correo del aficionado (con NOTIFICATIONS_URL configurada) y el log de deportiva dice \"Correo \\\"partido nuevo\\\"\" (en la carpeta HU-GC-11, al programar la Final): les llega a quienes apostaron o compraron boletos en partidos anteriores de esos equipos",
       "item": [
         {
           "name": "01 Preparar: crear el deporte (201)",
@@ -18355,7 +18355,39 @@
           ]
         },
         {
-          "name": "50 Detalle de la llave 1: es un partido de la fase final (200)",
+          "name": "50 Todos los partidos, de todos los torneos (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/matches",
+            "description": "Criterio HU-GC-06 #7: El sistema debe permitir consultar los partidos registrados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Están los de este torneo, en el mismo orden, con su torneo\", function () {",
+                  "    const list = pm.response.json();",
+                  "    const mine = [Number(pm.collectionVariables.get(\"matchABId\")), Number(pm.collectionVariables.get(\"matchCDId\")), Number(pm.collectionVariables.get(\"matchBAId\")), Number(pm.collectionVariables.get(\"matchSemi1Id\")), Number(pm.collectionVariables.get(\"matchSemi2Id\"))];",
+                  "    pm.expect(list.map((m) => m.id).filter((id) => mine.includes(id))).to.eql(mine);",
+                  "    list.filter((m) => mine.includes(m.id)).forEach((m) => pm.expect(m.tournament.id).to.eql(Number(pm.collectionVariables.get(\"tournamentPartidosId\"))));",
+                  "});",
+                  "pm.test(\"Toda la lista va por fecha\", function () {",
+                  "    const dates = pm.response.json().map((m) => m.scheduledAt);",
+                  "    pm.expect(dates).to.eql([...dates].sort());",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "51 Detalle de la llave 1: es un partido de la fase final (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -18384,7 +18416,7 @@
           ]
         },
         {
-          "name": "51 Detalle de un partido que no existe (404)",
+          "name": "52 Detalle de un partido que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -18409,7 +18441,7 @@
           ]
         },
         {
-          "name": "52 Partidos de una fase que no existe (404)",
+          "name": "53 Partidos de una fase que no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -18434,7 +18466,7 @@
           ]
         },
         {
-          "name": "53 Reprogramar Antílopes vs Berracos: otra fecha y hora (200)",
+          "name": "54 Reprogramar Antílopes vs Berracos: otra fecha y hora (200)",
           "request": {
             "method": "PUT",
             "header": [
@@ -18474,7 +18506,7 @@
           ]
         },
         {
-          "name": "54 Detalle: el cambio quedó guardado (200)",
+          "name": "55 Detalle: el cambio quedó guardado (200)",
           "request": {
             "method": "GET",
             "header": [],
@@ -18501,7 +18533,7 @@
           ]
         },
         {
-          "name": "55 Editar con equipos de grupos distintos (400)",
+          "name": "56 Editar con equipos de grupos distintos (400)",
           "request": {
             "method": "PUT",
             "header": [
@@ -18544,7 +18576,7 @@
           ]
         },
         {
-          "name": "56 Iniciar Antílopes vs Berracos (200)",
+          "name": "57 Iniciar Antílopes vs Berracos (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -18569,7 +18601,7 @@
           ]
         },
         {
-          "name": "57 Editar un partido en juego (400)",
+          "name": "58 Editar un partido en juego (400)",
           "request": {
             "method": "PUT",
             "header": [
@@ -18612,7 +18644,7 @@
           ]
         },
         {
-          "name": "58 Iniciarlo otra vez (400)",
+          "name": "59 Iniciarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -18640,7 +18672,7 @@
           ]
         },
         {
-          "name": "59 Eliminar un partido en juego (400)",
+          "name": "60 Eliminar un partido en juego (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -18669,7 +18701,7 @@
           ]
         },
         {
-          "name": "60 Cancelar Antílopes vs Berracos (200)",
+          "name": "61 Cancelar Antílopes vs Berracos (200)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -18694,7 +18726,7 @@
           ]
         },
         {
-          "name": "61 Cancelarlo otra vez (400)",
+          "name": "62 Cancelarlo otra vez (400)",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -18722,7 +18754,7 @@
           ]
         },
         {
-          "name": "62 Eliminar el partido cancelado (204)",
+          "name": "63 Eliminar el partido cancelado (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -18744,7 +18776,7 @@
           ]
         },
         {
-          "name": "63 El partido ya no existe (404)",
+          "name": "64 El partido ya no existe (404)",
           "request": {
             "method": "GET",
             "header": [],
@@ -18769,7 +18801,7 @@
           ]
         },
         {
-          "name": "64 Eliminar la Semifinal, que tiene partidos (400)",
+          "name": "65 Eliminar la Semifinal, que tiene partidos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -18798,7 +18830,7 @@
           ]
         },
         {
-          "name": "65 Cambiar el número de equipos de la Semifinal, que tiene partidos (400)",
+          "name": "66 Cambiar el número de equipos de la Semifinal, que tiene partidos (400)",
           "request": {
             "method": "PUT",
             "header": [
@@ -18842,7 +18874,7 @@
           ]
         },
         {
-          "name": "66 Cambiarle el nombre sí se puede (200)",
+          "name": "67 Cambiarle el nombre sí se puede (200)",
           "request": {
             "method": "PUT",
             "header": [
@@ -18882,7 +18914,7 @@
           ]
         },
         {
-          "name": "67 Eliminar el Grupo B, cuyos equipos ya tienen partidos (400)",
+          "name": "68 Eliminar el Grupo B, cuyos equipos ya tienen partidos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -18911,7 +18943,7 @@
           ]
         },
         {
-          "name": "68 Sacar a Coyotes del Grupo B, tiene partidos en la fase (400)",
+          "name": "69 Sacar a Coyotes del Grupo B, tiene partidos en la fase (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -18940,7 +18972,7 @@
           ]
         },
         {
-          "name": "69 Retirar la inscripción de Duendes, que tiene partidos (400)",
+          "name": "70 Retirar la inscripción de Duendes, que tiene partidos (400)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -18969,7 +19001,7 @@
           ]
         },
         {
-          "name": "70 Limpieza: eliminar Coyotes vs Duendes (204)",
+          "name": "71 Limpieza: eliminar Coyotes vs Duendes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -18990,7 +19022,7 @@
           ]
         },
         {
-          "name": "71 Limpieza: eliminar Berracos vs Antílopes (204)",
+          "name": "72 Limpieza: eliminar Berracos vs Antílopes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19011,7 +19043,7 @@
           ]
         },
         {
-          "name": "72 Limpieza: eliminar la llave 1 (204)",
+          "name": "73 Limpieza: eliminar la llave 1 (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19032,7 +19064,7 @@
           ]
         },
         {
-          "name": "73 Limpieza: eliminar la llave 2 (204)",
+          "name": "74 Limpieza: eliminar la llave 2 (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19053,7 +19085,7 @@
           ]
         },
         {
-          "name": "74 Limpieza: eliminar el Grupo A (204)",
+          "name": "75 Limpieza: eliminar el Grupo A (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19074,7 +19106,7 @@
           ]
         },
         {
-          "name": "75 Limpieza: eliminar el Grupo B (204)",
+          "name": "76 Limpieza: eliminar el Grupo B (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19095,7 +19127,7 @@
           ]
         },
         {
-          "name": "76 Limpieza: eliminar la Semifinal (204)",
+          "name": "77 Limpieza: eliminar la Semifinal (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19116,7 +19148,7 @@
           ]
         },
         {
-          "name": "77 Limpieza: eliminar la Fase de grupos (204)",
+          "name": "78 Limpieza: eliminar la Fase de grupos (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19137,7 +19169,7 @@
           ]
         },
         {
-          "name": "78 Limpieza: eliminar la fase de Copa Inactiva (204)",
+          "name": "79 Limpieza: eliminar la fase de Copa Inactiva (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19158,7 +19190,7 @@
           ]
         },
         {
-          "name": "79 Limpieza: retirar la inscripción de Antílopes (204)",
+          "name": "80 Limpieza: retirar la inscripción de Antílopes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19179,7 +19211,7 @@
           ]
         },
         {
-          "name": "80 Limpieza: retirar la inscripción de Berracos (204)",
+          "name": "81 Limpieza: retirar la inscripción de Berracos (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19200,7 +19232,7 @@
           ]
         },
         {
-          "name": "81 Limpieza: retirar la inscripción de Coyotes (204)",
+          "name": "82 Limpieza: retirar la inscripción de Coyotes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19221,7 +19253,7 @@
           ]
         },
         {
-          "name": "82 Limpieza: retirar la inscripción de Duendes (204)",
+          "name": "83 Limpieza: retirar la inscripción de Duendes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19242,7 +19274,7 @@
           ]
         },
         {
-          "name": "83 Limpieza: retirar la inscripción de Fénix (204)",
+          "name": "84 Limpieza: retirar la inscripción de Fénix (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19263,7 +19295,7 @@
           ]
         },
         {
-          "name": "84 Limpieza: eliminar Copa Partidos (204)",
+          "name": "85 Limpieza: eliminar Copa Partidos (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19284,7 +19316,7 @@
           ]
         },
         {
-          "name": "85 Limpieza: eliminar Copa Inactiva (204)",
+          "name": "86 Limpieza: eliminar Copa Inactiva (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19305,7 +19337,7 @@
           ]
         },
         {
-          "name": "86 Limpieza: retirar Antílopes del deporte (204)",
+          "name": "87 Limpieza: retirar Antílopes del deporte (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19326,7 +19358,7 @@
           ]
         },
         {
-          "name": "87 Limpieza: retirar Berracos del deporte (204)",
+          "name": "88 Limpieza: retirar Berracos del deporte (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19347,7 +19379,7 @@
           ]
         },
         {
-          "name": "88 Limpieza: retirar Coyotes del deporte (204)",
+          "name": "89 Limpieza: retirar Coyotes del deporte (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19368,7 +19400,7 @@
           ]
         },
         {
-          "name": "89 Limpieza: retirar Duendes del deporte (204)",
+          "name": "90 Limpieza: retirar Duendes del deporte (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19389,7 +19421,7 @@
           ]
         },
         {
-          "name": "90 Limpieza: retirar Escorpiones del deporte (204)",
+          "name": "91 Limpieza: retirar Escorpiones del deporte (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19410,7 +19442,7 @@
           ]
         },
         {
-          "name": "91 Limpieza: retirar Fénix del deporte (204)",
+          "name": "92 Limpieza: retirar Fénix del deporte (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19431,7 +19463,7 @@
           ]
         },
         {
-          "name": "92 Limpieza: eliminar Antílopes (204)",
+          "name": "93 Limpieza: eliminar Antílopes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19452,7 +19484,7 @@
           ]
         },
         {
-          "name": "93 Limpieza: eliminar Berracos (204)",
+          "name": "94 Limpieza: eliminar Berracos (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19473,7 +19505,7 @@
           ]
         },
         {
-          "name": "94 Limpieza: eliminar Coyotes (204)",
+          "name": "95 Limpieza: eliminar Coyotes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19494,7 +19526,7 @@
           ]
         },
         {
-          "name": "95 Limpieza: eliminar Duendes (204)",
+          "name": "96 Limpieza: eliminar Duendes (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19515,7 +19547,7 @@
           ]
         },
         {
-          "name": "96 Limpieza: eliminar Escorpiones (204)",
+          "name": "97 Limpieza: eliminar Escorpiones (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19536,7 +19568,7 @@
           ]
         },
         {
-          "name": "97 Limpieza: eliminar Fénix (204)",
+          "name": "98 Limpieza: eliminar Fénix (204)",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -19557,7 +19589,7 @@
           ]
         },
         {
-          "name": "98 Limpieza: eliminar el deporte (204)",
+          "name": "99 Limpieza: eliminar el deporte (204)",
           "request": {
             "method": "DELETE",
             "header": [],
