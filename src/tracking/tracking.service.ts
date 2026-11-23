@@ -33,6 +33,7 @@ import {
 import { Ball } from './entities/ball.entity';
 import { PositionRecord } from './entities/position-record.entity';
 import { TrackingStatus } from './entities/tracking-status.enum';
+import { TrackingEvents } from './tracking-events';
 import {
   toLastPosition,
   toPositionRecord,
@@ -62,7 +63,8 @@ interface Rosters {
 
 // HU-GC-09 · Seguimiento deportivo del partido: el estado del seguimiento, la pelota y las posiciones
 // de los jugadores y de la pelota. Las posiciones llegan por REST (el script que simula el partido las
-// envía); en la etapa 2 un socket avisará a las pizarras abiertas.
+// envía) y, ya guardadas, se publican en TrackingEvents para que el socket (TrackingGateway) avise a
+// las pizarras abiertas, igual que cada cambio de estado (criterios 9 y 10).
 //
 // Usa los services de partidos (el partido y su marcador), contratos (la plantilla del día) y
 // jugadores (el nombre en los mensajes); ninguno de ellos depende de este. Lo que los partidos
@@ -79,6 +81,7 @@ export class TrackingService {
     private readonly matchesService: MatchesService,
     private readonly teamPlayersService: TeamPlayersService,
     private readonly playersService: PlayersService,
+    private readonly events: TrackingEvents,
   ) {}
 
   // Los partidos en juego y los que ya tuvieron seguimiento (para ver su recorrido): primero los que
@@ -234,7 +237,7 @@ export class TrackingService {
         trackingStartedAt: state.trackingStartedAt ?? new Date(),
       });
     });
-    return this.board(matchId);
+    return this.boardAfterStatusChange(matchId);
   }
 
   // Activo → en pausa: deja de recibir posiciones hasta que se reanude.
@@ -256,7 +259,7 @@ export class TrackingService {
     await this.matchRepository.update(matchId, {
       trackingStatus: TrackingStatus.PAUSADO,
     });
-    return this.board(matchId);
+    return this.boardAfterStatusChange(matchId);
   }
 
   // Activo o en pausa → finalizado. No se vuelve a abrir, y no borra el partido, los jugadores, la
@@ -280,7 +283,7 @@ export class TrackingService {
       trackingStatus: TrackingStatus.FINALIZADO,
       trackingFinishedAt: new Date(),
     });
-    return this.board(matchId);
+    return this.boardAfterStatusChange(matchId);
   }
 
   // Registrar posiciones de jugadores y de la pelota (criterios 7, 8, 11 y 12). Todas o ninguna, solo
@@ -324,7 +327,7 @@ export class TrackingService {
     );
     // Un solo INSERT con todas: quedan todas o ninguna.
     const { identifiers } = await this.positionRepository.insert(rows);
-    return dto.positions.map((position, index) => ({
+    const saved: PositionRecordDto[] = dto.positions.map((position, index) => ({
       id: Number(identifiers[index].id),
       matchId,
       playerId: position.playerId ?? null,
@@ -333,9 +336,22 @@ export class TrackingService {
       y: position.y,
       recordedAt: toLocalTimestamp(now),
     }));
+    // Ya guardadas: las pizarras abiertas las dibujan (criterios 9 y 10).
+    this.events.positions(matchId, saved);
+    return saved;
   }
 
   // ---------------------------------------------------------------------------------------------
+
+  // La pizarra después de iniciar, pausar o finalizar, avisando el estado nuevo a las pizarras
+  // abiertas.
+  private async boardAfterStatusChange(
+    matchId: number,
+  ): Promise<TrackingBoardDto> {
+    const board = await this.board(matchId);
+    this.events.status(matchId, board.tracking);
+    return board;
+  }
 
   // Cada posición es de un jugador o de la pelota, ninguno se repite en la petición y cada jugador
   // está en la plantilla de uno de los dos equipos el día del partido (criterio 14).

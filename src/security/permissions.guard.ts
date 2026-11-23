@@ -36,7 +36,9 @@ export class PermissionsGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (!this.enabled) {
+    // Los eventos del socket (HU-GC-09) no son peticiones HTTP: TrackingGateway valida el token del
+    // handshake al unirse a una sala (guía 6 del profesor, WebSockets).
+    if (!this.enabled || context.getType() !== 'http') {
       return true;
     }
 

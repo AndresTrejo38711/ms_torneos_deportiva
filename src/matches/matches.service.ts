@@ -253,15 +253,19 @@ export class MatchesService {
         `El partido ${matchLabel(match)} ya está ${MATCH_STATUS_LABEL[match.status]}: no se puede cancelar`,
       );
     }
-    const { voided, voidedTickets } =
+    const { voided, voidedTickets, trackingClosed } =
       await this.matchRepository.manager.transaction(async (manager) => {
         await manager.update(Match, id, { status: MatchStatus.CANCELADO });
-        await this.trackingUsage.close(id, manager);
         return {
+          trackingClosed: await this.trackingUsage.close(id, manager),
           voided: await this.betSettlement.voidAll(id, manager),
           voidedTickets: await this.ticketUsage.voidAll(id, manager),
         };
       });
+    // Ya confirmado: las pizarras abiertas ven el seguimiento finalizado (HU-GC-09).
+    if (trackingClosed) {
+      await this.trackingUsage.announce(id);
+    }
     const response = await this.findOne(id);
     this.notifications.deliver(
       voidedEmails(response, voided),

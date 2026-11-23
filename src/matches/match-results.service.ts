@@ -71,16 +71,25 @@ export class MatchResultsService {
       homePenalties: penalties.home,
       awayPenalties: penalties.away,
     };
-    const settled = await this.matchRepository.manager.transaction(
-      async (manager) => {
+    const { settled, trackingClosed } =
+      await this.matchRepository.manager.transaction(async (manager) => {
         await manager.update(Match, id, {
           ...result,
           status: MatchStatus.FINALIZADO,
         });
-        await this.trackingUsage.close(id, manager);
-        return this.betSettlement.settle(id, winningSelection(result), manager);
-      },
-    );
+        return {
+          trackingClosed: await this.trackingUsage.close(id, manager),
+          settled: await this.betSettlement.settle(
+            id,
+            winningSelection(result),
+            manager,
+          ),
+        };
+      });
+    // Ya confirmado: las pizarras abiertas ven el seguimiento finalizado (HU-GC-09).
+    if (trackingClosed) {
+      await this.trackingUsage.announce(id);
+    }
 
     const response = await this.matchesService.findOne(id);
     const ticketHolders = await this.ticketUsage.fanEmailsForMatch(id);
