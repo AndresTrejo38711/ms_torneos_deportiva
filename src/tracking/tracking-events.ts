@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Observable, Subject } from 'rxjs';
+import { SimulationStateDto } from './dto/simulation.dto';
 import {
   PositionRecordDto,
   TrackingStateDto,
@@ -7,10 +8,12 @@ import {
 
 // Lo que cambió en el seguimiento de un partido (HU-GC-09, criterios 9 y 10):
 // - positions: las posiciones que se acaban de guardar (de jugadores y de la pelota);
-// - status: el estado nuevo del seguimiento (iniciado, en pausa, finalizado).
+// - status: el estado nuevo del seguimiento (iniciado, en pausa, finalizado);
+// - simulation: la simulación del servidor ("Simular partido") empezó o terminó.
 export type TrackingEvent =
   | { type: 'positions'; matchId: number; positions: PositionRecordDto[] }
-  | { type: 'status'; matchId: number; tracking: TrackingStateDto };
+  | { type: 'status'; matchId: number; tracking: TrackingStateDto }
+  | { type: 'simulation'; matchId: number; simulation: SimulationStateDto };
 
 // Avisos del seguimiento en vivo. Los services publican aquí lo que ya quedó guardado y el gateway
 // (TrackingGateway) se lo reenvía a las pizarras abiertas. Así ningún service conoce Socket.IO y el
@@ -30,5 +33,10 @@ export class TrackingEvents {
 
   status(matchId: number, tracking: TrackingStateDto): void {
     this.subject.next({ type: 'status', matchId, tracking });
+  }
+
+  // La simulación del partido empezó o terminó (botón "Simular partido").
+  simulation(matchId: number, simulation: SimulationStateDto): void {
+    this.subject.next({ type: 'simulation', matchId, simulation });
   }
 }

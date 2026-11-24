@@ -16,14 +16,20 @@ import {
   TrackedMatchDto,
   TrackingBoardDto,
 } from './dto/tracking-response.dto';
+import { TrackingSimulationService } from './simulation/tracking-simulation.service';
 import { TrackingService } from './tracking.service';
+import { StartSimulationDto } from './dto/simulation.dto';
+import { PlayerPhotoDto } from '../players/dto/player-response.dto';
 
-// HU-GC-09 · /api/deportiva/tracking. Consultar (la lista, la pizarra y el historial) lo pueden el
-// administrador deportivo y el aficionado; iniciar, pausar, finalizar y registrar posiciones, solo
-// el administrador (y el script que simula el partido, con su token).
+// HU-GC-09 · /api/deportiva/tracking. Consultar (la lista, la pizarra, el historial y las fotos) lo pueden
+// el administrador deportivo y el aficionado; iniciar, pausar, finalizar, registrar posiciones y simular el
+// partido desde la pizarra, solo el administrador (y el script que simula el partido, con su token).
 @Controller('tracking')
 export class TrackingController {
-  constructor(private readonly trackingService: TrackingService) {}
+  constructor(
+    private readonly trackingService: TrackingService,
+    private readonly simulation: TrackingSimulationService,
+  ) {}
 
   // Partidos en juego y partidos con seguimiento.
   @Get('matches')
@@ -78,5 +84,30 @@ export class TrackingController {
     @Param('matchId', ParseIdPipe) matchId: number,
   ): Promise<TrackingBoardDto> {
     return this.trackingService.finish(matchId);
+  }
+
+  // Las fotos de los jugadores de la pizarra (solo los que tienen foto). Las ve también el aficionado.
+  @Get('matches/:matchId/photos')
+  photos(
+    @Param('matchId', ParseIdPipe) matchId: number,
+  ): Promise<PlayerPhotoDto[]> {
+    return this.trackingService.photos(matchId);
+  }
+
+  // "Simular partido" (solo el administrador): el servidor mueve a los jugadores y la pelota.
+  // { "intervalMs": 1000 } (opcional: 500, 1000 o 2000).
+  @Patch('matches/:matchId/simulation/start')
+  startSimulation(
+    @Param('matchId', ParseIdPipe) matchId: number,
+    @Body() dto: StartSimulationDto,
+  ): Promise<TrackingBoardDto> {
+    return this.simulation.start(matchId, dto);
+  }
+
+  @Patch('matches/:matchId/simulation/stop')
+  stopSimulation(
+    @Param('matchId', ParseIdPipe) matchId: number,
+  ): Promise<TrackingBoardDto> {
+    return this.simulation.stop(matchId);
   }
 }

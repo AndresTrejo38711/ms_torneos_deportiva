@@ -1,6 +1,7 @@
 import { MatchResponseDto } from '../../matches/dto/match-response.dto';
 import { TeamSummaryDto } from '../../teams/dto/team-response.dto';
 import { TrackingStatus } from '../entities/tracking-status.enum';
+import { SimulationStateDto } from './simulation.dto';
 
 // El estado del seguimiento de un partido. Las fechas van en hora local, "AAAA-MM-DDTHH:mm".
 export class TrackingStateDto {
@@ -27,6 +28,8 @@ export class TrackedPlayerDto {
   active: boolean;
   // null mientras no se le haya registrado ninguna posición.
   lastPosition: LastPositionDto | null;
+  // Si está jugando: su última posición no lo sacó de la cancha (false también sin posición).
+  onCourt: boolean;
 }
 
 // Un equipo del partido con su plantilla del día del partido (criterios 3 y 14).
@@ -51,6 +54,8 @@ export class PositionRecordDto {
   x: number;
   y: number;
   recordedAt: string;
+  // false: con este registro el jugador salió de la cancha.
+  onCourt: boolean;
 }
 
 // El deporte del torneo, para dibujar su campo (criterio 2). parentName sirve con los subdeportes:
@@ -66,6 +71,8 @@ export class TrackingTotalsDto {
   records: number;
   // Cuántos jugadores tienen al menos una.
   playersTracked: number;
+  // Cuántos jugadores están en la cancha ahora (su última posición no los sacó).
+  onCourt: number;
 }
 
 // GET /tracking/matches/{matchId}: lo que muestra la pizarra.
@@ -80,6 +87,8 @@ export class TrackingBoardDto {
   totals: TrackingTotalsDto;
   // Las últimas posiciones registradas, de la más nueva a la más vieja.
   latest: PositionRecordDto[];
+  // Si el servidor está simulando el partido (botón "Simular partido" de la pizarra).
+  simulation: SimulationStateDto;
 }
 
 // GET /tracking/matches: un partido en juego o con seguimiento.

@@ -32,3 +32,9 @@ export class PlayerSummaryDto {
   position: string | null;
   active: boolean;
 }
+
+// HU-GC-09: solo la foto de un jugador, para su ficha en la pizarra del seguimiento.
+export class PlayerPhotoDto {
+  playerId: number;
+  photo: string; // "data:image/jpeg;base64,..."
+}

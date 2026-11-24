@@ -13,6 +13,7 @@ import { Match } from '../matches/entities/match.entity';
 import { matchLabel } from '../matches/match-label';
 import { MatchesService } from '../matches/matches.service';
 import { PlayerSummaryDto } from '../players/dto/player-response.dto';
+import { PlayerPhotoDto } from '../players/dto/player-response.dto';
 import { PlayersService } from '../players/players.service';
 import { TeamPlayersService } from '../team-players/team-players.service';
 import {
@@ -33,6 +34,7 @@ import {
 import { Ball } from './entities/ball.entity';
 import { PositionRecord } from './entities/position-record.entity';
 import { TrackingStatus } from './entities/tracking-status.enum';
+import { SimulationRegistry } from './simulation/simulation-registry';
 import { TrackingEvents } from './tracking-events';
 import {
   toLastPosition,
@@ -50,6 +52,7 @@ const RECORD_FIELDS = {
   x: true,
   y: true,
   recordedAt: true,
+  onCourt: true,
   match: { id: true },
   player: { id: true },
   ball: { id: true },
@@ -82,6 +85,7 @@ export class TrackingService {
     private readonly teamPlayersService: TeamPlayersService,
     private readonly playersService: PlayersService,
     private readonly events: TrackingEvents,
+    private readonly simulations: SimulationRegistry,
   ) {}
 
   // Los partidos en juego y los que ya tuvieron seguimiento (para ver su recorrido): primero los que
@@ -174,8 +178,11 @@ export class TrackingService {
           where: { match: { id: matchId } },
         }),
         playersTracked: lastOfPlayer.size,
+        onCourt: [...lastOfPlayer.values()].filter((record) => record.onCourt)
+          .length,
       },
       latest: latest.map(toPositionRecord),
+      simulation: this.simulations.stateOf(matchId),
     };
   }
 
@@ -196,6 +203,21 @@ export class TrackingService {
       take: query.limit ?? DEFAULT_HISTORY_PAGE,
     });
     return records.map(toPositionRecord);
+  }
+
+  // Las fotos de los jugadores de las dos plantillas que tienen foto, para sus fichas en la pizarra. Va
+  // aparte de la pizarra porque la pizarra se recarga seguido y las fotos pesan (hasta 90 KB cada una).
+  async photos(matchId: number): Promise<PlayerPhotoDto[]> {
+    const match = await this.matchesService.findOne(matchId); // 404 si no existe
+    const rosters = await this.rostersOf(match);
+    return this.playersService.photosOf(
+      [...rosters.home, ...rosters.away].map((player) => player.id),
+    );
+  }
+
+  // El estado del seguimiento (lo consulta la simulación cuando un lote es rechazado).
+  async statusOf(matchId: number): Promise<TrackingStatus> {
+    return (await this.findState(matchId)).trackingStatus;
   }
 
   // Sin iniciar → activo (la primera vez crea la pelota del partido) o en pausa → activo. Solo con el
@@ -322,6 +344,7 @@ export class TrackingService {
         ball: position.ball ? { id: ball.id } : null,
         x: position.x,
         y: position.y,
+        onCourt: position.onCourt !== false,
         recordedAt: now,
       }),
     );
@@ -335,6 +358,7 @@ export class TrackingService {
       x: position.x,
       y: position.y,
       recordedAt: toLocalTimestamp(now),
+      onCourt: position.onCourt !== false,
     }));
     // Ya guardadas: las pizarras abiertas las dibujan (criterios 9 y 10).
     this.events.positions(matchId, saved);
@@ -369,6 +393,12 @@ export class TrackingService {
         throw new ApplicationException(
           ErrorCase.INVALID_OPERATION,
           `La posición ${index + 1} debe ser de un jugador ("playerId") o de la pelota ("ball": true), no de los dos ni de ninguno`,
+        );
+      }
+      if (isBall && position.onCourt === false) {
+        throw new ApplicationException(
+          ErrorCase.INVALID_OPERATION,
+          `La posición ${index + 1} es de la pelota: la pelota no sale de la cancha`,
         );
       }
       if (isBall) {

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ApplicationException } from '../common/errors/application.exception';
 import { ErrorCase } from '../common/errors/error-case.enum';
 import { CreatePlayerDto } from './dto/create-player.dto';
-import { PlayerResponseDto } from './dto/player-response.dto';
+import { PlayerPhotoDto, PlayerResponseDto } from './dto/player-response.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
 import { toPlayerResponse } from './players.mapper';
@@ -150,6 +150,23 @@ export class PlayersService {
     }
 
     await this.playerRepository.delete(id);
+  }
+
+  // HU-GC-09: las fotos de estos jugadores (solo los que tienen foto), sin el resto de sus datos. La foto
+  // tiene select: false en la entidad, por eso se pide explícitamente.
+  async photosOf(ids: number[]): Promise<PlayerPhotoDto[]> {
+    if (ids.length === 0) return [];
+    const rows = await this.playerRepository
+      .createQueryBuilder('player')
+      .select('player.id', 'playerId')
+      .addSelect('player.photo', 'photo')
+      .where('player.id IN (:...ids)', { ids })
+      .andWhere('player.photo IS NOT NULL')
+      .getRawMany<{ playerId: number | string; photo: string }>();
+    return rows.map((row) => ({
+      playerId: Number(row.playerId),
+      photo: row.photo,
+    }));
   }
 
   // ---------------------------------------------------------------------------------------------

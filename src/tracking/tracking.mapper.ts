@@ -41,6 +41,7 @@ export function toPositionRecord(record: PositionRecord): PositionRecordDto {
     x: record.x,
     y: record.y,
     recordedAt: toLocalTimestamp(record.recordedAt),
+    onCourt: record.onCourt,
   };
 }
 
@@ -67,5 +68,6 @@ export function toTrackedPlayer(
     position: player.position,
     active: player.active,
     lastPosition: toLastPosition(last),
+    onCourt: last ? last.onCourt : false,
   };
 }

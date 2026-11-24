@@ -25320,7 +25320,7 @@
     },
     {
       "name": "HU-GC-09 · Seguimiento deportivo del partido",
-      "description": "Seguimiento en vivo de un partido (la pizarra), **lo que se guarda y se consulta**. Los criterios 2, 9 y 10 se ven fuera de Postman: el socket que avisa a las pizarras abiertas y la pantalla del front.\n\n- `GET /api/deportiva/tracking/matches`: partidos en juego y partidos con seguimiento.\n- `GET /api/deportiva/tracking/matches/{matchId}`: lo que muestra la pizarra (partido, deporte, estado del seguimiento, pelota, jugadores de cada equipo con su última posición, contadores y últimas posiciones).\n- `GET /api/deportiva/tracking/matches/{matchId}/positions?afterId=&limit=`: el historial, en orden.\n- `PATCH .../start` (`{ \"ballName\": \"...\" }` opcional, crea la pelota la primera vez), `PATCH .../pause` y `PATCH .../finish`.\n- `POST .../positions` con `{ \"positions\": [{ \"playerId\": 7, \"x\": 54, \"y\": 31 }, { \"ball\": true, \"x\": 57, \"y\": 29 }] }`: x y y de 0 a 100 (porcentaje del campo), todas o ninguna, hasta 50.\n\nLos jugadores son los que tenían contrato con el local o el visitante el día del partido. El seguimiento solo se inicia con el partido en juego, y se finaliza solo al registrar el resultado o cancelar el partido. Finalizar no borra nada; un partido con posiciones no se elimina.\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**: crea una aficionada (Ana) para comprobar que el hincha ve la pizarra pero no la cambia. Lo del administrador usa el token de la colección.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se desactiva lo que no se puede borrar: los partidos finalizados y los que tienen posiciones son historial.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El partido debe estar previamente registrado en el sistema. → peticiones 30, 31, 52, 88\n2. El sistema debe permitir acceder a una pizarra que represente gráficamente el espacio de juego correspondiente al deporte. → fuera de Postman: la pantalla #seguimiento/{id} del front dibuja la cancha según el deporte (fútbol, fútbol de salón, baloncesto, voleibol o un campo genérico); la foto de la pizarra trae el deporte\n3. En la pizarra se deben visualizar los jugadores que participan en el partido. → peticiones 31, 56, 66\n4. Cada jugador debe poder ser identificado visualmente dentro de la pizarra. → peticiones 31\n5. El sistema debe diferenciar los jugadores de cada equipo participante. → peticiones 31\n6. La pelota debe visualizarse de manera independiente de los jugadores. → peticiones 39, 56\n7. El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones). → peticiones 44, 54, 55, 78\n8. El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones). → peticiones 44, 54, 55\n9. Cuando cambie la posición de un jugador, su ubicación debe actualizarse en la pizarra. → fuera de Postman: el socket /api/deportiva/socket.io avisa \"positions\" a la sala del partido y la pizarra del front mueve la ficha (se prueba con tools/simulador-seguimiento/simular.mjs)\n10. Cuando cambie la posición de la pelota, su ubicación debe actualizarse en la pizarra. → fuera de Postman: el socket /api/deportiva/socket.io avisa \"positions\" a la sala del partido y la pizarra del front mueve la ficha (se prueba con tools/simulador-seguimiento/simular.mjs)\n11. Las posiciones registradas deben estar asociadas con el partido correspondiente. → peticiones 54, 57\n12. Cada registro de posición debe permitir identificar a qué jugador o pelota pertenece. → peticiones 45, 46, 54, 57\n13. El sistema debe conservar los registros de posición necesarios para representar el seguimiento realizado durante el partido. → peticiones 56, 57, 58, 70, 82\n14. Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado. → peticiones 31, 49, 50\n15. La pelota mostrada debe corresponder a la utilizada en el partido. → peticiones 39, 56, 64, 77\n16. La finalización del seguimiento no debe eliminar la información del partido, los jugadores ni la pelota. → peticiones 70, 74, 75, 80, 86",
+      "description": "Seguimiento en vivo de un partido (la pizarra), **lo que se guarda y se consulta**. Los criterios 2, 9 y 10 se ven fuera de Postman: el socket que avisa a las pizarras abiertas y la pantalla del front.\n\n- `GET /api/deportiva/tracking/matches`: partidos en juego y partidos con seguimiento.\n- `GET /api/deportiva/tracking/matches/{matchId}`: lo que muestra la pizarra (partido, deporte, estado del seguimiento, pelota, jugadores de cada equipo con su última posición, contadores y últimas posiciones).\n- `GET /api/deportiva/tracking/matches/{matchId}/positions?afterId=&limit=`: el historial, en orden.\n- `PATCH .../start` (`{ \"ballName\": \"...\" }` opcional, crea la pelota la primera vez), `PATCH .../pause` y `PATCH .../finish`.\n- `POST .../positions` con `{ \"positions\": [{ \"playerId\": 7, \"x\": 54, \"y\": 31 }, { \"ball\": true, \"x\": 57, \"y\": 29 }] }`: x y y de 0 a 100 (porcentaje del campo), todas o ninguna, hasta 50. Con `\"onCourt\": false` el jugador sale de la cancha (al banco): la pizarra solo dibuja a los que juegan.\n- `PATCH .../simulation/start` (`{ \"intervalMs\": 500 | 1000 | 2000 }`) y `PATCH .../simulation/stop`: simular el partido desde la web (el servidor envía las posiciones); `GET .../photos`: las fotos de los jugadores.\n\nLos jugadores son los que tenían contrato con el local o el visitante el día del partido. El seguimiento solo se inicia con el partido en juego, y se finaliza solo al registrar el resultado o cancelar el partido. Finalizar no borra nada; un partido con posiciones no se elimina.\n\n**Esta carpeta necesita `SECURITY_ENABLED=true` y ms_torneos_security**: crea una aficionada (Ana) para comprobar que el hincha ve la pizarra pero no la cambia. Lo del administrador usa el token de la colección.\n\nEjecuta la carpeta completa en orden (Run folder): cada petición usa los ids que guardan las anteriores. Los nombres y documentos llevan un sufijo nuevo en cada corrida. Al final se desactiva lo que no se puede borrar: los partidos finalizados y los que tienen posiciones son historial.\n\n**Criterios de aceptación y peticiones que los prueban**\n\n1. El partido debe estar previamente registrado en el sistema. → peticiones 30, 31, 52, 88\n2. El sistema debe permitir acceder a una pizarra que represente gráficamente el espacio de juego correspondiente al deporte. → fuera de Postman: la pantalla #seguimiento/{id} del front dibuja la cancha según el deporte (fútbol, fútbol de salón, baloncesto, voleibol o un campo genérico); la foto de la pizarra trae el deporte\n3. En la pizarra se deben visualizar los jugadores que participan en el partido. → peticiones 31, 56, 66, 64.8, 64.10\n4. Cada jugador debe poder ser identificado visualmente dentro de la pizarra. → peticiones 31, 64.1\n5. El sistema debe diferenciar los jugadores de cada equipo participante. → peticiones 31\n6. La pelota debe visualizarse de manera independiente de los jugadores. → peticiones 39, 56\n7. El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones). → peticiones 44, 54, 55, 78. También con el botón «Simular partido» de la pizarra (el servidor envía las posiciones): peticiones 64.2 a 64.7\n8. El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones). → peticiones 44, 54, 55. También con el botón «Simular partido» de la pizarra (el servidor envía las posiciones): peticiones 64.2 a 64.7\n9. Cuando cambie la posición de un jugador, su ubicación debe actualizarse en la pizarra. → fuera de Postman: el socket /api/deportiva/socket.io avisa \"positions\" a la sala del partido y la pizarra del front mueve la ficha (se prueba con tools/simulador-seguimiento/simular.mjs)\n10. Cuando cambie la posición de la pelota, su ubicación debe actualizarse en la pizarra. → fuera de Postman: el socket /api/deportiva/socket.io avisa \"positions\" a la sala del partido y la pizarra del front mueve la ficha (se prueba con tools/simulador-seguimiento/simular.mjs)\n11. Las posiciones registradas deben estar asociadas con el partido correspondiente. → peticiones 54, 57\n12. Cada registro de posición debe permitir identificar a qué jugador o pelota pertenece. → peticiones 45, 46, 54, 57\n13. El sistema debe conservar los registros de posición necesarios para representar el seguimiento realizado durante el partido. → peticiones 56, 57, 58, 70, 82\n14. Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado. → peticiones 31, 49, 50, 64.8, 64.9, 64.10\n15. La pelota mostrada debe corresponder a la utilizada en el partido. → peticiones 39, 56, 64, 77\n16. La finalización del seguimiento no debe eliminar la información del partido, los jugadores ni la pelota. → peticiones 70, 74, 75, 80, 86",
       "item": [
         {
           "name": "01 Preparar: el administrador inicia sesión en ms_torneos_security (200)",
@@ -26444,7 +26444,7 @@
                   "    const b = pm.response.json();",
                   "    pm.expect(b.tracking).to.eql({ status: \"SIN_INICIAR\", startedAt: null, finishedAt: null });",
                   "    pm.expect(b.ball).to.eql(null);",
-                  "    pm.expect(b.totals).to.eql({ records: 0, playersTracked: 0 });",
+                  "    pm.expect(b.totals).to.eql({ records: 0, playersTracked: 0, onCourt: 0 });",
                   "    pm.expect(b.latest).to.eql([]);",
                   "    pm.expect(b.match.id).to.eql(Number(pm.collectionVariables.get(\"matchSegId\")));",
                   "});",
@@ -27395,7 +27395,7 @@
                   "});",
                   "pm.test(\"Seis registros, tres jugadores con posición y las últimas de la más nueva a la más vieja\", function () {",
                   "    const b = pm.response.json();",
-                  "    pm.expect(b.totals).to.eql({ records: 6, playersTracked: 3 });",
+                  "    pm.expect(b.totals).to.eql({ records: 6, playersTracked: 3, onCourt: 3 });",
                   "    pm.expect(b.latest.length).to.eql(6);",
                   "    pm.expect(b.latest[0].ball).to.eql(true);",
                   "    pm.expect(b.latest[1].playerId).to.eql(Number(pm.collectionVariables.get(\"playerSegAriasId\")));",
@@ -27648,6 +27648,336 @@
           ]
         },
         {
+          "name": "64.1 Fotos de los jugadores de la pizarra (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/photos",
+            "description": "Criterio HU-GC-09 #4: Cada jugador debe poder ser identificado visualmente dentro de la pizarra.\n\nSolo trae los jugadores de las dos plantillas que tienen foto; los de esta carpeta no tienen, así que la lista llega vacía."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Es una lista de { playerId, photo }\", function () {",
+                  "    const fotos = pm.response.json();",
+                  "    pm.expect(fotos).to.be.an(\"array\");",
+                  "    fotos.forEach(function (f) {",
+                  "        pm.expect(f).to.have.property(\"playerId\");",
+                  "        pm.expect(f).to.have.property(\"photo\");",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.2 Simular con una velocidad no permitida (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/simulation/start",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intervalMs\": 300\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones).\n\nLa simulación arranca con 2000 ms y se detiene en la 64.6, antes de su primer movimiento (a los 2 s): así las pruebas 66 y 70 siguen contando 6 posiciones.\n\nSolo se aceptan 500, 1000 o 2000 ms."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.3 Iniciar la simulación (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/simulation/start",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intervalMs\": 2000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones).\n\nLa simulación arranca con 2000 ms y se detiene en la 64.6, antes de su primer movimiento (a los 2 s): así las pruebas 66 y 70 siguen contando 6 posiciones."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"La pizarra dice que se está simulando cada 2000 ms\", function () {",
+                  "    const sim = pm.response.json().simulation;",
+                  "    pm.expect(sim.running).to.eql(true);",
+                  "    pm.expect(sim.intervalMs).to.eql(2000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.4 Simular otra vez sin detener (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/simulation/start",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intervalMs\": 2000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones).\n\nLa simulación arranca con 2000 ms y se detiene en la 64.6, antes de su primer movimiento (a los 2 s): así las pruebas 66 y 70 siguen contando 6 posiciones.\n\nUn partido no tiene dos simulaciones a la vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.5 Ana no puede detener la simulación (403)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{fanAnaToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/simulation/stop",
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones).\n\nLa simulación arranca con 2000 ms y se detiene en la 64.6, antes de su primer movimiento (a los 2 s): así las pruebas 66 y 70 siguen contando 6 posiciones.\n\nEl aficionado ve la pizarra, pero no maneja la simulación."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.6 Detener la simulación (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/simulation/stop",
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones).\n\nLa simulación arranca con 2000 ms y se detiene en la 64.6, antes de su primer movimiento (a los 2 s): así las pruebas 66 y 70 siguen contando 6 posiciones."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Ya no se está simulando\", function () {",
+                  "    const sim = pm.response.json().simulation;",
+                  "    pm.expect(sim.running).to.eql(false);",
+                  "    pm.expect(sim.intervalMs).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.7 Detener una simulación que no está en curso (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/simulation/stop",
+            "description": "Criterio HU-GC-09 #7: El sistema debe permitir registrar y actualizar la posición espacial de cada jugador dentro del campo de juego (desde un script que simula posiciones).\n\nCriterio HU-GC-09 #8: El sistema debe permitir registrar y actualizar la posición espacial de la pelota (desde un script que simula posiciones).\n\nLa simulación arranca con 2000 ms y se detiene en la 64.6, antes de su primer movimiento (a los 2 s): así las pruebas 66 y 70 siguen contando 6 posiciones."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.8 Sacar a Arias de la cancha (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    { \"playerId\": {{playerSegAriasId}}, \"x\": 30, \"y\": 100, \"onCourt\": false }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #3: En la pizarra se deben visualizar los jugadores que participan en el partido.\n\nCriterio HU-GC-09 #14: Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado.\n\nUn registro con \"onCourt\": false saca al jugador de la cancha (va al banco; ej.: el cambio con el líbero): la pizarra solo dibuja a los que están jugando. Esta petición agrega 1 registro: las pruebas 66 y 70 cuentan 7."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"El registro dice que salió de la cancha\", function () {",
+                  "    const r = pm.response.json();",
+                  "    pm.expect(r).to.have.length(1);",
+                  "    pm.expect(r[0].onCourt).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.9 La pelota no sale de la cancha (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}/positions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    { \"ball\": true, \"x\": 50, \"y\": 50, \"onCourt\": false }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Criterio HU-GC-09 #3: En la pizarra se deben visualizar los jugadores que participan en el partido.\n\nCriterio HU-GC-09 #14: Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado.\n\nUn registro con \"onCourt\": false saca al jugador de la cancha (va al banco; ej.: el cambio con el líbero): la pizarra solo dibuja a los que están jugando. Esta petición agrega 1 registro: las pruebas 66 y 70 cuentan 7."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "64.10 Arias quedó en el banco (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tracking/matches/{{matchSegId}}",
+            "description": "Criterio HU-GC-09 #3: En la pizarra se deben visualizar los jugadores que participan en el partido.\n\nCriterio HU-GC-09 #14: Solo se deben mostrar en la pizarra los jugadores que participan en el encuentro seleccionado.\n\nUn registro con \"onCourt\": false saca al jugador de la cancha (va al banco; ej.: el cambio con el líbero): la pizarra solo dibuja a los que están jugando. Esta petición agrega 1 registro: las pruebas 66 y 70 cuentan 7."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Arias no está en cancha, pero conserva su última posición\", function () {",
+                  "    const b = pm.response.json();",
+                  "    const arias = b.home.players.find(function (p) { return String(p.id) === String(pm.collectionVariables.get(\"playerSegAriasId\")); });",
+                  "    pm.expect(arias.onCourt).to.eql(false);",
+                  "    pm.expect(arias.lastPosition).to.not.eql(null);",
+                  "    pm.expect(b.totals).to.eql({ records: 7, playersTracked: 3, onCourt: 2 });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "65 Ana ve la lista de partidos con seguimiento (200)",
           "request": {
             "method": "GET",
@@ -27710,7 +28040,7 @@
                   "});",
                   "pm.test(\"La misma pizarra\", function () {",
                   "    const b = pm.response.json();",
-                  "    pm.expect(b.totals.records).to.eql(6);",
+                  "    pm.expect(b.totals.records).to.eql(7);",
                   "});"
                 ]
               }
@@ -27857,7 +28187,7 @@
                   "    pm.expect(typeof b.tracking.finishedAt).to.eql(\"string\");",
                   "    pm.expect(b.ball.id).to.eql(Number(pm.collectionVariables.get(\"ballSegId\")));",
                   "    pm.expect(b.home.players.map((p) => p.id)).to.eql([Number(pm.collectionVariables.get(\"playerSegAriasId\")), Number(pm.collectionVariables.get(\"playerSegBeltranId\"))]);",
-                  "    pm.expect(b.totals.records).to.eql(6);",
+                  "    pm.expect(b.totals.records).to.eql(7);",
                   "});"
                 ]
               }

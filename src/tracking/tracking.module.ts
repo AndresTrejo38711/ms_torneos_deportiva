@@ -10,6 +10,8 @@ import { PositionRecord } from './entities/position-record.entity';
 import { TrackingController } from './tracking.controller';
 import { TrackingGateway } from './tracking.gateway';
 import { TrackingService } from './tracking.service';
+import { SimulationRegistry } from './simulation/simulation-registry';
+import { TrackingSimulationService } from './simulation/tracking-simulation.service';
 import { TrackingUsageModule } from './tracking-usage.module';
 
 // HU-GC-09 (seguimiento deportivo del partido). Usa los services de partidos, contratos y jugadores;
@@ -17,6 +19,8 @@ import { TrackingUsageModule } from './tracking-usage.module';
 // TrackingUsageModule, que no depende de nadie. Registra Match para leer y cambiar las columnas del
 // seguimiento, que viven en el partido. TrackingGateway es el socket de las pizarras (etapa 2): toma
 // los avisos de TrackingEvents (de TrackingUsageModule) y valida con SecurityClient quién se une.
+// TrackingSimulationService simula el partido desde la pizarra ("Simular partido"); SimulationRegistry le
+// cuenta a TrackingService si hay simulación, sin que dependan uno del otro (sin ciclo).
 @Module({
   imports: [
     TypeOrmModule.forFeature([Ball, PositionRecord, Match]),
@@ -27,6 +31,11 @@ import { TrackingUsageModule } from './tracking-usage.module';
     SecurityModule,
   ],
   controllers: [TrackingController],
-  providers: [TrackingService, TrackingGateway],
+  providers: [
+    TrackingService,
+    TrackingGateway,
+    SimulationRegistry,
+    TrackingSimulationService,
+  ],
 })
 export class TrackingModule {}

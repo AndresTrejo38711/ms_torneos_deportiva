@@ -33,8 +33,9 @@ type JoinReply = { ok: true } | { error: string };
 // 1. El cliente se conecta con su token: io({ path: '/api/deportiva/socket.io', auth: { token } }).
 // 2. Emite "join" con { matchId }. Puede unirse quien pueda ver la pizarra por REST
 //    (GET /api/deportiva/tracking/matches/{matchId}), y la respuesta es { ok: true } o { error }.
-// 3. Desde ahí recibe "positions" (las posiciones recién guardadas) y "status" ({ matchId, status,
-//    startedAt, finishedAt }) de ese partido, y de ningún otro.
+// 3. Desde ahí recibe "positions" (las posiciones recién guardadas), "status" ({ matchId, status,
+//    startedAt, finishedAt }) y "simulation" ({ matchId, running, intervalMs }: el botón "Simular partido")
+//    de ese partido, y de ningún otro.
 @WebSocketGateway({ path: SOCKET_PATH })
 export class TrackingGateway implements OnGatewayInit, OnModuleDestroy {
   private readonly logger = new Logger(TrackingGateway.name);
@@ -133,16 +134,27 @@ export class TrackingGateway implements OnGatewayInit, OnModuleDestroy {
     if (!room) {
       return;
     }
-    if (event.type === 'positions') {
-      room.emit('positions', event.positions);
-    } else {
-      const { status, startedAt, finishedAt } = event.tracking;
-      room.emit('status', {
-        matchId: event.matchId,
-        status,
-        startedAt,
-        finishedAt,
-      });
+    switch (event.type) {
+      case 'positions':
+        room.emit('positions', event.positions);
+        break;
+      case 'status': {
+        const { status, startedAt, finishedAt } = event.tracking;
+        room.emit('status', {
+          matchId: event.matchId,
+          status,
+          startedAt,
+          finishedAt,
+        });
+        break;
+      }
+      case 'simulation':
+        room.emit('simulation', {
+          matchId: event.matchId,
+          running: event.simulation.running,
+          intervalMs: event.simulation.intervalMs,
+        });
+        break;
     }
   }
 }

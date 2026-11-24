@@ -65,6 +65,11 @@ export class PositionRecord {
   })
   y: number;
 
+  // false: el jugador sale de la cancha (va al banco; ej.: el cambio con el líbero). La última posición de
+  // cada jugador dice si está jugando. La pelota siempre está en cancha. Las filas viejas quedan en true.
+  @Column({ name: 'on_court', type: 'boolean', default: true })
+  onCourt: boolean;
+
   // La pone el servidor, con milisegundos, para que el orden no dependa del reloj del script.
   @Column({ name: 'recorded_at', type: 'datetime', precision: 3 })
   recordedAt: Date;

@@ -4,6 +4,9 @@
 // ms_torneos_deportiva por la misma ruta REST que usaría un sistema real de seguimiento. Las pizarras
 // abiertas las reciben por el socket (criterios 9 y 10).
 //
+// También se puede simular sin consola: botón "Simular partido" en la pizarra (#seguimiento/{id}), que corre
+// la misma lógica en el servidor (src/tracking/simulation/).
+//
 // Node 20 o superior, sin dependencias. Uso (desde ms_torneos_deportiva):
 //   node tools/simulador-seguimiento/simular.mjs --partido=15
 //   node tools/simulador-seguimiento/simular.mjs --partido=15 --intervalo=500 --pelota="Balón oficial"
@@ -342,6 +345,17 @@ async function main() {
 
   const { kind, spots } = formationFor(board.sport);
   const players = [...lineUp(board.home, spots, false), ...lineUp(board.away, spots, true)];
+  // Los que hoy figuran en cancha sin ser de esta formación (de otra simulación) salen en el primer lote
+  // (onCourt: false: van al banco), así en la cancha solo quedan los que juegan.
+  const playing = new Set(players.map((player) => player.id));
+  let leaving = [...board.home.players, ...board.away.players]
+    .filter((player) => player.lastPosition && player.onCourt !== false && !playing.has(player.id))
+    .map((player) => ({
+      playerId: player.id,
+      x: Number(player.lastPosition.x),
+      y: Number(player.lastPosition.y),
+      onCourt: false,
+    }));
   if (players.length === 0) {
     fail(`Ninguno de los dos equipos tiene jugadores activos con contrato el día del partido`);
   }
@@ -368,13 +382,14 @@ async function main() {
   while (sent < options.steps && !stopping) {
     const started = Date.now();
     if (status === 'ACTIVO') {
-      const positions = tick(state);
+      const positions = [...leaving, ...tick(state)];
       const res = await http('POST', `${API}/tracking/matches/${options.matchId}/positions`, {
         token,
         body: { positions },
       });
       stopOnAuthErrors(res);
       if (res.status === 201) {
+        leaving = [];
         sent++;
         if (sent === 1 || sent % 10 === 0) {
           const ball = positions.at(-1);

@@ -46,11 +46,17 @@ export class PositionInputDto {
   @Min(0, { message: `La coordenada y ${COORDINATE}` })
   @Max(100, { message: `La coordenada y ${COORDINATE}` })
   y: number;
+
+  // false: el jugador sale de la cancha (va al banco). Si no se envía, está en cancha. La pelota no sale.
+  @IsOptional()
+  @IsBoolean({ message: 'onCourt debe ser true o false' })
+  onCourt?: boolean | null;
 }
 
 // Cuerpo de POST /tracking/matches/{matchId}/positions (HU-GC-09). Ejemplo:
 // { "positions": [{ "playerId": 7, "x": 54, "y": 31 }, { "ball": true, "x": 57, "y": 29 }] }
-// Se guardan todas o ninguna.
+// Se guardan todas o ninguna. { "playerId": 7, "x": 30, "y": 100, "onCourt": false } saca al jugador de la
+// cancha (ej.: el cambio con el líbero).
 export class RegisterPositionsDto {
   @IsNotEmpty({ message: 'La lista de posiciones es obligatoria' })
   @IsArray({
